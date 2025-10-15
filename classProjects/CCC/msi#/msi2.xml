@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+	<rom type="cartridge" title="msi2" version="1.0" />
+	<binary path="obj/msi2.vbin" />
+	<textures>
+		<texture path="obj/GameObjects.vtex" />
+		<texture path="obj/Start.vtex" />
+		<texture path="obj/DoomBG.vtex" />
+		<texture path="obj/GameOver.vtex" />
+	</textures>
+	<sounds>
+		<sound path="obj/DoomTheme.vsnd" />
+		<sound path="obj/NewHorizonsTheme.vsnd" />
+		<sound path="obj/Shotgun.vsnd" />
+		<sound path="obj/Hurt.vsnd" />
+		<sound path="obj/Dead.vsnd" />
+		<sound path="obj/Fireball.vsnd" />
+		<sound path="obj/DemonDeath.vsnd" />
+		<sound path="obj/ShieldDamage.vsnd" />
+		<sound path="obj/ShieldDeath.vsnd" />
+	</sounds>
+</rom-definition>
