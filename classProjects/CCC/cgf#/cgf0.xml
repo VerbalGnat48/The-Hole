@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+	<rom type="cartridge" title="cgf0" version="1.0" />
+	<binary path="obj/cgf0.vbin" />
+	<textures>
+		<texture path="obj/Table_SGB.vtex" />
+		<texture path="obj/Player_Suits_SGB.vtex" />
+		<texture path="obj/Enemy_Suits_SGB.vtex" />
+	</textures>
+	<sounds>
+	</sounds>
+</rom-definition>
