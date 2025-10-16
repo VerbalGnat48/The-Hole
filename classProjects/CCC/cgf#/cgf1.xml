@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+	<rom type="cartridge" title="cgf1" version="1.0" />
+	<binary path="obj/cgf1.vbin" />
+	<textures>
+		<texture path="obj/Table_SGB.vtex" />
+		<texture path="obj/Player_Suits_SGB.vtex" />
+		<texture path="obj/Enemy_Suits_SGB.vtex" />
+		<texture path="obj/Alphabet_SGB.vtex" />
+	</textures>
+	<sounds>
+		<sound path="obj/BlackJack.vsnd" />
+		<sound path="obj/Casino.vsnd" />
+		<sound path="obj/Flip.vsnd" />
+		<sound path="obj/Lose.vsnd" />
+		<sound path="obj/Shuffle.vsnd" />
+		<sound path="obj/Start.vsnd" />
+		<sound path="obj/Win.vsnd" />
+	</sounds>
+</rom-definition>

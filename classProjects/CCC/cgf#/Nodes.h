@@ -20,8 +20,8 @@ struct GameObject
 	int TID;			//Texture ID
 	int X, Y;			//Objects Center
 	int Width, Height;	//Hitbox
-	int XScale;
-	int YScale;
+	float XScale;
+	float YScale;
 	int BC;
 	int StackVal;
 	GameObject *next;
@@ -41,6 +41,8 @@ struct Stack
     GameObject *top;
     List *data;
     int	size;
+	int X;
+	int Y;
 };
 
 //-----------------------------------------------------

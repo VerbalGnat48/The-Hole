@@ -13,3 +13,9 @@ msi1 - Convert your functional space invaders game from msi0 from the array back
 msi2 - Complete your transition of Space Invaders to singly-linked lists by polishing your linked list implementation into a library with API.
 
 msi3 - Evolve your space invaders game into something more, considering something like galaga. Also, implement a doubly-linked list and update everything to take advantage of that new list functionality.
+
+////////// How to use //////////
+
+Use for example: "./msi0.sh msi0.v32" to both "make" and run cgf0.
+To make: "./msi0.sh"
+To run: "Vircon32 mis0.v32"
