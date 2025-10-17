@@ -1,0 +1,751 @@
+#!/bin/bash
+#################################################
+##
+## This is a program that is Influenced by the unix/usr0 'urev' skills review activity, create a program that does the same but for binary values with differnt GATES.
+##
+
+###################################################################################
+##
+## Functions
+##
+###################################################################################
+
+function File_Check() {
+	########################
+	## If not Clear and file does not exist, make it
+	##
+	if [[ ! -f "info.txt" ]] ; then 
+		touch info.txt
+		Access_Time=$(date "+%F %T")
+		Seconds_AT=$(date +%s)
+		echo "Available After: ${Access_Time}" >> info.txt
+		echo "In Seconds that is: ${Seconds_AT}" >> info.txt
+		echo "Times Played: 0" >> info.txt
+		echo "Amount Wrong: 0" >> info.txt
+		echo "Amount Right: 0" >> info.txt
+	fi
+}
+
+########################
+## Replace provided value in info.txt
+##
+function RW_Replace() {
+	word=$1
+	tmp=$(grep -oE "${word}.{,20}" info.txt | cut -c 8-)
+	kmp=$(( ${tmp} + 1 ))
+	LineNum=$(grep -I -n "${word}" info.txt | cut -d : -f 1)
+	$(sed -i "${LineNum}s/${tmp}/${kmp}/" info.txt)
+}
+
+########################
+## Set the next time this can be played
+##
+function Access_Time() {
+	
+	Row=$1
+	Column=$2
+
+	########################
+	## If Set == 4 then set the Access Time
+	##
+	Access_Time=$(date -d "+4 hours +20 minutes" "+%F %T")
+#	Access_Time=$(date -d "+1 minutes" "+%F %T")
+	Old_Time=$(grep -oE ":.{,20}" info.txt | head -1 | cut -c 3-)
+	$(sed -i "s/${Old_Time}/${Access_Time}/g" info.txt)
+
+	Seconds_AT=$(date +%s)
+	Seconds_AT=$(( ${Seconds_AT} + 15600 ))
+#	Seconds_AT=$(( ${Seconds_AT} + 60 ))
+	Old_SAT=$(grep -oE ":.{,20}" info.txt | head -2 | tail -1 | cut -c 3-)
+	$(sed -i "s/${Old_SAT}/${Seconds_AT}/g" info.txt)
+
+	Times_Played=$(grep "Played" info.txt | tr -d "[[:alpha:]]: ")
+	Old_TP=${Times_Played}
+	Times_Played=$(( ${Times_Played} + 1 ))
+	$(sed -i "3s/${Old_TP}/${Times_Played}/" info.txt)
+
+	trap SIGINT
+	printf "\033[${Row};${Column}H"											#Move Curser
+}
+
+########################
+## Check if provided ansers are correct
+##
+function Answer_Check() {
+	Question=0
+	Placement=6
+	while [[ "${Question}" != 3 ]] ;
+	do
+		#Move Curser to new place
+		printf "\033[6;${Placement}H"
+
+		#Read Input
+		read value
+
+		########################
+		## Check value against Answer
+		##
+		if [[ ${value} != ${RanAnswers[Question]} ]] ; then
+			RW_Replace Wrong
+			printf "\033[6;${Placement}H"		#Move Curser to postition
+			printf "\033[0K"					#Remove User input
+			printf "\xF0\x9F\x92\x80"			#Put"X" is input was wrong
+		else
+		#If right thenadd 1 to input.txt's 'Amount Right:" value
+			RW_Replace Right
+		fi
+
+		Question=$(( ${Question} + 1 ))
+		Placement=$(( ${Placement} + 20 ))
+	done
+	sleep 1
+	Set=$(( ${Set} + 1 ))
+}
+
+########################
+## Print the "Math"
+##
+function Math_Text() {
+	Value1=$1
+	Value2=$2
+	Range=${MaxRanBiLngth}
+	Not=$3
+
+	if [[ -z ${Not} ]] ; then
+		#Print the numbers
+		printf "\033[3;${Placement}H"
+		printf "%0"${Range}"d" ${Value1}
+		printf "\033[4;${Placement}H"
+		printf "%0"${Range}"d" ${Value2}
+	else
+		printf "\033[4;${Placement}H"
+		printf "%0"${Range}"d" ${Value1}
+	fi
+	printf "\033[5;${Placement}H"
+	printf "=%.0s" $(seq 1 ${MaxRanBiLngth})
+	Placement=$(( ${Placement} + 20 ))
+}
+
+########################
+## Get the Printed Numbers and Prep for making the Answers
+##
+function Get_Prep() {
+	Not=$1
+
+	RanValue1[index]+=$(( $RANDOM%(${MaxRandom} - 1 + 1 ) + 1 ))
+	RanValue1[index]=$( echo "obase=2;${RanValue1[index]}" | bc )
+	RanValue2[index]+=$(( $RANDOM%(${MaxRandom} - 1 + 1 ) + 1 ))
+	RanValue2[index]=$( echo "obase=2;${RanValue2[index]}" | bc )
+
+	if [[ -z ${Not} ]] ; then
+		Math_Text ${RanValue1[index]} ${RanValue2[index]}
+	else
+		Math_Text ${RanValue1[index]} e e
+	fi
+
+	RanValue1[index]=$( printf "%0${MaxRanBiLngth}d" ${RanValue1[index]} )
+	RanValue2[index]=$( printf "%0${MaxRanBiLngth}d" ${RanValue2[index]} )
+
+	unset array1 ; unset array2
+	for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+	do		
+		tmp=${RanValue1[index]}
+		array1+=(${tmp:$jndex:1})
+		tmp=${RanValue2[index]}
+		array2+=(${tmp:$jndex:1})
+	done
+}
+
+########################
+## Gate Table
+##
+function Table() {
+	Row=1
+	Column=0
+	Word=$1
+
+	printf "\033[8;${Column}H"
+	printf "+---+---+-----+"
+	printf "\033[9;${Column}H"
+	printf "| A | B |     |"
+	printf "\033[9;$(( ${Column} + 10 ))H"
+	printf "%4s" ${Word}
+	printf "\033[10;${Column}H"
+	printf "+---+---+-----+"
+
+	for (( index=11; index<=14; index++ ))
+	do
+		printf "\033[$index;${Column}H"
+		printf "|   |   |     |"
+	done
+	printf "\033[15;${Column}H"
+	printf "+---+---+-----+"
+
+	TAarray[0]=0
+	TAarray[1]=0
+	TAarray[2]=1
+	TAarray[3]=1
+
+	TBarray[0]=0
+	TBarray[1]=1
+	TBarray[2]=0
+	TBarray[3]=1
+}
+
+function Random_Base() {
+	#Get a random start base with one of these values
+	tmp=$1
+	while [[ "${tmp}" != "4" ]] && [[ "${tmp}" != "8" ]] && [[ "${tmp}" != "16" ]] ;
+	do
+		tmp=$(( $RANDOM%(16-1+1)+1 ))
+	done
+	echo ${tmp}
+}
+
+###################################################################################
+##
+## Main
+##
+###################################################################################
+
+trap 'echo got SIGINT' SIGINT
+
+########################
+## If Clear and File exists, delete it
+##
+if [[ "${1}" == "clear" ]] ; then
+	if [[ -f "info.txt" ]] ; then
+		$(rm info.txt &>/dev/null)
+	fi
+	exit 0
+fi
+
+########################
+## Get Current Time and check if it past Access_Time
+##
+if [[ -f "info.txt" ]] ; then
+	Current_Time=$(date +%s)
+	Access_Time=$(grep "is" info.txt | tr -d "[[:alpha:]] " | cut -c 2-)
+	if [[ ${Current_Time} < ${Access_Time} ]] ; then
+		printf "IT IS NOT TIME TO PLAY A GAME DETECTIVE!\n"
+		exit 0;
+	fi
+fi
+
+########################
+## If Random exists then select random game mode
+##
+if [[ -z "${1}" ]] ; then
+	RanGameMode=$(( $RANDOM%(7-1+1)+1 ))
+fi
+
+########################
+## Check times Played
+##
+if [[ -f "info.txt" ]] ; then
+	Times_Played=$(grep "Played" info.txt | tr -d "[[:alpha:]]: ")
+else
+	Time_Played=0
+fi
+
+MaxRandom=65355
+MaxRanBinary=$( echo "obase=2;${MaxRandom}" | bc )
+MaxRanBiLngth=${#MaxRanBinary}
+
+WrongCount=0;
+
+###################################################################################
+##
+## Warm Up
+##
+###################################################################################
+if [[ "${1}" == "warmup" ]] || [[ "${Times_Played}" -lt 6 ]]; then
+	File_Check
+
+	Set=0
+	while [[ ${Set} != 4 ]] ;
+	do
+		########################
+		## Random Bases
+		##
+		RanBase1=$(Random_Base 0)
+		RanBase2=$(Random_Base 0)
+		while [[ "${RanBase1}" == "${RanBase2}" ]] ;
+		do
+			RanBase2=$(Random_Base 0)
+		done
+		if [[ "${RanBase2}" -eq 4 ]] ; then
+			BitMultiple=2
+		elif [[ "${RanBase2}" -eq 8 ]] ; then
+			BitMultiple=3
+		elif [[ "${RanBase2}" -eq 16 ]] ; then
+			BitMultiple=4
+		fi
+
+		printf "\033[1;1H"
+		printf "\033[2J"
+		printf "\033[1;18H"
+		printf "Convert to Base %s" ${RanBase2}
+
+		RanAnswers=()
+		RanNibNum=()
+		NibbleCount=$(( $RANDOM%(4-1+1)+1 ))
+		unset FullParts
+
+		for (( index=0; index<${NibbleCount}; index++ ))
+		do
+			RanNibNum[index]+=$(( $RANDOM%(15-1+1)+1 ))
+			RanNibNum[index]=$( echo "obase=${RanBase1};${RanNibNum[index]}" | bc )
+			RanNibNum[index]=$( echo "obase=2;ibase=${RanBase1};${RanNibNum[index]}" | bc )
+			FullParts+="${RanNibNum[index]}"
+		done
+		Full=$(echo "${FullParts}")
+		FullLngth=${#Full}
+		while [[ $(( ${FullLngth} % ${BitMultiple} )) -ne 0 ]]
+		do
+			FullLngth=$(( ${FullLngth} + 1 ))
+		done
+		Fuller=$( printf "%0${FullLngth}d" ${Full} )
+		printf "\033[4;18H"
+		printf "%s" ${Fuller}
+		printf "\033[5;18H"
+		printf "=%.0s" $(seq 1 ${FullLngth})
+		LoopMax=$(( ${FullLngth} / ${BitMultiple} ))
+		CutStart=1
+		RanAnswers=()
+		unset Array
+		
+		for (( index=0; index<${LoopMax}; index++ ))
+		do
+			RanAnswers[index]+=$( $(echo "expr substr ${Fuller} ${CutStart} ${BitMultiple}") )
+			RanAnswers[index]=$( echo "obase=${RanBase2};ibase=2;${RanAnswers[index]}" | bc )
+			CutStart=$(( ${CutStart} + ${BitMultiple} ))
+		done
+		Answer=$( echo -n ${RanAnswers[@]} | tr -d " " )
+		printf "\033[6;18H"
+		read value
+		if [[ ${value} != ${Answer} ]] ; then
+			RW_Replace Wrong
+			printf "\033[6;18H"
+			printf "\033[0K"
+			printf "\xF0\x9F\x92\x80"
+			WrongCount=$(( ${WrongCount} + 1 ));
+		else
+			RW_Replace Right
+		fi
+		sleep 1
+		Set=$(( ${Set} + 1 ))
+	done
+
+###################################################################################
+##
+## AND Gate
+##
+###################################################################################
+elif [[ "${1}" == "and" ]] || [[ "${RanGameMode}" == 1 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]] ;
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "AND"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				if [[ "${array1[$jndex]}" == 1 ]] && [[ "${array2[$jndex]}" == 1 ]] ; then
+					RanArray+=1
+				else
+					RanArray+=0
+				fi
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Table AND
+			for (( jndex=0; jndex<4; jndex++ ))
+			do
+				printf "\033[$(( $jndex + 11 ));3H"
+				printf "%d" ${TAarray[$jndex]}
+				printf "\033[$(( $jndex + 11 ));7H"
+				printf "%d" ${TBarray[$jndex]}
+				if [[ "${TAarray[$jndex]}" == 1 ]] && [[ "${TBarray[$jndex]}" == 1 ]] ; then
+					temp=1
+				else
+					temp=0
+				fi
+				printf "\033[$(( $jndex + 11 ));12H"
+				printf "%d" ${temp}
+			done
+		fi
+
+		Answer_Check
+	done
+	Access_Time 17 0
+###################################################################################
+##
+## OR Gate
+##
+###################################################################################
+elif [[ "${1}" == "or" ]] || [[ "${RanGameMode}" == 2 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]] ;
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "OR"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				if [[ "${array1[$jndex]}" == 1 ]] || [[ "${array2[$jndex]}" == 1 ]] ; then
+					RanArray+=1
+				else
+					RanArray+=0
+				fi
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Table OR
+			for (( jndex=0; jndex<4; jndex++ ))
+			do
+				printf "\033[$(( $jndex + 11 ));3H"
+				printf "%d" ${TAarray[$jndex]}
+				printf "\033[$(( $jndex + 11 ));7H"
+				printf "%d" ${TBarray[$jndex]}
+				if [[ "${TAarray[$jndex]}" == 1 ]] || [[ "${TBarray[$jndex]}" == 1 ]] ; then
+					temp=1
+				else
+					temp=0
+				fi
+				printf "\033[$(( $jndex + 11 ));12H"
+				printf "%d" ${temp}
+			done
+		fi
+
+		Answer_Check
+	done
+###################################################################################
+##
+## XOR Gate
+##
+###################################################################################
+elif [[ "${1}" == "xor" ]] || [[ "${RanGameMode}" == 3 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]]
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "XOR"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				if [[ "${array1[$jndex]}" == "${array2[$jndex]}" ]] ; then
+					RanArray+=0
+				else
+					RanArray+=1
+				fi
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Table XOR
+			for (( jndex=0; jndex<4; jndex++ ))
+			do
+				printf "\033[$(( $jndex + 11 ));3H"
+				printf "%d" ${TAarray[$jndex]}
+				printf "\033[$(( $jndex + 11 ));7H"
+				printf "%d" ${TBarray[$jndex]}
+				if [[ "${TAarray[$jndex]}" == "${TBarray[$jndex]}" ]] ; then
+					temp=0
+				else
+					temp=1
+				fi
+				printf "\033[$(( $jndex + 11 ));12H"
+				printf "%d" ${temp}
+			done
+		fi
+
+		Answer_Check
+	done
+###################################################################################
+##
+## NOT Gate
+##
+###################################################################################
+elif [[ "${1}" == "not" ]] || [[ "${RanGameMode}" == 4 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]]
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "NOT"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep 3
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				RanArray+=$( echo "obase=2;! ${array1[$jndex]}" | bc )
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Word="NOT"
+			printf "\033[8;0H"
+			printf "+---+-----+"
+			printf "\033[9;0H"
+			printf "| A |     |"
+			printf "\033[9;6H"
+			printf "%4s" ${Word}
+			printf "\033[10;0H"
+			printf "+---+-----+"
+			printf "\033[11;0H"
+			printf "| 0 |  1  |"
+			printf "\033[12;0H"
+			printf "| 1 |  0  |"
+			printf "\033[13;0H"
+			printf "+---+-----+"
+		fi
+
+		Answer_Check
+	done
+###################################################################################
+##
+## NAND Gate
+##
+###################################################################################
+elif [[ "${1}" == "nand" ]] || [[ "${RanGameMode}" == 5 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]]
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "NAND"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				if [[ "${array1[$jndex]}" == 1 ]] && [[ "${array2[$jndex]}" == 1 ]] ; then
+					RanArray+=0
+				else
+					RanArray+=1
+				fi
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Table NAND
+			for (( jndex=0; jndex<4; jndex++ ))
+			do
+				printf "\033[$(( $jndex + 11 ));3H"
+				printf "%d" ${TAarray[$jndex]}
+				printf "\033[$(( $jndex + 11 ));7H"
+				printf "%d" ${TBarray[$jndex]}
+				if [[ "${TAarray[$jndex]}" == 1 ]] && [[ "${TBarray[$jndex]}" == 1 ]] ; then
+					temp=0
+				else
+					temp=1
+				fi
+				printf "\033[$(( $jndex + 11 ));12H"
+				printf "%d" ${temp}
+			done
+		fi
+
+		Answer_Check
+	done
+###################################################################################
+##
+## NOR Gate
+##
+###################################################################################
+elif [[ "${1}" == "nor" ]] || [[ "${RanGameMode}" == 6 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]]
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "NOR"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				if [[ "${array1[$jndex]}" == 1 ]] || [[ "${array2[$jndex]}" == 1 ]] ; then
+					RanArray+=0
+				else
+					RanArray+=1
+				fi
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Table NOR
+			for (( jndex=0; jndex<4; jndex++ ))
+			do
+				printf "\033[$(( $jndex + 11 ));3H"
+				printf "%d" ${TAarray[$jndex]}
+				printf "\033[$(( $jndex + 11 ));7H"
+				printf "%d" ${TBarray[$jndex]}
+				if [[ "${TAarray[$jndex]}" == 1 ]] || [[ "${TBarray[$jndex]}" == 1 ]] ; then
+					temp=0
+				else
+					temp=1
+				fi
+				printf "\033[$(( $jndex + 11 ));12H"
+				printf "%d" ${temp}
+			done
+		fi
+
+		Answer_Check
+	done
+###################################################################################
+##
+## XNOR Gate
+##
+###################################################################################
+elif [[ "${1}" == "xnor" ]] || [[ "${RanGameMode}" == 7 ]]; then
+	File_Check
+	
+	Set=0
+	while [[ ${Set} != 4 ]]
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+		printf "\033[1;32H"
+		printf "XNOR"
+
+		RanValue1=()
+		RanValue2=()
+		RanAnswers=()
+		Placement=6
+		for (( index=0; index<3; index++ ))
+		do
+			Get_Prep
+			unset RanArray
+			for (( jndex=0; jndex<${MaxRanBiLngth}; jndex++ ))
+			do		
+				if [[ "${array1[$jndex]}" == "${array2[$jndex]}" ]] ; then
+					RanArray+=1
+				else
+					RanArray+=0
+				fi
+			done
+			RanAnswers[index]+=$( echo -n ${RanArray[@]} )
+		done
+		if [[ "${Times_Played}" -le 12 ]] ; then
+			Table XNOR
+			for (( jndex=0; jndex<4; jndex++ ))
+			do
+				printf "\033[$(( $jndex + 11 ));3H"
+				printf "%d" ${TAarray[$jndex]}
+				printf "\033[$(( $jndex + 11 ));7H"
+				printf "%d" ${TBarray[$jndex]}
+				if [[ "${TAarray[$jndex]}" == "${TBarray[$jndex]}" ]] ; then
+					temp=1
+				else
+					temp=0
+				fi
+				printf "\033[$(( $jndex + 11 ));12H"
+				printf "%d" ${temp}
+			done
+		fi
+
+		Answer_Check
+	done
+fi
+
+Access_Time 17 0
+
+if [[ ${WrongCount} == 0 ]] && [[ $(( "${WrongCount}" - 1 )) -ge 0 ]] ; then
+	word="Wrong"
+	tmp=$(grep -oE "${word}.{,20}" info.txt | cut -c 8-)
+	kmp=$(( ${tmp} - 1 ))
+	LineNum=$(grep -I -n "${word}" info.txt | cut -d : -f 1)
+	$(sed -i "${LineNum}s/${tmp}/${kmp}/" info.txt)
+fi
+
+printf "\033[17;0H"
+
+cat info.txt

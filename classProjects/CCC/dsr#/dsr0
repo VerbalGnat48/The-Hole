@@ -1,0 +1,464 @@
+#!/bin/bash
+#################################################
+##
+## This is a program that is Influenced by the unix/usr0 'urev' skills review activity, create a program that does the same but for powers of 2 base math and conversions.
+##
+
+###################################################################################
+##
+## Functions
+##
+###################################################################################
+
+function File_Check() {
+	########################
+	## If not Clear and file does not exist, make it
+	##
+	if [[ ! -f "info.txt" ]] ; then 
+		touch info.txt
+		Access_Time=$(date "+%F %T")
+		Seconds_AT=$(date +%s)
+		echo "Available After: ${Access_Time}" >> info.txt
+		echo "In Seconds that is: ${Seconds_AT}" >> info.txt
+		echo "Times Played: 0" >> info.txt
+		echo "Amount Wrong: 0" >> info.txt
+		echo "Amount Right: 0" >> info.txt
+	fi
+}
+
+function Random_Base() {
+
+	#Get a random start base with one of these values
+	tmp=$1
+	while [[ "${tmp}" != "2" ]] && [[ "${tmp}" != "4" ]] && [[ "${tmp}" != "8" ]] && [[ "${tmp}" != "16" ]] ;
+	do
+		tmp=$(( $RANDOM%(16-1+1)+1 ))
+	done
+	echo ${tmp}
+}
+
+########################
+## Replace provided value in info.txt
+##
+function RW_Replace() {
+	word=$1
+	tmp=$(grep -oE "${word}.{,20}" info.txt | cut -c 8-)
+	kmp=$(( ${tmp} + 1 ))
+	LineNum=$(grep -I -n "${word}" info.txt | cut -d : -f 1)
+	$(sed -i "${LineNum}s/${tmp}/${kmp}/" info.txt)
+}
+
+########################
+## Set the next time this can be played
+##
+function Access_Time() {
+	
+	Row=$1
+	Column=$2
+
+	########################
+	## If Set == 4 then set the Access Time
+	##
+	Access_Time=$(date -d "+4 hours +20 minutes" "+%F %T")
+	Old_Time=$(grep -oE ":.{,20}" info.txt | head -1 | cut -c 3-)
+	$(sed -i "s/${Old_Time}/${Access_Time}/g" info.txt)
+
+	Seconds_AT=$(date +%s)
+	Seconds_AT=$(( ${Seconds_AT} + 15600 ))
+	Old_SAT=$(grep -oE ":.{,20}" info.txt | head -2 | tail -1 | cut -c 3-)
+	$(sed -i "s/${Old_SAT}/${Seconds_AT}/g" info.txt)
+
+	Times_Played=$(grep "Played" info.txt | tr -d "[[:alpha:]]: ")
+	Old_TP=${Times_Played}
+	Times_Played=$(( ${Times_Played} + 1 ))
+	$(sed -i "3s/${Old_TP}/${Times_Played}/" info.txt)
+
+	trap SIGINT
+	printf "\033[${Row};${Column}H"											#Move Curser
+}
+
+########################
+## Print base table for provided operation (+ and -)
+##
+function Table() {
+	########################
+	## Get the Times Played Value and check if <= 4
+	##
+	#Set function vaeriables
+	Base=$1
+	Sign=$2
+
+	Times_Played=$(grep "Played" info.txt | tr -d "[[:alpha:]]: ")
+	if [[ "${Times_Played}" -le 4 ]] ; then
+
+		#Get The Max Number
+		if [[ "${Sign}" == "+" ]] ; then
+			Max=$(( $(echo "obase=${Base};16" | bc) ${Sign} $(echo "obase=${Base};16" | bc) ))		#Max Value of the operation
+		elif [[ "${Sign}" == "-" ]] ; then
+			Max=$(( $(echo "obase=${Base};0" | bc) ${Sign} $(echo "obase=${Base};16" | bc) ))		#Max Value of the operation
+			Max=$(( ${Max} + 2 ))
+		fi
+
+		Max_Length=${#Max}																		#Length of Max Value
+		printf "\033[9;1H"																		#Move Curser
+	
+		#Print the Tables top row
+		printf "%${Max_Length}s  " ${Sign}
+		for (( index=0; index <=16; index++ ))
+		do
+			printf "%${Max_Length}s " $(echo "obase=${Base};${index}" | bc)
+		done
+		printf "\n"
+
+		#Print the "---------------------------------"
+		printf %$(( ${Max_Length} + 2 ))"c" "x"													#Print spaces so that the "x" lines up with the "|" later on
+		for (( index=0; index<=$(( (16 * ( ${Max_Length} + 1 ) ) + ${Max_Length} -1 )); index++ ))
+		do
+			echo -n "-"
+		done
+		printf "\n"
+
+		#Print the other Rows
+		for (( index=0; index<=16; index++ ))
+		do
+			printf "%${Max_Length}s |" $(echo "obase=${Base};${index}" | bc)
+			for (( jndex=0; jndex<=16; jndex++ ))
+			do
+				Number=$(( ${index} ${Sign} ${jndex} ))
+				printf "%${Max_Length}s " $(echo "obase=${Base};${Number}" | bc)
+			done
+			printf "\n"
+		done
+	fi
+}
+
+########################
+## Print base conversion table
+##
+function Cable() {
+	Row=$1
+	Column=$2
+
+	Times_Played=$(grep "Played" info.txt | tr -d "[[:alpha:]]: ")
+	if [[ "${Times_Played}" -le 2 ]] ; then
+		Max_Length=5
+		printf "\033[${Row};${Column}0H"												#Move Curser
+		
+		#Print the Tables top row
+		printf "Base|"
+		for (( index=0; index<=16; index++ ))
+		do
+			printf "%${Max_Length}d " ${index}
+		done
+		printf "\n"
+
+		#Print the "----------------"
+		echo -n "----x"
+		for (( index=0; index<=$(( (16 * ( ${Max_Length} + 1 ) ) + ${Max_Length} -1 )); index++ ))
+		do
+			echo -n "-"
+		done
+		printf "\n"
+
+		Base=2
+		#Print the other Rows
+		for (( index=0; index<=4; index++ ))
+		do
+			printf "%4d|" ${Base}
+			for (( jndex=0; jndex<=16; jndex++ ))
+			do
+				printf "%${Max_Length}s " $(echo "obase=${Base};${jndex}" | bc)
+			done
+			printf "\n"
+			Base=$(( ${Base} * 2 ))
+		done
+	fi
+}
+
+########################
+## Print how the Math will look
+##
+function Math_Text() {
+	Position=$1
+	Value1=$2
+	Sign=$3
+	Value2=$4
+	Word=$3
+
+	printf "\033[3;${Position}H"									#Move Curser
+	printf "%5s" ${Value1}											#Print Value1
+	if [[ "${Word}" == "convert" ]] ; then
+		printf "\033[4;$(( ${Position}+0 ))H"						#Move Curser
+		printf "\xF0\x9F\x94\x84"									#Print an emoji
+		printf "\033[5;$(( ${Position}+0 ))H"						#Move Curser
+		printf "======="													#Print the seperator
+	else
+		printf "\033[4;$(( ${Position}-1 ))H"							#Move Curser
+		printf "${Sign}"											#Print the Sign
+		printf "\033[4;${Position}H"								#Move Curser
+		printf "%5s" ${Value2}										#Print Value2
+		printf "\033[5;$(( ${Position}-1 ))H"						#Move Curser
+		printf "======="											#Print the seperator
+	fi
+	Placement=$(( ${Placement} + 10 ))
+}
+
+########################
+## Check if provided ansers are correct
+##
+function Answer_Check() {
+	Question=0
+	Placement=12
+	while [[ "${Question}" != 3 ]] ;
+	do
+		#Move Curser to new place
+		printf "\033[6;${Placement}H"
+
+		#Read Input
+		read value
+
+		########################
+		## Check value against Answer
+		##
+		#If wrong then add 1 to input.txt's "Amount Wrong:" value
+		value=$( echo $value | sed 's/^0*//')
+		value=$( echo $value | sed 's/^ *//')
+		if [[ ${value} != ${RanAnswers[Question]} ]] ; then
+			RW_Replace Wrong
+			printf "\033[6;${Placement}H"		#Move Curser to postition
+			printf "\033[0K"					#Remove User input
+			printf "\xF0\x9F\x92\x80"			#Put"X" is input was wrong
+		else
+		#If right thenadd 1 to input.txt's 'Amount Right:" value
+			RW_Replace Right
+		fi
+
+		Question=$(( ${Question} + 1 ))
+		Placement=$(( ${Placement} + 10 ))
+	done
+	sleep 1
+	Set=$(( ${Set} + 1 ))
+}
+
+###################################################################################
+##
+## Main
+##
+###################################################################################
+
+trap 'echo got SIGINT' SIGINT
+
+########################
+## If Clear and File exists, delete it
+##
+if [[ "${1}" == "clear" ]] ; then
+	if [[ -f "info.txt" ]] ; then
+		$(rm info.txt &>/dev/null)
+	fi
+	exit 0
+fi
+
+########################
+## Get Current Time and check if it past Access_Time
+##
+if [[ -f "info.txt" ]] ; then
+	Current_Time=$(date +%s)
+	Access_Time=$(grep "is" info.txt | tr -d "[[:alpha:]] " | cut -c 2-)
+	if [[ ${Current_Time} < ${Access_Time} ]] ; then
+		printf "IT IS NOT TIME TO PLAY A GAME DETECTIVE!\n"
+		exit 0;
+	fi
+fi
+
+########################
+## If Random exists then select random game mode
+##
+if [[ -z "${1}" ]] ; then
+	RanGameMode=$(( $RANDOM%(3-1+1)+1 ))
+fi
+
+###################################################################################
+##
+## If Conversion or RangameMode == 1 then do the Base Converion Game
+##
+###################################################################################
+if [[ "${1}" == "conversion" ]] || [[ "${RanGameMode}" == 1 ]]; then
+
+	File_Check
+
+	Set=0
+	while [[ ${Set} != 4 ]] ;
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+
+		########################
+		## Random Bases
+		##
+		RanBase1=$(Random_Base 0)
+		RanBase2=$(Random_Base 0)
+		while [[ "${RanBase1}" == "${RanBase2}" ]] ;
+		do
+			RanBase2=$(Random_Base 0)
+		done
+		printf "\033[1;18H"
+		printf "Convert from Base:" 
+		printf "\033[2;18H"
+		printf "%s to %s\n\n" ${RanBase1} ${RanBase2}
+
+		########################
+		## Set up the Math and the answers
+		##
+		RanNums=()
+		RanAnswers=()
+		Placement=12
+		for (( index=0; index<3; index++ ))
+		do
+			RanNums[index]+=$(( $RANDOM%(16-1+1)+1 ))
+			RanNums[index]=$(echo "obase=${RanBase1};${RanNums[index]}" | bc)
+			RanAnswers[index]+=$(echo "obase=${RanBase2};ibase=${RanBase1};${RanNums[index]}" | bc)
+
+			Math_Text ${Placement} ${RanNums[index]} convert
+		done
+		printf "\n\n"
+		
+		Cable 9 0
+		Answer_Check convert
+
+	done
+	Access_Time 17 0
+
+	cat info.txt
+###################################################################################
+##
+## Addition
+##
+###################################################################################
+elif [[ "${1}" == "addition" ]] || [[ "${RanGameMode}" == 2 ]]; then
+
+	File_Check
+
+	Set=0
+	while [[ ${Set} != 4 ]] ;
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+
+		########################
+		## Random Base
+		##
+		RanBase1=$(Random_Base 0)
+		printf "\033[1;18H"									#Move Curser
+		printf "In Base %s do:\n\n" ${RanBase1}				#Print the Rule
+
+		########################
+		## Set up the Math
+		##
+		RanNums=()
+		RanAdds=()
+		Placement=12
+		for (( index=0; index<3; index++ ))
+		do
+			RanNums[index]+=$(( $RANDOM%(16-1+1)+1 ))
+			RanNums[index]=$(echo "obase=${RanBase1};${RanNums[index]}" | bc)
+			RanAdds[index]+=$(( $RANDOM%(16-1+1)+1 ))
+			RanAdds[index]=$(echo "obase=${RanBase1};${RanAdds[index]}" | bc)
+
+			Math_Text ${Placement} ${RanNums[index]} "+" ${RanAdds[index]}
+		done
+		printf "\n\n"
+
+		########################
+		## Get the Answers
+		##
+		RanAnswers=()
+		for (( index=0; index<3; index++ ))
+		do
+			RanAnswers[index]+=$(( $(echo "obase=10;ibase=${RanBase1};${RanNums[index]}" | bc) + $(echo "obase=10;ibase=${RanBase1};${RanAdds[index]}" | bc) ))
+			RanAnswers[index]=$(echo "obase=${RanBase1};${RanAnswers[index]}" | bc)
+		done
+		printf "\n"
+
+		Table ${RanBase1} +
+		Cable 29 0
+
+		Answer_Check
+	done
+	Access_Time 36 0
+
+	cat info.txt
+###################################################################################
+##
+## Subtraction
+##
+###################################################################################
+elif [[ "${1}" == "subtraction" ]] || [[ "${RanGameMode}" == 3 ]]; then
+
+	File_Check
+
+	Set=0
+	while [[ ${Set} != 4 ]] ;
+	do
+		########################
+		## Game Time
+		##
+		printf "\033[1;1H"									#Move Curser
+		printf "\033[2J"									#Clear the Screen
+
+		########################
+		## Random Base
+		##
+		RanBase1=$(Random_Base 0)
+		printf "\033[1;18H"									#Move Curser
+		printf "In Base %s do:\n\n" ${RanBase1}				#Print the Rule
+
+		########################
+		## Set up the Math
+		##
+		RanNums=()
+		RanSubs=()
+		Placement=12
+		for (( index=0; index<3; index++ ))
+		do
+			RanNums[index]+=$(( $RANDOM%(16-1+1)+1 ))
+			RanSubs[index]+=$(( $RANDOM%(16-1+1)+1 ))
+			Result=$(( ${RanNums[index]} - ${RanSubs[index]} ))
+			while [[ "${Result}" -le 0 ]] ;
+			do
+				RanNums[index]=$(( $RANDOM%(16-1+1)+1 ))
+				RanSubs[index]=$(( $RANDOM%(16-1+1)+1 ))
+				Result=$(( ${RanNums[index]} - ${RanSubs[index]} ))
+			done
+			RanNums[index]=$(echo "obase=${RanBase1};${RanNums[index]}" | bc)
+			RanSubs[index]=$(echo "obase=${RanBase1};${RanSubs[index]}" | bc)
+
+			Math_Text ${Placement} ${RanNums[index]} "-" ${RanSubs[index]}
+		done
+		printf "\n\n"
+
+		########################
+		## Get the Answers
+		##
+		RanAnswers=()
+		for (( index=0; index<3; index++ ))
+		do
+			RanAnswers[index]+=$(( $(echo "obase=10;ibase=${RanBase1};${RanNums[index]}" | bc) - $(echo "obase=10;ibase=${RanBase1};${RanSubs[index]}" | bc) ))
+			RanAnswers[index]=$(echo "obase=${RanBase1};${RanAnswers[index]}" | bc)
+		done
+		printf "\n"
+
+		Table ${RanBase1} -
+		Cable 29 0
+
+		Answer_Check
+	done
+	Access_Time 36 0
+
+	cat info.txt
+fi

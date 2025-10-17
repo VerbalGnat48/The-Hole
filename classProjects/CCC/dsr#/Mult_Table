@@ -1,0 +1,152 @@
+#!/bin/bash
+
+#How to use:
+#./name Base Range
+
+base=$1
+up=$2
+low=$3
+num=$low
+length=$((up-low))
+end=$((length+1))											#How many numbers are in the range
+max=$((up*up))												#Max number output
+if [[ -n "$base" ]]; then
+	max=$( echo "obase=$base; $max" | bc )						#Bases the max
+fi
+if [[ -n $base && -n $low ]]; then
+	list=$(seq $low $up)									#All allowed numbers
+fi
+fmaxl=${#max}												#Length of max number output
+l=$((fmaxl+1))												#fmaxl + 1 to account for space after number in number row when printing
+smaxl=$(( ( ($length+1)*$l )-1 ))							#Takes $length and +1 to get the range, * that by $l to know how many spaces we have, -1 to get rid of an extra "-"
+count=0;
+
+#----------------------------------------------------------
+# Errors
+#----------------------------------------------------------
+
+if [[ $base -lt 2 || $base -gt 16 ]]; then
+	if [[ -n "$base" ]]; then
+		printf "ERROR: INVALID BASE!\n" >&2
+		exit 1
+	fi
+fi
+if [[ $low -gt $up ]]; then
+	printf "ERROR: INVALID NUMBER ORDER!\n" >&2
+	exit 1
+fi
+if [[ $low -lt 0 || $low -gt 99 ]]; then
+	printf "ERROR: INVALID LOWER BOUND!\n" >&2
+	exit 1
+fi
+if [[ $up -lt 0 || $up -gt 99 ]]; then
+	printf "ERROR: INVALID UPPER BOUND!\n" >&2
+	exit 1
+fi
+
+#----------------------------------------------------------
+# Functions
+#----------------------------------------------------------
+
+TOP () {
+	printf %$(($l+2))"c" " "											#Prints spaces so that the numbers can line up with the other numbers
+	bist=$(echo "obase=$base; $list" | bc)
+	printf %$l"s" $bist													#Prints the $list numbers
+	printf "\n"
+	printf %$(($l+2))"c" "x"											#Print spaces so that the "x" lines up with the "|" later on
+	for (( i=0; i<=$smaxl; i++ )) do									#Prints "-" after "x" until it reaches the last number allowed
+		echo -n "-"
+	done
+	printf "\n"
+}
+
+BOT () {
+	for y in $list														#For every value in $list do this...
+	do
+		by=$(echo "obase=$base; $y" | bc)								#Bases said current value in $list
+		printf %$(($l-${#by}))"c" " "									#Print x amount of spaces in front of the current y value
+		printf "%s |" $by												#Print the current y value
+		for x in $list													#For every value in $list do this...
+		do
+			bx=$(echo "obase=$base; $x" | bc)							#Bases said current value in $list
+			printf %$l"s" $(echo "obase=$base; $((x*y))" | bc )			#Multiples the two values togther and then bases the product
+			count=$((count+1))											#Needed to later be able to end the print at the correct moment
+			if (( $count == $end )); then								#When number of printed products = number range end go on to the next y value
+				count=0;
+				printf "\n"
+			fi
+		done
+	done
+}
+
+#----------------------------------------------------------
+# If no arguments
+#----------------------------------------------------------
+
+if [[ -z "$base" ]]; then
+	list=$(seq 1 9)
+	l=3;
+	smaxl=$(( (9*$l)-1 ))
+	printf %$(($l+2))"c" " "
+	printf %$l"s" $list
+	printf "\n"
+	printf %$(($l+2))"c" "x"
+	for (( i=0; i<=$smaxl; i++ )) do
+		echo -n "-"
+	done
+	printf "\n"
+	for y in $list
+	do
+		printf %$(($l-${#y}))"c" " "
+		printf "%s |" $y
+		for x in $list
+		do
+			printf %$l"s" $((x*y))
+			if (( $x == 9 )); then
+				printf "\n"
+			fi
+		done
+	done
+fi
+
+#----------------------------------------------------------
+# If base exists
+#----------------------------------------------------------
+
+if [[ -n "$base" && -z "$low" && -z "$up" ]]; then
+
+	lval=$(($base-1))
+	list=$(seq 1 $lval )
+	max=$((lval*lval))
+	l=$(( ${#max}+1 ))
+	if (( $base <= 4 )); then
+		l=$(($l+1))
+	fi
+	smaxl=$(( ( ($lval)*$l )-1 ))
+	end=$lval
+	TOP
+	BOT
+fi
+
+#----------------------------------------------------------
+# If base and up exist
+#----------------------------------------------------------
+
+if [[ -n "$base" && -z "$low" && -n "$up" ]]; then
+
+	list=$(seq 1 $up)
+	length=$(($up-1))
+	smaxl=$(( ( ($length+1)*$l )-1 ))
+	end=$up
+	TOP
+	BOT
+fi
+
+#----------------------------------------------------------
+# If all arguments exist
+#----------------------------------------------------------
+
+if [[ -n "$base" && -n "$low" && -n "$up" ]]; then
+	TOP
+	BOT
+fi
