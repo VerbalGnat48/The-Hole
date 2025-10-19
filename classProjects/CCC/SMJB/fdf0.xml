@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+	<rom type="cartridge" title="fdf0" version="1.0" />
+	<binary path="fdf0.o" />
+	<textures>
+		<texture path="obj/T-SS3Combined.vtex" />
+		<texture path="obj/T-BG1.vtex" />
+		<texture path="obj/T-BG2.vtex" />
+		<texture path="obj/T-BG3.vtex" />
+		<texture path="obj/T-BG4.vtex" />
+		<texture path="obj/T-BG5.vtex" />
+		<texture path="obj/T-BG6.vtex" />
+		<texture path="obj/T-BG7.vtex" />
+		<texture path="obj/T-BGU.vtex" />
+		<texture path="obj/title.vtex" />
+	</textures>
+	<sounds>
+		<sound path="obj/Title_screen_theme.vsnd" />
+		<sound path="obj/MattioSelect2.vsnd" />
+		<sound path="obj/JoeSelect2.vsnd" />
+
+		<sound path="obj/1-1_theme.vsnd" />
+		<sound path="obj/Jump_SoundV2.vsnd" />
+		<sound path="obj/Bowser_jump.vsnd" />
+		<sound path="obj/Fireball.vsnd" />
+		<sound path="obj/Death_and_GO.vsnd" />
+
+		<sound path="obj/Coin_grab.vsnd" />
+		<sound path="obj/Mushroom_get.vsnd" />
+		<sound path="obj/Jump_on_Enemy.vsnd" />
+		<sound path="obj/Win.vsnd" />
+	</sounds>
+</rom-definition>
