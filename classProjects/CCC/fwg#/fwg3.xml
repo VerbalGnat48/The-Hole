@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+    <rom type="cartridge" title="fwg3" version="1.0" />
+    <binary path="obj/fwg3.vbin" />
+    <textures>
+        <texture path="obj/Background.vtex" />
+		<texture path="obj/GameObjects.vtex" />
+		<texture path="obj/YOUDIED.vtex" />
+    </textures>
+	<sounds>
+		<sound path="obj/Bezos1.vsnd" />
+		<sound path="obj/YOUDIED.vsnd" />
+		<sound path="obj/Cracking.vsnd" />
+		<sound path="obj/Score.vsnd" />
+		<sound path="obj/PCBootup.vsnd" />
+	  </sounds>
+</rom-definition>
