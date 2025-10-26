@@ -1,0 +1,307 @@
+unix/ldg0 project
+=================
+
+OBJECTIVE
+=========
+Write a script to  accomplish stated functionality, referencing pertinent
+tool-related  information  as  appropriate,  and  utilizing  the  pattern
+matching  features of  Regular Expressions  to aid  you in  obtaining the
+result.
+
+BACKGROUND
+==========
+Time to turn the tables on one of the roles you've performed each week of
+the semester: from letter division do-er  to an aspect of letter division
+maker. This  project has you  applying your  scripting skills to  write a
+wrapper  script (a  script that,  while at  its core  runs and  relies on
+the  processing  of  some  other command,  will  format/polish/add  other
+functionality to accomplish the task at hand).
+
+Provided  you will  find a  set  of 'ref_ldg0.ARCH'  binaries, as  you've
+commonly seen in other projects this  semester. This is the LONG DIVISION
+GENERATOR you  will use in the  process of crafting some  letter division
+puzzles.  Long  division  differs  from letter  division,  in  that  long
+division is just the numbers that  are calculated. The letter division is
+the encoding scheme where unique letters  are substituted in place of the
+numbers, creating that mystery of the puzzle that drives you to solve it.
+
+There  are certain  features  and functionalities  in  the long  division
+generator that  you will want  to become familiar  with (so that  you can
+call on them as needed). Be sure  to inquire with the program in question
+as to what options are available to  you, and experiment with it to get a
+feel for the tool (since your script will  be calling upon it to do a big
+chunk of the work).
+
+NOTE
+====
+Pertaining to semantics, the core aspect of the activity you are involved
+in performing in this project is NOT "encrypting".
+
+Encrypting can be defined as "convert (information or data) into a cipher
+or  code,  especially to  prevent  unauthorized  access." The  nature  of
+encryption implies the  encrypted data poses no clues as  to its ultimate
+original  identity.  And  with  letter divisions,  the  ENTIRE  point  of
+studying  the letterified  puzzle  IS to  derive clues.  So,  we are  NOT
+encrypting or  decrypting. Although, if  one were completely  clueless to
+the nature of numbers, mathematics, and  logic, the puzzle would be quite
+effectively encrypted, with little to  no recourse of decrypting it. But:
+I've not  given you unsolvable puzzles,  nor have I withheld  the various
+observed strategies  one can employ.  Therefore, we are not  dealing with
+encryption/decryption.
+
+What we ARE doing is a form of "cipher", or more generically, "code":
+
+  * cipher: a secret  or disguised way of writing; a  code. As an archaic
+    but rather apropos use: to do arithmetic.
+
+  * code:  a  system  of  words,   letters,  figures,  or  other  symbols
+    substituted  for  other  words,  letters, etc.,  especially  for  the
+    purposes of secrecy.
+
+I would argue that ciphering (or enciphering) implies an obfuscation of a
+PROCESS (how  the switch is  taking place). In  the case of  these letter
+divisions,  we understand  many  aspects of  the  process: SOME  randomly
+selected letter has replaced all instances of one of the numbers.
+
+Therefore, the obfuscation is more surface-level: we've taken the numbers
+originally  generated in  the  puzzle and  substituted  letters in  their
+place. The puzzle has been ENCODED. And it is our job to DECODE it.
+
+TASK
+====
+You are essentially CREATING a letter division generator,  only,  instead
+of needing to create the core long division logic, that has been done for
+you. Instead, you are in a position to receive the raw numbers,  and must
+instead craft a scheme to encode them with random and selectively curated
+letters, along with all the supporting pctX letter division tags, to give
+you a bonafide letter division (everything but difficulty, since we don't
+actually know if the puzzles generated are solvable,  and if they are,  I
+have not yet evaluated them to determine their approximate difficulty.)
+
+The core  of this project is  text processing, with variable  and command
+expansion thrown in for good  measure. Regular Expressions to some extent
+will also simplify the work involved.
+
+This is  also an  exercise in  detail management:  there might,  at first
+glance, seem to be a lot of  details to tend to, but if compartmentalized
+and addressed  in appropriate  form, should  not prove  overwhelming. New
+ideas and  processes being sussed  out, sure,  but all things  to present
+useful learning opportunities that you can apply to other areas.
+
+SPECIFICATIONS
+==============
+Your letter  division   generator  script  (ldg0.sh)  is   to  produce  a
+pctX-candidate puzzle, in  a format suitable for  intake evaluation. This
+is largely  (although not  entirely) the same  as an  actually deployable
+pctX puzzle, but that difference is  really only in the form of evaluated
+determinations  of  difficulty,  and  potential additions  of  hints  ior
+restrictions.
+
+What,  then, are  the  specifications  you should  be  concerned with?  A
+proper, fully-evaluated letter division puzzle should be as follows:
+
+<code>
+           GLJK
+     +---------
+KJKK | GLMBRVLR
+      -VKOKL
+       =====
+        LJBGV
+       -OKVKG
+        =====
+         JJGKL
+        -LKBKV
+         =====
+          KVRMR
+         -JKRKB
+          =====
+           VKMK
+
+base: 10
+letters: BGJKLMOPRV
+key: RBVGPMOLJK
+difficulty: easy
+missing: P
+</code>
+
+Of  note: the  identified base  tag SHOULD  ALWAYS be  the first  listed,
+following a full  blank line separating the puzzle data  from its tags at
+the bottom.  After that, letters, then  key. The others can  occur in any
+order.
+
+A  "solve4" puzzle  will have  a  necessary addition  of "quotient:"  and
+"remainder:" tags  at the bottom  of the  puzzle, since the  quotient and
+remainder are masked  out with question marks in that  category of puzzle
+(and the master copy needs SOME reference to the actual information).
+
+The big  difference between this  puzzle and  the one your  script should
+produce,  is that  the "difficulty:"  tag should  default to  a value  of
+'nonrated', which  is the scheme  I use when I  queue up new  puzzles for
+evaluation.
+
+You'll note  that SOME tags are  already provided, so you  simply have to
+add the others, as needed. Also, you should note that you don't see every
+possible tag on every puzzle. If there are no restrictions, there will be
+no "restrictions:" tag, for instance.
+
+The ldg0.sh script contains in a comment  banner up top the text you will
+want to  output for  the help  (keep that format,  simply omit  the three
+consecutive # marks at the start of each line).
+
+TOOLKIT
+=======
+You may want  to ensure you are familiar enough  with the following tools
+and facilities:
+
+  * [(1)
+  * bc(1)
+  * grep(1) - especially the "REGULAR EXPRESSIONS" section
+  * egrep(1) - especially the "REGULAR EXPRESSIONS" section
+  * sed(1)
+  * tr(1)
+  * sort(1)
+  * uniq(1)
+  * arrays and for loops in bash(1)
+  * command expansions in bash(1)
+  * the RANDOM variable in bash(1)
+
+FUN  FACT: you  can  SEARCH  for strings/patterns  in  a  manual page  by
+typing  '/' then  the string/pattern  as  desired. For  instance, if  you
+wanted to  know more  about the  "RANDOM" variable in  bash, open  up the
+bash  manual page,  and type  "/RANDOM" (case  matters, and  you can  use
+regular expressions  to enhance your  pattern). The next match  should be
+highlighted and position  on the page adjusted. Navigate with  "n" to get
+the next match, and "N" to get the previous.
+
+EXAMPLES
+========
+A fully operational script should  have certain predictable outputs, when
+given specific variables  and options as input. For  example, your script
+should be able to reproduce the puzzle above by running it as follows:
+
+<cli>
+yourpi:~/src/SEMESTER/unix/ldg0$ ./ldg0.sh RBVGPMOLJK 9899 37510270
+           GLJK
+     +---------
+KJKK | GLMBRVLR
+      -VKOKL
+       =====
+        LJBGV
+       -OKVKG
+        =====
+         JJGKL
+        -LKBKV
+         =====
+          KVRMR
+         -JKRKB
+          =====
+           VKMK
+
+base: 10
+letters: BGJKLMOPRV
+key: RBVGPMOLJK
+difficulty: nonrated
+missing: P
+</cli>
+
+You could also just as easily turn it into a solve4 puzzle:
+
+<cli>
+yourpi:~/src/SEMESTER/unix/ldg0$ ./ldg0.sh RBVGPMOLJK 9899 37510270 solve4
+       ????????
+     +---------
+KJKK | GLMBRVLR
+      -VKOKL
+       =====
+        LJBGV
+       -OKVKG
+        =====
+         JJGKL
+        -LKBKV
+         =====
+          KVRMR
+         -JKRKB
+          =====
+          ?????
+
+base: 10
+letters: BGJKLMOPRV
+key: RBVGPMOLJK
+difficulty: nonrated
+quotient: GLJK
+remainder: VKMK
+missing: P
+</cli>
+
+Getting it to  issue help is as  easy as providing "help"  as an argument
+(check for help before doing ANYTHING else, then you won't run into nasty
+information conflicts):
+
+<cli>
+yourpi:~/src/SEMESTER/unix/ldg0$ ./ldg0.sh help
+
+  ldg0.sh - letter division generator script (wrapper around the long
+            division generator provided with project resources). This
+            script is to make letter division puzzles,  output in the
+            class pctX format.
+
+     usage: [VARIABLE...] ldg0.sh KEY DIVISOR DIVIDEND [OPTION...]
+
+      KEY - will be the first argument (${1}), encoded in puzzle base
+            and listed as a string, in ascending order from the  zero
+            letter through the highest counting value letter.  If the
+            string "random" is present,  key will instead be randomly
+            generated.
+
+  DIVISOR - will  be the  second  argument (${2}),  encoded in  puzzle
+            base. If  instead "random#" is  provided, where #  is some
+            number  for  use as  the  length  of that  component,  the
+            divisor  will end  up  being randomly  generated (to  that
+            length).
+
+ DIVIDEND - will be the third argument (${3}),  encoded in the puzzle
+            base. If instead "random#" is provided,  where # is  some
+            number for use as the length of that component, that will
+            then indicate the dividend is to be randomly generated to
+            the implied length.
+
+   option - description (potential optional arguments beyond ${3})
+ ========   =============================================================
+     both   show both long division and letter division in script output
+    nokey   do not include puzzle key in output. Store in "puzzle.key"
+ sanitize   do not use potentially confusing symbols (B,D,I,O,S,Z)
+     save   instead of displaying to STDOUT, save to "puzzle"
+   solve4   generate puzzle in solve4 format
+     help   display this help and exit
+
+ variable - description                                 default
+ ========   =========================================   =======
+     BASE   set puzzle base (6-16)                      10
+    TERMS   set number of puzzle terms                  null
+
+</cli>
+
+Utilizing the random functionality (and specifying the base):
+
+<cli>
+yourpi:~/src/SEMESTER/unix/ldg0$ BASE=6 ./ldg0.sh random random4 random6
+           QP
+     +-------
+EWXP | QWXEPE
+      - EWXP
+       =====
+        WEWJE
+       -WPQPP
+        =====
+         QQXQ
+
+base: 6
+key: JQXWPE
+letters: EJPQWX
+difficulty: nonrated
+</cli>
+
+SUBMIT
+======
+Since there  is a  Makefile provided,  you can submit  once you  get your
+content back on lab46, and run "make submit"
