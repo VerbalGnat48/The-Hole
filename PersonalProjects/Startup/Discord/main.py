@@ -13,5 +13,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)
-client.run('MTM4NTA0ODA1MjEyNDg4MDkzNw.G36qQz.VrHljZc9Pm9xSiyjc-sTeUswn5MUz4pOoJWN8Y')
-
+dotenv_path="~/.env"
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
+client.run(TOKEN)

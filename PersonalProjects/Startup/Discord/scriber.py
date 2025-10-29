@@ -52,7 +52,10 @@ async def on_message(message):
 				f.write(f"{msg.author.name}: {msg.content}\n")
 		await channel.send("Done Logging")
 
-client.run("MTM4NTA0ODA1MjEyNDg4MDkzNw.G36qQz.VrHljZc9Pm9xSiyjc-sTeUswn5MUz4pOoJWN8Y") #Replace with your bot's token
+dotenv_path="~/.env"
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
+client.run(TOKEN)
 
 #----------------------------
 # Remove any non "@" lines
