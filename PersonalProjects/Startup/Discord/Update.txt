@@ -1,0 +1,2 @@
+Maybe tac file if needed
+cat new.txt >> ../Quotes/QuoteBook
