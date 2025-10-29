@@ -4,6 +4,8 @@ This shows the various iterations of my cgf journey.
 
 Various card games that show the use of doubly-linked lists.
 
+Was made in Fall, 2024 from 10/02 -> 10/23 with each version being a different week during that time.
+
 ////////// cgf objectives //////////
 
 cgf0 - Lay the framework for our doubly-linked list: implement a deck of cards where you can display piles of cards, navigating through and showing each card in the deck (forward and backward).
