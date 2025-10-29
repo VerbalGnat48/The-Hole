@@ -1,6 +1,8 @@
 # This example requires the 'message_content' intent.
 
 import discord
+import os
+from dotenv import load_dotenv
 
 class MyClient(discord.Client):
     async def on_ready(self):
