@@ -1,0 +1,13 @@
+Music:Off
+Image:On
+Quotes:On
+
+Img_tag_Music:On
+Img_tag_Friends:On
+Img_tag_Memes:On
+Img_tag_CompSci:On
+Img_tag_Misc:On
+
+Quo_tag_Comp:On
+Quo_tag_Misc:On
+Quo_tag_Book:On

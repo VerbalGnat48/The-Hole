@@ -1,0 +1,1 @@
+jp2a file --color-depth=24 --height=25
