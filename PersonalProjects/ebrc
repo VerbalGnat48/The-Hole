@@ -1,0 +1,90 @@
+
+#------------------------------------------------
+# This is the bashrc extra stuff I have made for a smoother bash experince
+#
+
+#------------------------------------------------
+# Class Related
+#------------------------------------------------
+export PATH=$PATH:/usr/local/Vircon32/DevTools
+export PATH=$PATH:/opt/local/Vircon32/Emulator
+
+#------------------------------------------------
+# Personal
+#------------------------------------------------
+alias ebrc='vim ~/.bashrc'
+alias sorb='source .bashrc'
+export PATH=$PATH:~/bin
+cdd () { cd "$@" && ls; }
+alias cd='cdd'
+alias DLS='cd /mnt/c/Users/cmazz/Downloads'
+alias Music='cd /mnt/c/Users/cmazz/Music'
+alias Videos='cd /mnt/c/Users/cmazz/Videos'
+alias Pics='cd /mnt/c/Users/cmazz/OneDrive/Pictures'
+
+alias cs='cd /mnt/c/Users/cmazz/OneDrive/Pictures/CS'
+cS () { if [ -z "${1}" ]; then cs; else cs && cd "${1}"; fi }
+alias CS='cS'
+
+#------------------------------------------------
+# Magnum Opus #1
+#------------------------------------------------
+FIND()
+{
+	if [ "${1}" = "PCT" ]; then
+		cd > /dev/null && cd ~/src/fall2024/pct/ > /dev/null
+		if [ -z "${2}" ]; then
+			ls ;
+		else
+			cd pct"${2}";
+		fi
+	elif [ -z "${2}" ]; then
+		cd > /dev/null && cd $( ls -lR | grep -m 1 "/[A-Za-z0-9-]*${1}" | sed 's/.$//' );
+	elif [ "${2}" = "P" ]; then
+		cd /mnt/c/Users/cmazz/OneDrive/Pictures > /dev/null && cd $( ls -lR | grep -m 1 "/[A-Za-z0-9-]*${1}" | sed 's/.$//' ) ;
+	elif [ "${2}" = "C" ]; then
+		cd /mnt/c/Users/cmazz > /dev/null && cd $( ls | grep "${1}" ) ;
+	elif [ "${2}" = "J" ]; then
+		cd /mnt/c/Users/cmazz/CSCS2420F24 > /dev/null && cd $( ls | grep "${1}" ) ;
+	fi
+
+}
+alias ct='FIND'
+
+PLAY()
+{
+	#sudo apt install sox
+	#sudo apt intsall libsox-fmt-all
+	cd /mnt/c/Users/cmazz/Music/Sound_Effects > /dev/null ;
+	play -q $(ls | grep "${1}" ) ;
+	if [[ -n "$2" ]]
+	then
+		play -q $( ls | grep "${2}" )	
+	fi
+	cd - > /dev/null ;
+}
+alias Play='PLAY'
+
+LIST()
+{
+	printf "==============================\n"
+	cd /mnt/c/Users/cmazz/Music/Sound_Effects > /dev/null && ls -1 && cd - > /dev/null ;
+	printf "==============================\n"
+}
+alias Playlist='LIST'
+
+#------------------------------------------------
+# Startup
+#------------------------------------------------
+~/The-Hole/PersonalProjects/Startup/startup.sh
+
+
+
+
+
+
+
+
+
+
+
