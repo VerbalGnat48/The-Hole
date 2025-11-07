@@ -10,7 +10,7 @@ function addTask() {
 
 		let timeDiff = new Date(dueDate) - new Date();
 		if(timeDiff > 0) {
-			setTimeout(() => alert(`Reminder: ${taskInput} is due!`), timeDiff);
+			setTimeout( () => alert(`Reminder: ${taskInput} is due!`), timeDiff);
 		}
 	}
 }
