@@ -3,10 +3,20 @@
 //
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("list-container");
+const inputFile = document.getElementById("input-file");
+
+inputFile.addEventListener("change", uploadImage);
 
 /////////////////////////////////////////////////
 // Methods
 //
+
+//Image Upload
+function uploadImage() {
+//	if( inputFile.value != "" ) {
+		let imgLink = URL.createObjectURL(inputFile.files[0]);
+//	}
+}
 
 //Add Task
 function addTask() {
@@ -18,9 +28,12 @@ function addTask() {
 		alert("You must provide a time!");
 	}
 	else {
+		//Making Task
 		let li = document.createElement("li");
 		li.innerHTML = `${inputBox.value} is due at ${new Date(dueDate).toLocaleString()}`;
 		listContainer.appendChild(li);
+
+		//Adding "x"
 		let span = document.createElement("span");
 		span.innerHTML = "\u00d7";
 		li.appendChild(span);
@@ -36,7 +49,8 @@ function addTask() {
 
 //Add/Remove Task
 listContainer.addEventListener("click", function(e) {
-	if(e.target.tagName === "LI") {
+	//Can't "uncheck" task
+	if(e.target.tagName === "LI" && !e.target.classList.contains("checked") ) {
 		e.target.classList.toggle("checked");
 		saveData();
 	}

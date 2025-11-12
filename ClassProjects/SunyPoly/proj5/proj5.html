@@ -11,16 +11,20 @@
 		<div class="todo-app">
 			<h2>To-Do List</h2>
 			<div class="row">
-				<input type="text" id="input-box" placeholder="Add your text">
-				<button onclick="addTask()">Add</button>
-				<button onclick="clearTask()">Reset</button>
+					<input type="text" id="input-box" placeholder="Add your text">
+					<button onclick="addTask()">Add</button>
+					<button onclick="clearTask()">Reset</button>
 			</div>
 			<div class="row">
 				<input type="datetime-local" id="due-date">
 			</div>
-			<ol reversed id="list-container"></ol>
+			<!<label for="input-file" id="drop-area">
+				<ol id="list-container"></ol>
+				<input type="file" accept="image/*" id="input-file"> <!hidden>
+			<!</label>
 		</div>
 	</div>
 	<script src="./js-css/proj5.js"></script>
 </body>
 </html>
+
