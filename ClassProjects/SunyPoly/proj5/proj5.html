@@ -1,45 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Paper 5 Project</title>
+	<title>To-Do</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="./toast/toast.css">
-	<style type="text/css">
-		.Coin {
-			position:absolute;
-			margin-left:0px;
-			margin-top:0px;
-		}
-
-		.alert {
-			padding:20px;
-			background-color:#f44336; /* Red */
-			color:white;
-			margin-bottom:15px;
-		}
-		.closebtn {
-			margin-left:15px;
-			color:white;
-			font-weight:bold;
-		 	float:right;
-			font-size:22px;
-			line-height:20px;
-			cursor:pointer;
-			transition:0.3s;
-		}
-		.closebtn:hover {
-			clolr:black;
-		}
-	</style>
+	<link rel="stylesheet" href="./js-css/proj5.css">
 </head>
 <body>
-<!--	<h1>Ass Jim</h1>
-	<div class="Coin">
-		<img src="Joe-Coin.png" alt="Token" width="100" height="100" class="Coin"> </div>
-	<div class="alert">
-  		<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> </div>
--->
-	<script src="./toast/toast.js"></script>
+	<div class="container">
+		<div class="todo-app">
+			<h2>To-Do List</h2>
+			<div class="row">
+				<input type="text" id="input-box" placeholder="Add your text">
+				<button onclick="addTask()">Add</button>
+				<button onclick="clearTask()">Reset</button>
+			</div>
+			<div class="row">
+				<input type="datetime-local" id="due-date">
+			</div>
+			<ol reversed id="list-container"></ol>
+		</div>
+	</div>
+	<script src="./js-css/proj5.js"></script>
 </body>
 </html>

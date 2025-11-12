@@ -21,9 +21,9 @@ function addTask() {
 		let li = document.createElement("li");
 		li.innerHTML = `${inputBox.value} is due at ${new Date(dueDate).toLocaleString()}`;
 		listContainer.appendChild(li);
-		let span = document.createElement("span");
-		span.innerHTML = "\u00d7";
-		li.appendChild(span);
+		let kill = document.createElement("span");
+		kill.innerHTML = "\u00d7";
+		li.appendChild(kill);
 
 		let timeDiff = new Date(dueDate) - new Date();
 			if(timeDiff > 0) {
@@ -39,8 +39,9 @@ listContainer.addEventListener("click", function(e) {
 	if(e.target.tagName === "LI") {
 		e.target.classList.toggle("checked");
 		saveData();
+//		localStorage.clear();
 	}
-	else if(e.target.tagName === "SPAN") {
+	else if(e.target.tagName === "KILL") {
 		e.target.parentElement.remove();
 		saveData();
 	}
@@ -54,11 +55,6 @@ function saveData() {
 //Show Task
 function showTask() {
 	listContainer.innerHTML = localStorage.getItem("data");
-}
-
-//Clear Tasks
-function clearTask() {
-	localStorage.clear();
 }
 
 
