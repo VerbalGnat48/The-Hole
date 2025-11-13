@@ -33,14 +33,14 @@
 	padding-left:20px;
 	margin-bottom:25px;
 }
-input{
+.row input{
 	flex:1;
 	border:none;
 	outline:none;
 	background:transparent;
 	padding:10px;
 }
-button{
+.row button{
 	border:none;
 	outline:none;
 	padding:16px 50px;
