@@ -51,7 +51,7 @@
 	border-radius:10px;
 }
 /* Tasks */
-ol li{
+#task-list li{
 	list-style:none;
 	font-size:17px;
 	padding:12px 8px 12px 50px;
@@ -60,7 +60,7 @@ ol li{
 	position:relative;
 	color:#ff3f37;
 }
-ol li::before{
+#task-list li::before{
 	content:'';
 	position:absolute;
 	height:28px;
@@ -72,17 +72,17 @@ ol li::before{
 	top:12px;
 	left:8px;
 }
-ol li.checked{
+#task-list li.checked{
 	color:#555;
 	text-decoration:line-through;
 }
-ol li.checked::before{
+#task-list li.checked::before{
 	background-image:url(../Images/Joe-Coin.png);
 }
 
 /*Delete task stuff*/
 /*X*/
-ol li span{
+#task-list li #remover{
 	position:absolute;
 	right:0;
 	top:5px;
@@ -94,7 +94,7 @@ ol li span{
 	text-align:center;
 	border-radius:50%;
 }
-ol li span:hover{
+#task-list li #remover:hover{
 	background:#edeef0;
 }
 

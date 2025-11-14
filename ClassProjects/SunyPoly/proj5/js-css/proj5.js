@@ -2,7 +2,7 @@
 // Values and Variables
 //
 const inputBox = document.getElementById("input-box");
-const listContainer = document.getElementById("list-container");
+const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
 
 inputFile.addEventListener("change", uploadImage);
@@ -35,8 +35,12 @@ function addTask() {
 
 		//Adding "x"
 		let span = document.createElement("span");
+		span.id = "remover";
 		span.innerHTML = "\u00d7";
 		li.appendChild(span);
+
+		//Adding the photo upload
+//		let button = document.createElement("button");
 
 		let timeDiff = new Date(dueDate) - new Date();
 			if(timeDiff > 0) {
@@ -54,7 +58,7 @@ listContainer.addEventListener("click", function(e) {
 		e.target.classList.toggle("checked");
 		saveData();
 	}
-	else if(e.target.tagName === "SPAN") {
+	else if(e.target.tagName === "SPAN" && e.target.id === "remover" ) {
 		e.target.parentElement.remove();
 		saveData();
 	}
