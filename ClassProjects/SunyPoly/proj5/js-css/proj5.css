@@ -88,7 +88,7 @@
 	top:5px;
 	width:40px;
 	height:40px;
-	font-size=22px;
+	font-size;22px;
 	color:#555;
 	line-height:40px;
 	text-align:center;
@@ -99,4 +99,58 @@
 }
 
 
+#task-list li #uploadBtn{
+	position:absolute;
+	right:50px;
+	top:5px;
+	width:40px;
+	height:40px;
+	font-size;22px;
+	color:#555;
+	line-height:40px;
+	text-align:center;
+	border-radius:50%;
+	cursor:pointer;
+}
 
+#task-list li #uploadBtn:hover{
+	background:#edeef0;
+}
+
+#task-list li #fileInput{
+	position:absolute;
+	right:100px;
+	top:5px;
+	width:40px;
+	height:40px;
+	font-size;22px;
+	color:#555;
+	line-height:40px;
+	text-align:center;
+	border-radius:50%;
+	cursor:progress;
+}
+
+#task-list li input {
+	display:none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*/

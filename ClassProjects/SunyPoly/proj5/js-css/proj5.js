@@ -11,13 +11,6 @@ inputFile.addEventListener("change", uploadImage);
 // Methods
 //
 
-//Image Upload
-function uploadImage() {
-//	if( inputFile.value != "" ) {
-		let imgLink = URL.createObjectURL(inputFile.files[0]);
-//	}
-}
-
 //Add Task
 function addTask() {
 	let dueDate = document.getElementById("due-date").value;
@@ -40,7 +33,11 @@ function addTask() {
 		li.appendChild(span);
 
 		//Adding the photo upload
-//		let button = document.createElement("button");
+		let uploadBtn = document.createElement("label");
+		uploadBtn.htmlFor = "input-file"
+		uploadBtn.id = "uploadBtn";
+		uploadBtn.innerHTML = "\u0055";
+		li.appendChild(uploadBtn);
 
 		let timeDiff = new Date(dueDate) - new Date();
 			if(timeDiff > 0) {
@@ -77,6 +74,13 @@ function showTask() {
 //Clear Tasks
 function clearTask() {
 	localStorage.clear();
+}
+
+//Image Upload
+function uploadImage() {
+	if( inputFile.value != "" ) {
+		let imgLink = URL.createObjectURL(inputFile.files[0]);
+	}
 }
 
 
