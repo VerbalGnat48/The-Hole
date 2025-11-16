@@ -147,8 +147,12 @@
 	cursor:pointer;
 	border-radius:50%;
 	margin-bottom:25px;
+	margin-right:14px;
 }
 
+.day-buttons button.selected {
+	background:#ff5945;
+}
 
 
 

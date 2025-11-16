@@ -4,6 +4,7 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
+const day = document.getElementById("days");
 
 /////////////////////////////////////////////////
 // Event Listeners
@@ -58,15 +59,17 @@ function addTask() {
 
 //Add/Remove Task
 listContainer.addEventListener("click", function(e) {
-	//Can't "uncheck" task
+	//Check off a task that is unchecked
 	if(e.target.tagName === "LI" && !e.target.classList.contains("checked") ) {
 		e.target.classList.toggle("checked");
 		saveData();
 	}
+	//Remove Button
 	else if(e.target.tagName === "SPAN" && e.target.id === "remover" ) {
 		e.target.parentElement.remove();
 		saveData();
 	}
+	//Upload Button that checks for image before deleting task
 	else if( e.target.tagName === "LABEL" && e.target.id === "uploadBtn") {
 		var fileName = inputFile.value;
 		if( inputFile.files.length <= 0 ) {
@@ -105,6 +108,13 @@ function uploadImage() {
 	}
 }
 
+//Day Button Stuff
+day.addEventListener("click", function(e) {
+	e.target.classList.toggle("selected");
+	if(e.target.id === "monday") {
+		alert("Monday");
+	}
+});
 
 
 /////////////////////////////////////////////////
