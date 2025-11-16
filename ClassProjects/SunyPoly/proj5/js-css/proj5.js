@@ -5,7 +5,10 @@ const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
 
-inputFile.addEventListener("change", uploadImage);
+/////////////////////////////////////////////////
+// Event Listeners
+//
+//inputFile.addEventListener("change", uploadImage);
 
 /////////////////////////////////////////////////
 // Methods
@@ -31,6 +34,11 @@ function addTask() {
 		span.id = "remover";
 		span.innerHTML = "\u00d7";
 		li.appendChild(span);
+
+		let uploads = document.createElement("input");
+		uploads.type = "file";
+		uploads.accept = "image/*";
+		uploads.id = "input-file";
 
 		//Adding the photo upload
 		let uploadBtn = document.createElement("label");
@@ -59,6 +67,20 @@ listContainer.addEventListener("click", function(e) {
 		e.target.parentElement.remove();
 		saveData();
 	}
+	else if( e.target.tagName === "LABEL" && e.target.id === "uploadBtn") {
+		var fileName = inputFile.value;
+		if( inputFile.files.length <= 0 ) {
+			inputFile.addEventListener("change", uploadImage);
+			//Set a "image uploaded" variable in e
+			inputFile.addEventListener("change", (event) => {
+				if(event.target.files.length > 0) {
+					e.target.parentElement.remove();
+					saveData();
+					window.location.reload();
+				}
+			});
+		}
+	}
 }, false);
 
 //Save Task
@@ -84,11 +106,11 @@ function uploadImage() {
 }
 
 
+
 /////////////////////////////////////////////////
 // "main"
 //
 showTask();
-
 
 
 
