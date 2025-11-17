@@ -29,6 +29,8 @@ function addTask() {
 		let li = document.createElement("li");
 		li.innerHTML = `${inputBox.value} is due at ${new Date(dueDate).toLocaleString()}`;
 		listContainer.appendChild(li);
+		li.name = `${inputBox.value}`;
+		li.data = `${new Date(dueDate)}`;
 
 		//Adding "x"
 		let span = document.createElement("span");
@@ -111,7 +113,7 @@ function uploadImage() {
 //Day Button Stuff
 day.addEventListener("click", function(e) {
 	e.target.classList.toggle("selected");
-	if(e.target.id === "monday") {
+	if(e.target.id === "monday" && e.target.classList.contains("selected") ) {
 		alert("Monday");
 	}
 });
