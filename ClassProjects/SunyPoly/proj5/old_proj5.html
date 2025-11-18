@@ -10,11 +10,19 @@
 	<div class="container">
 		<div class="todo-app">
 			<h2>To-Do List</h2>
-			<img src="./Images/Plant.png" id="plant1" width="300" height="300">
 			<div class="row">
 					<input type="text" id="input-box" placeholder="Add your text">
 					<button onclick="addTask()">Add</button>
 					<button onclick="clearTask()">Reset</button>
+			</div>
+			<div class="day-buttons" id="days">
+				<button id="sunday">S</button>
+				<button id="monday">M</button>
+				<button id="tuesday">T</button>
+				<button id="wednesday">W</button>
+				<button id="thursday">TH</button>
+				<button id="fridays">F</button>
+				<button id="saturday">S</button>
 			</div>
 			<div class="row">
 				<input type="datetime-local" id="due-date">

@@ -4,7 +4,7 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
-const plant = document.getElementById("plant1");
+const day = document.getElementById("days");
 
 /////////////////////////////////////////////////
 // Event Listeners
@@ -14,24 +14,6 @@ const plant = document.getElementById("plant1");
 /////////////////////////////////////////////////
 // Methods
 //
-
-var plantUpdateFlag = true;
-var sepia = 0;
-function updatePlant() {
-	//Get seconds since epoch
-	var nowSeconds = Math.floor(Date.now()/1000);
-
-	if(plantUpdateFlag === true) {
-		plantUpdateFlag = false;
-		plant.name = nowSeconds + 10-1;
-	}
-	//Make plant "sicker" every time task isn't done in time
-	else if(plant.name <= nowSeconds) {
-		plantUpdateFlag = true;
-		sepia += 0.25;
-		plant1.style.filter = 'sepia('+sepia+')';
-	}
-}
 
 //Add Task
 function addTask() {
@@ -69,7 +51,7 @@ function addTask() {
 		li.appendChild(uploadBtn);
 
 		let timeDiff = new Date(dueDate) - new Date();
-		if(timeDiff > 0) {
+			if(timeDiff > 0) {
 			setTimeout( () => alert(`Reminder: ${inputBox.value} is due!`), timeDiff);
 		}
 	}
@@ -128,13 +110,20 @@ function uploadImage() {
 	}
 }
 
+//Day Button Stuff
+day.addEventListener("click", function(e) {
+	e.target.classList.toggle("selected");
+	if(e.target.id === "monday" && e.target.classList.contains("selected") ) {
+		alert("Monday");
+	}
+});
 
 
 /////////////////////////////////////////////////
 // "main"
 //
-setInterval(updatePlant, 1000);
 showTask();
+
 
 
 

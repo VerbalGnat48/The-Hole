@@ -1,4 +1,3 @@
-
 *{
 	margin:0;
 	padding:0;
@@ -10,11 +9,6 @@
 	min-height:100vh;
 	background:linear-gradient(135deg,#153677,#4e085f);
 	padding:10px;
-}
-img {
-	display:block;
-	margin-left:auto;
-	margin-right:auto;
 }
 .todo-app{
 	width:100%;
@@ -141,6 +135,24 @@ img {
 	display:none;
 }
 
+/* Day Buttons */
+.day-buttons button {
+	border:none;
+	outline:none;
+	width:50px;
+	height:50px;
+	background:#edeef0;
+	justify-content:center;
+	font-size:0.8rem;
+	cursor:pointer;
+	border-radius:50%;
+	margin-bottom:25px;
+	margin-right:14px;
+}
+
+.day-buttons button.selected {
+	background:#ff5945;
+}
 
 
 
