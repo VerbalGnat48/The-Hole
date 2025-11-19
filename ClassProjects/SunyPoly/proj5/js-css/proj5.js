@@ -15,11 +15,13 @@ const plant = document.getElementById("plant1");
 // Methods
 //
 
+
 var plantUpdateFlag = true;
 var sepia = 0;
 function updatePlant() {
 	//Get seconds since epoch
 	var nowSeconds = Math.floor(Date.now()/1000);
+	var plantHealth = document.getElementById("waterCountOne").innerHTML;
 
 	if(plantUpdateFlag === true) {
 		plantUpdateFlag = false;
@@ -30,6 +32,8 @@ function updatePlant() {
 		plantUpdateFlag = true;
 		sepia += 0.25;
 		plant1.style.filter = 'sepia('+sepia+')';
+		plantHealth -= 25;
+		document.getElementById("waterCountOne").innerHTML = plantHealth;
 	}
 }
 
