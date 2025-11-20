@@ -33,15 +33,17 @@ img {
 .waterCounter {
 	width:100%;
 	max-width:100px;
-	display:flex;
 	background:#395a83;
 	border-radius:30px;
 	margin-bottom:25px;
 	margin-left:auto;
 	margin-right:auto;
-	padding:16px 35px;
-	text-align:center;
+	padding:10px;
 	color:#fff;
+}
+.waterCounter span {
+	display:flex;
+	justify-content:center;
 }
 .row{
 	display:flex;

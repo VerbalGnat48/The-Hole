@@ -1,10 +1,20 @@
 /////////////////////////////////////////////////
 // Values and Variables
 //
+
+//Input
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
+
+//Plants
 const plant = document.getElementById("plant1");
+const plantDecayTime = 5-1;
+var plantUpdateFlag = false;
+var hasTask = false;
+var sepia = 0;
+var plantHealth = document.getElementById("waterCountOne").innerHTML;
+var firstRun = true;
 
 /////////////////////////////////////////////////
 // Event Listeners
@@ -15,25 +25,33 @@ const plant = document.getElementById("plant1");
 // Methods
 //
 
-
-var plantUpdateFlag = true;
-var sepia = 0;
 function updatePlant() {
-	//Get seconds since epoch
-	var nowSeconds = Math.floor(Date.now()/1000);
-	var plantHealth = document.getElementById("waterCountOne").innerHTML;
+	if(plantHealth > 0 && listContainer.hasChildNodes() ) {
+		//Check if Plant should be active
+		hasTask = false;
+		for(var i=0; i<listContainer.children.length; i++) {
+			if(listContainer.children[i].tagName === "LI") {
+				hasTask = true;
+			}
+		}
+		if(hasTask) {
+			//Get seconds since epoch
+			var nowSeconds = Math.floor(Date.now()/1000);
 
-	if(plantUpdateFlag === true) {
-		plantUpdateFlag = false;
-		plant.name = nowSeconds + 10-1;
-	}
-	//Make plant "sicker" every time task isn't done in time
-	else if(plant.name <= nowSeconds) {
-		plantUpdateFlag = true;
-		sepia += 0.25;
-		plant1.style.filter = 'sepia('+sepia+')';
-		plantHealth -= 25;
-		document.getElementById("waterCountOne").innerHTML = plantHealth;
+			if(plantUpdateFlag === true || firstRun) {
+				plantUpdateFlag = false;
+				plant.name = nowSeconds + plantDecayTime;
+				firstRun = false;
+			}
+			//Make plant "sicker" every time task isn't done in time
+			else if(plant.name <= nowSeconds) {
+				plantUpdateFlag = true;
+				sepia += 0.25;
+				plant1.style.filter = 'sepia('+sepia+')';
+				plantHealth -= 25;
+				document.getElementById("waterCountOne").innerHTML = plantHealth;
+			}
+		}
 	}
 }
 
@@ -72,6 +90,9 @@ function addTask() {
 		uploadBtn.innerHTML = "\u0055";
 		li.appendChild(uploadBtn);
 
+		//Updating Plant Stuff
+		plantUpdateFlag = true;
+
 		let timeDiff = new Date(dueDate) - new Date();
 		if(timeDiff > 0) {
 			setTimeout( () => alert(`Reminder: ${inputBox.value} is due!`), timeDiff);
@@ -90,7 +111,7 @@ listContainer.addEventListener("click", function(e) {
 	}
 	//Remove Button
 	else if(e.target.tagName === "SPAN" && e.target.id === "remover" ) {
-		e.target.parentElement.remove();
+		e.target.parentNode.remove();
 		saveData();
 	}
 	//Upload Button that checks for image before deleting task
@@ -137,9 +158,9 @@ function uploadImage() {
 /////////////////////////////////////////////////
 // "main"
 //
+
 setInterval(updatePlant, 1000);
 showTask();
-
 
 
 
