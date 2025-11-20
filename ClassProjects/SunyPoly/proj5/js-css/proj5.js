@@ -122,6 +122,13 @@ listContainer.addEventListener("click", function(e) {
 			//Set a "image uploaded" variable in e
 			inputFile.addEventListener("change", (event) => {
 				if(event.target.files.length > 0) {
+					if(plantHealth < 100) {
+						plantHealth += 25;
+						sepia -= 0.25;
+						plant1.style.filter = 'sepia('+sepia+')';
+						document.getElementById("waterCountOne").innerHTML = plantHealth;
+					}
+
 					e.target.parentElement.remove();
 					saveData();
 					window.location.reload();
