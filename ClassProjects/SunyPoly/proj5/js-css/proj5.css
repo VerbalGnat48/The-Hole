@@ -56,12 +56,23 @@
 	display:flex;
 	flex-wrap:wrap;
 	justify-content:center;
-	background-color: rgba(255, 255, 255, 0.6)
+	background-color: rgba(255, 255, 255, 0.6);
+	text-align:center;
 }
 .plant img {
 	cursor:pointer;
 	width:100px;
 	height:100px;
+}
+.plant p {
+	width:50px;
+	height:20px;
+	justify-content:center;
+	text-align:center;
+	background:#395a83;
+	border-radius:10px;
+	margin:auto;
+	color:#fff;
 }
 
 /* Task Buttons */

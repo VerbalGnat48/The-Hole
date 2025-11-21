@@ -6,15 +6,67 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
+const plantContainer = document.getElementById("plants");
 
-/////////////////////////////////////////////////
-// Event Listeners
-//
-//inputFile.addEventListener("change", uploadImage);
+var plantDecayRate = 5-1;
+var plantDecayValue = 25;
+var firstRun = true;
+var plantUpdateFlag = false;
 
 /////////////////////////////////////////////////
 // Methods
 //
+
+function addPlants() {
+	//Add plantContainer Child
+	const plant = document.createElement("div");
+	var plantInstance = plantContainer.children.length;
+	//Plant Child 0
+	plant.className = "plant";
+	plant.id = `plant${plantInstance}`;
+	plant.innerHTML = `<img src="./Images/Plant.png">`;
+	plantContainer.appendChild(plant);
+	//Plant Child 1
+	const water = document.createElement("p");
+	water.innerHTML = "100";
+	water.name = "100";
+	plant.appendChild(water);
+	plant.style.filter = `sepia(`+(1.00 - (parseInt(water.name)/100))+`)`;
+	savePlant();
+	showPlant();
+}
+
+function updatePlants() {
+	if(listContainer.hasChildNodes() ) {
+		//Get time since epoch in seconds
+		var nowSeconds = Math.floor(Date.now()/1000);
+		if(plantUpdateFlag || firstRun) {
+			plantUpdateFlag = false;
+			for(var i=0; i<plantContainer.children.length; i++) {
+				var plant = plantContainer.children[i];
+				plant.children[0].name = nowSeconds + plantDecayRate;
+			}
+			firstRun = false;
+		}
+		//Plant Decay
+		else {
+			for(var i=0; i<plantContainer.children.length; i++) {
+				var plant = plantContainer.children[i];
+				var sec = parseInt(plant.children[0].name);
+				var health = parseInt(plant.children[1].innerHTML);
+				if(sec <= nowSeconds && health > 0) {
+					plantUpdateFlag = true;
+					health -= plantDecayValue;
+					plant.children[1].innerHTML = health.toString();
+					plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+					plant.children[1].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+				}
+			}
+		}
+		savePlant();
+	}
+}
+
 
 //Add Task
 function addTask() {
@@ -80,8 +132,24 @@ listContainer.addEventListener("click", function(e) {
 			//Set a "image uploaded" variable in e
 			inputFile.addEventListener("change", (event) => {
 				if(event.target.files.length > 0) {
+					//Plants
+					if(plantContainer.hasChildNodes() ) {
+						for(var i=0; i<plantContainer.children.length; i++) {
+							var plant = plantContainer.children[i];
+							let health = parseInt(plant.children[1].innerHTML);
+							//Plant Improve
+							if(health < 100) {			
+								health += plantDecayValue;
+								plant.children[1].innerHTML = health.toString();
+								plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+								plant.children[1].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+							}
+						}
+					}
+					//Tasks
 					e.target.parentElement.remove();
 					saveTask();
+					savePlant();
 					window.location.reload();
 				}
 			});
@@ -90,17 +158,7 @@ listContainer.addEventListener("click", function(e) {
 }, false);
 
 
-function addPlants() {
-	const plantContainer = document.getElementById("plants");
-	const plant = document.createElement("div");
-	plant.className = "plant";
-	plant.innerHTML = `<img src="./Images/Plant.png">`;
-	plantContainer.appendChild(plant);
-	savePlant();
-	showPlant();
-}
-
-//Save Task
+//Save Data
 function saveTask() {
 	localStorage.setItem("taskData", listContainer.innerHTML);
 }
@@ -108,15 +166,13 @@ function savePlant() {
 	localStorage.setItem("plantData", plantContainer.innerHTML);
 }
 
-//Show Task
-function showTask() {
+//Show Data
+function showData() {
 	listContainer.innerHTML = localStorage.getItem("taskData");
-}
-function showPlant() {
 	plantContainer.innerHTML = localStorage.getItem("plantData");
 }
 
-//Clear Tasks
+//Clear Data
 function clearScreen() {
 	window.location.reload();
 	localStorage.clear();
@@ -135,9 +191,8 @@ function uploadImage() {
 // "main"
 //
 
-showTask();
-showPlant();
-
+setInterval(updatePlants, 1000);
+showData();
 
 
 
