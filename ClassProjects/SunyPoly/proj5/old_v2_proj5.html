@@ -10,18 +10,18 @@
 	<div class="container">
 		<div class="todo-app">
 			<h2>To-Do List</h2>
-			<div class="plant-maker">
-				<button onclick="addPlants()">More Plants</button>
+			<img src="./Images/Plant.png" id="plant1" width="300" height="300">
+			<div class="waterCounter">
+				<span id="waterCountOne">100</span>
 			</div>
 			<div class="row">
 					<input type="text" id="input-box" placeholder="Add your text">
 					<button onclick="addTask()">Add</button>
-					<button onclick="clearScreen()">Reset</button>
+					<button onclick="clearTask()">Reset</button>
 			</div>
 			<div class="row">
 				<input type="datetime-local" id="due-date">
 			</div>
-			<div class="plants" id="plants"></div>
 			<div class="list-container">
 				<ol id="task-list"></ol>
 				<input type="file" accept="image/*" id="input-file" hidden>

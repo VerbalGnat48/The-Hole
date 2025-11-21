@@ -25,46 +25,26 @@
 	align-items:center;
 	margin-bottom:20px;
 }
-/* Plants */
-.plant-maker{
-	display:flex;
-	align-items:center;
-	justify-content:center;
-	margin-bottom:10px;
-	align:auto;
+img {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
 }
-.plant-maker button {
-	display:flex;
-	align-items:center;
+.waterCounter {
 	width:100%;
 	max-width:100px;
-	margin-right:auto;
-	margin-left:auto;
-	border:none;
-	outline:none;
-	padding:10px;
+	background:#395a83;
+	border-radius:30px;
 	margin-bottom:25px;
-	background:#ff5945;
+	margin-left:auto;
+	margin-right:auto;
+	padding:10px;
 	color:#fff;
-	font-size:16px;
-	cursor:pointer;
-	border-radius:10px;
 }
-
-.plants {
-	min-height:100px;
+.waterCounter span {
 	display:flex;
-	flex-wrap:wrap;
 	justify-content:center;
-	background-color: rgba(255, 255, 255, 0.6)
 }
-.plant img {
-	cursor:pointer;
-	width:100px;
-	height:100px;
-}
-
-/* Task Buttons */
 .row{
 	display:flex;
 	align-items:center;
@@ -142,7 +122,7 @@
 
 #task-list li #uploadBtn{
 	position:absolute;
-	right:40px;
+	right:50px;
 	top:5px;
 	width:40px;
 	height:40px;
@@ -153,9 +133,31 @@
 	border-radius:50%;
 	cursor:pointer;
 }
+
 #task-list li #uploadBtn:hover{
 	background:#edeef0;
 }
+
+#task-list li #fileInput{
+	position:absolute;
+	right:100px;
+	top:5px;
+	width:40px;
+	height:40px;
+	font-size;22px;
+	color:#555;
+	line-height:40px;
+	text-align:center;
+	border-radius:50%;
+	cursor:progress;
+}
+
+#task-list li input {
+	display:none;
+}
+
+
+
 
 
 

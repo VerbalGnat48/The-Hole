@@ -7,6 +7,15 @@ const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
 
+//Plants
+const plant = document.getElementById("plant1");
+const plantDecayTime = 5-1;
+var plantUpdateFlag = false;
+var hasTask = false;
+var sepia = 0;
+var plantHealth = document.getElementById("waterCountOne").innerHTML;
+var firstRun = true;
+
 /////////////////////////////////////////////////
 // Event Listeners
 //
@@ -15,6 +24,36 @@ const inputFile = document.getElementById("input-file");
 /////////////////////////////////////////////////
 // Methods
 //
+
+function updatePlant() {
+	if(plantHealth > 0 && listContainer.hasChildNodes() ) {
+		//Check if Plant should be active
+		hasTask = false;
+		for(var i=0; i<listContainer.children.length; i++) {
+			if(listContainer.children[i].tagName === "LI") {
+				hasTask = true;
+			}
+		}
+		if(hasTask) {
+			//Get seconds since epoch
+			var nowSeconds = Math.floor(Date.now()/1000);
+
+			if(plantUpdateFlag === true || firstRun) {
+				plantUpdateFlag = false;
+				plant.name = nowSeconds + plantDecayTime;
+				firstRun = false;
+			}
+			//Make plant "sicker" every time task isn't done in time
+			else if(plant.name <= nowSeconds) {
+				plantUpdateFlag = true;
+				sepia += 0.25;
+				plant1.style.filter = 'sepia('+sepia+')';
+				plantHealth -= 25;
+				document.getElementById("waterCountOne").innerHTML = plantHealth;
+			}
+		}
+	}
+}
 
 //Add Task
 function addTask() {
@@ -51,13 +90,16 @@ function addTask() {
 		uploadBtn.innerHTML = "\u0055";
 		li.appendChild(uploadBtn);
 
+		//Updating Plant Stuff
+		plantUpdateFlag = true;
+
 		let timeDiff = new Date(dueDate) - new Date();
 		if(timeDiff > 0) {
 			setTimeout( () => alert(`Reminder: ${inputBox.value} is due!`), timeDiff);
 		}
 	}
 	inputBox.value = "";
-	saveTask();
+	saveData();
 }
 
 //Add/Remove Task
@@ -65,12 +107,12 @@ listContainer.addEventListener("click", function(e) {
 	//Check off a task that is unchecked
 	if(e.target.tagName === "LI" && !e.target.classList.contains("checked") ) {
 		e.target.classList.toggle("checked");
-		saveTask();
+		saveData();
 	}
 	//Remove Button
 	else if(e.target.tagName === "SPAN" && e.target.id === "remover" ) {
 		e.target.parentNode.remove();
-		saveTask();
+		saveData();
 	}
 	//Upload Button that checks for image before deleting task
 	else if( e.target.tagName === "LABEL" && e.target.id === "uploadBtn") {
@@ -80,8 +122,15 @@ listContainer.addEventListener("click", function(e) {
 			//Set a "image uploaded" variable in e
 			inputFile.addEventListener("change", (event) => {
 				if(event.target.files.length > 0) {
+					if(plantHealth < 100) {
+						plantHealth += 25;
+						sepia -= 0.25;
+						plant1.style.filter = 'sepia('+sepia+')';
+						document.getElementById("waterCountOne").innerHTML = plantHealth;
+					}
+
 					e.target.parentElement.remove();
-					saveTask();
+					saveData();
 					window.location.reload();
 				}
 			});
@@ -89,36 +138,18 @@ listContainer.addEventListener("click", function(e) {
 	}
 }, false);
 
-
-function addPlants() {
-	const plantContainer = document.getElementById("plants");
-	const plant = document.createElement("div");
-	plant.className = "plant";
-	plant.innerHTML = `<img src="./Images/Plant.png">`;
-	plantContainer.appendChild(plant);
-	savePlant();
-	showPlant();
-}
-
 //Save Task
-function saveTask() {
-	localStorage.setItem("taskData", listContainer.innerHTML);
-}
-function savePlant() {
-	localStorage.setItem("plantData", plantContainer.innerHTML);
+function saveData() {
+	localStorage.setItem("data", listContainer.innerHTML);
 }
 
 //Show Task
 function showTask() {
-	listContainer.innerHTML = localStorage.getItem("taskData");
-}
-function showPlant() {
-	plantContainer.innerHTML = localStorage.getItem("plantData");
+	listContainer.innerHTML = localStorage.getItem("data");
 }
 
 //Clear Tasks
-function clearScreen() {
-	window.location.reload();
+function clearTask() {
 	localStorage.clear();
 }
 
@@ -135,8 +166,9 @@ function uploadImage() {
 // "main"
 //
 
+setInterval(updatePlant, 1000);
 showTask();
-showPlant();
+
 
 
 
