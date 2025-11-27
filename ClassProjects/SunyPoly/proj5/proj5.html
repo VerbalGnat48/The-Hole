@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>To-Do</title>
+	<title>Medication Tracker</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./js-css/proj5.css">
@@ -9,14 +9,20 @@
 <body>
 	<div class="container">
 		<div class="todo-app">
-			<h2>To-Do List</h2>
-			<div class="plant-maker">
-				<button onclick="addPlants()">More Plants</button>
+			<h2>Medication List</h2>
+			<div class="row">
+				<input type="text" id="input-box-plant" placeholder="Select and Name your plant!">
+				<button onclick="addPlants()">Add</button>
+			</div>
+			<div class="plant-types" id="plantTypes">
+				<input type="image" src="./Images/Plant01.png" id="one">
+				<input type="image" src="./Images/Plant02.png" id="two">
+				<input type="image" src="./Images/Plant03.png" id="three">
 			</div>
 			<div class="row">
-					<input type="text" id="input-box" placeholder="Add your text">
-					<button onclick="addTask()">Add</button>
-					<button onclick="clearScreen()">Reset</button>
+				<input type="text" id="input-box" placeholder="Add your text">
+				<button onclick="addTask()">Add</button>
+				<button onclick="clearScreen()">Reset</button>
 			</div>
 			<div class="row">
 				<input type="datetime-local" id="due-date">

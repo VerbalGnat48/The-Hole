@@ -7,33 +7,50 @@ const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("task-list");
 const inputFile = document.getElementById("input-file");
 const plantContainer = document.getElementById("plants");
+const plantType = document.getElementById("plantTypes");
+const inputPlant = document.getElementById("input-box-plant");
 
 var plantDecayRate = 5-1;
 var plantDecayValue = 25;
 var firstRun = true;
-var plantUpdateFlag = false;
+var plantUpdateFlag = true;
+
+var plantFileName;
 
 /////////////////////////////////////////////////
 // Methods
 //
 
 function addPlants() {
-	//Add plantContainer Child
-	const plant = document.createElement("div");
-	var plantInstance = plantContainer.children.length;
-	//Plant Child 0
-	plant.className = "plant";
-	plant.id = `plant${plantInstance}`;
-	plant.innerHTML = `<img src="./Images/Plant.png">`;
-	plantContainer.appendChild(plant);
-	//Plant Child 1
-	const water = document.createElement("p");
-	water.innerHTML = "100";
-	water.name = "100";
-	plant.appendChild(water);
-	plant.style.filter = `sepia(`+(1.00 - (parseInt(water.name)/100))+`)`;
-	savePlant();
-	showPlant();
+	if(plantFileName === '') {
+		alert("You must selcted a plant!");
+	}
+	else if(inputPlant.value === '') {
+		alert("You must provide a name for your plant!");
+	}
+	else {
+		refresh();
+		//Add plantContainer Child
+		const plant = document.createElement("div");
+		var plantInstance = plantContainer.children.length;
+		//Plant Child 0
+		plant.className = "plant";
+		plant.id = `plant${plantInstance}`;
+		plant.innerHTML = `<img src="./Images/${plantFileName}">`;
+		plantContainer.appendChild(plant);
+		//Plant Child 1
+		const name = document.createElement("label");
+		name.innerHTML = inputPlant.value;
+		plant.appendChild(name);
+		//Plant Child 2
+		const water = document.createElement("p");
+		water.innerHTML = "100";														//Plant Healthi Value
+		plant.appendChild(water);
+		plant.style.filter = `sepia(`+(1.00 - (parseInt(water.innerHTML)/100))+`)`;		//Plant Health Visual
+
+		savePlant();
+		showPlant();
+	}
 }
 
 function updatePlants() {
@@ -53,13 +70,13 @@ function updatePlants() {
 			for(var i=0; i<plantContainer.children.length; i++) {
 				var plant = plantContainer.children[i];
 				var sec = parseInt(plant.children[0].name);
-				var health = parseInt(plant.children[1].innerHTML);
+				var health = parseInt(plant.children[2].innerHTML);
 				if(sec <= nowSeconds && health > 0) {
 					plantUpdateFlag = true;
 					health -= plantDecayValue;
-					plant.children[1].innerHTML = health.toString();
+					plant.children[2].innerHTML = health.toString();
 					plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
-					plant.children[1].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+					plant.children[2].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
 				}
 			}
 		}
@@ -136,13 +153,13 @@ listContainer.addEventListener("click", function(e) {
 					if(plantContainer.hasChildNodes() ) {
 						for(var i=0; i<plantContainer.children.length; i++) {
 							var plant = plantContainer.children[i];
-							let health = parseInt(plant.children[1].innerHTML);
+							let health = parseInt(plant.children[2].innerHTML);
 							//Plant Improve
 							if(health < 100) {			
 								health += plantDecayValue;
-								plant.children[1].innerHTML = health.toString();
+								plant.children[2].innerHTML = health.toString();
 								plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
-								plant.children[1].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+								plant.children[2].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
 							}
 						}
 					}
@@ -150,12 +167,21 @@ listContainer.addEventListener("click", function(e) {
 					e.target.parentElement.remove();
 					saveTask();
 					savePlant();
-					window.location.reload();
+					refresh();
 				}
 			});
 		}
 	}
 }, false);
+
+plantType.addEventListener("click", function(e) {
+	for(var i=0; i<plantType.children.length; i++) {
+		plantType.children[i].classList.remove("selected");
+	}
+	e.target.classList.toggle("selected");
+	var plantFullPath = e.target.src;
+	plantFileName = plantFullPath.replace(/^.*[\\\/]/, '');
+});
 
 
 //Save Data
@@ -174,8 +200,12 @@ function showData() {
 
 //Clear Data
 function clearScreen() {
-	window.location.reload();
+	window.location.reload(true);
 	localStorage.clear();
+}
+
+function refresh() {
+	window.location.reload(true);
 }
 
 //Image Upload
