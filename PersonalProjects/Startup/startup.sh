@@ -73,7 +73,7 @@ if [[ -z "$1" ]]; then
 					#-------------------------
 #					directories=$(grep -i "Quo_tag_*.*Yes" Startinfo.txt | sed -e 's/.*tag_\(.*\):.*/\1/')	#Get the desired names of the dirs that have a "Yes"
 					files=$(grep -i "Quo_tag_*.*On" Startinfo.txt | sed -e 's/.*tag_\(.*\):.*/\1/' | sed -e 's/^/*/' | sed -e 's/$/*/')
-					cd ~/Startup/Quotes/ > /dev/null
+					cd ~/The-Hole/PersonalProjects/Startup/Quotes/ > /dev/null
 
 					#Check if x file exists, if so then kill
 					if [ -f "Quotes.txt" ]; then

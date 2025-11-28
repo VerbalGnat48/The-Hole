@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Medication Tracker</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./proj5.css">
+</head>
+<body>
+	<div class="container">
+		<div class="info">
+			<h2>Medication Information</h2>
+			<p>Just like how plants need a strict watering scheuele to stay healthy, so do people taking medication.</p>
+			<p>.</p>
+			<p>There are many consequences of not properly taking your medication like:</p>
+			<p>.</p>
+			<p>1. Worsening of disease</p>
+			<p>2. More Medication costs</p>
+			<p>3. Death</p>
+			<p>.</p>
+			<h2>Tips and Tricks</h2>
+			<p>Take your meds when doing other activities, like when brushing your teeth.</p>
+			<p>.</p>
+			<p>Set Reminders!</p>
+			<p>.</p>
+			<p>Asks freinds and family to help keep you on schedule.</p>
+			<p>.</p>
+			<h2>How This Works</h2>
+			<p>After uploading a task use the "U" button to upload a photo as a simulation of you taking a photo of your medication when you take it.</p>
+			<p>.</p>
+			<p>Plant Decay Rate is set for 10 seconds for testing purposes!</p>
+			<span class="tempInfo" id="info" hidden></span>
+			<p>.</p>
+			<a href=https://docs.google.com/document/d/1tUYw_7UrbIzFFlaCTaXXPE8YZUb7E66mmsc5Iz3k9KY/edit?usp=sharing">Feedback link!</a>
+		</div>
+		<div class="todo-app">
+			<h2>Medication List</h2>
+			<div class="row">
+				<input type="text" id="input-box-plant" placeholder="Select and Name your plant!">
+				<button onclick="addPlants()">Add</button>
+			</div>
+			<div class="plant-types" id="plantTypes">
+				<input type="image" src="./Images/Plant01.png" id="one">
+				<input type="image" src="./Images/Plant02.png" id="two">
+				<input type="image" src="./Images/Plant03.png" id="three">
+			</div>
+			<div class="row">
+				<input type="text" id="input-box" placeholder="Add your text">
+				<button onclick="addTask()">Add</button>
+				<button onclick="clearScreen()">Reset</button>
+			</div>
+			<div class="row">
+				<input type="datetime-local" id="due-date">
+			</div>
+			<div class="plants" id="plants"></div>
+			<div class="list-container">
+				<ol id="task-list"></ol>
+				<input type="file" accept="image/*" id="input-file" hidden>
+			</div>
+		</div>
+	</div>
+	<script src="./proj5.js"></script>
+</body>
+</html>
+
