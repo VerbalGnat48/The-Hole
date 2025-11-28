@@ -9,13 +9,21 @@ const inputFile = document.getElementById("input-file");
 const plantContainer = document.getElementById("plants");
 const plantType = document.getElementById("plantTypes");
 const inputPlant = document.getElementById("input-box-plant");
+const storyNum = document.getElementById("info");
 
-var plantDecayRate = 5-1;
+var plantDecayRate = 10-1;
 var plantDecayValue = 25;
 var firstRun = true;
 var plantUpdateFlag = true;
 
 var plantFileName;
+
+const storyArray = [];
+storyArray[0] = "Dave had a plant. Dave sometimes forgot to water his plant";
+storyArray[1] = "Daves plant started to wilt";
+storyArray[2] = "To fix this Dave started to set reminders";
+storyArray[3] = "Dave watered the plant almost every day";
+storyArray[4] = "The plant got better and never died. The End";
 
 /////////////////////////////////////////////////
 // Methods
@@ -139,7 +147,7 @@ listContainer.addEventListener("click", function(e) {
 	//Remove Button
 	else if(e.target.tagName === "SPAN" && e.target.id === "remover" ) {
 		e.target.parentNode.remove();
-		saveTask();
+		aveTask();
 	}
 	//Upload Button that checks for image before deleting task
 	else if( e.target.tagName === "LABEL" && e.target.id === "uploadBtn") {
@@ -163,6 +171,17 @@ listContainer.addEventListener("click", function(e) {
 							}
 						}
 					}
+					//Story
+					var number = parseInt(storyNum.innerHTML,10);
+					if(storyNum.innerHTML === "" || number === storyArray.length-1) {
+						storyNum.innerHTML = 0;
+					}
+					else if(number < storyArray.length-1 ) {
+						number++;
+						storyNum.innerHTML = number;
+					}
+					alert(storyArray[storyNum.innerHTML]);
+					saveStory();
 					//Tasks
 					e.target.parentElement.remove();
 					saveTask();
@@ -191,11 +210,15 @@ function saveTask() {
 function savePlant() {
 	localStorage.setItem("plantData", plantContainer.innerHTML);
 }
+function saveStory() {
+	localStorage.setItem("storyData", storyNum.innerHTML);
+}
 
 //Show Data
 function showData() {
 	listContainer.innerHTML = localStorage.getItem("taskData");
 	plantContainer.innerHTML = localStorage.getItem("plantData");
+	storyNum.innerHTML = localStorage.getItem("storyData");
 }
 
 //Clear Data
