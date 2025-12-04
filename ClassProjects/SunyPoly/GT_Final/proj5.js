@@ -105,7 +105,7 @@ function addTask() {
 	else {
 		//Making Task
 		let li = document.createElement("li");
-		li.innerHTML = `${inputBox.value} is due at ${new Date(dueDate).toLocaleString()}`;
+		li.innerHTML = `${inputBox.value}<br>is due at ${new Date(dueDate).toLocaleString()}`;
 		listContainer.appendChild(li);
 		li.name = `${inputBox.value}`;
 		li.data = `${new Date(dueDate)}`;
@@ -136,6 +136,24 @@ function addTask() {
 	inputBox.value = "";
 	saveTask();
 }
+
+function openTab(event, tabName) {
+	var i, tabContent, tabLinks;
+	tabContent = document.getElementsByClassName("tabContent");
+	for(i=0; i<tabContent.length; i++) {
+		tabContent[i].style.display = "none";
+	}
+	tabLinks = document.getElementsByClassName("tabLinks");
+	for(i=0; i<tabLinks.length; i++) {
+		tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+	}
+	document.getElementById(tabName).style.display = "block";
+	event.currentTarget.className += " active";
+}
+
+/////////////////////////////////////////////////
+// Listeners
+//
 
 //Add/Remove Task
 listContainer.addEventListener("click", function(e) {
@@ -202,6 +220,10 @@ plantType.addEventListener("click", function(e) {
 	plantFileName = plantFullPath.replace(/^.*[\\\/]/, '');
 });
 
+
+/////////////////////////////////////////////////
+// More Methods
+//
 
 //Save Data
 function saveTask() {
