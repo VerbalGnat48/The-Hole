@@ -74,7 +74,6 @@
 	text-align:center;
 }
 .plant img {
-	cursor:pointer;
 	width:100px;
 	height:100px;
 }
@@ -97,6 +96,17 @@
 	border-radius:10px;
 	margin:auto;
 }
+.plant button {
+	position:absolute;
+	left:15px;
+	width:65px;
+	height:100px;
+	cursor:pointer;
+	word-wrap:break-word;
+	background-color:transparent;
+	color:transparent;
+	border:none;
+}
 .plant-types input {
 	border:none;
 	outline:none;
@@ -112,6 +122,22 @@
 }
 .plant-types input.selected {
 	background:#ff5945;
+}
+#plantRemover {
+	position:absolute;
+	top:0;
+	right:0;
+	cursor:pointer;
+	width:22px;
+	height:22px;
+	font-size;22px;
+	color:#555;
+	text-align:center;
+	border-radius:50%;
+}
+#plantRemover:hover {
+	background:#edeef0;
+	color:red;
 }
 
 /* Task Buttons */

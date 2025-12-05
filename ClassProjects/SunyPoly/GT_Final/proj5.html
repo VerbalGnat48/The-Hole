@@ -7,13 +7,12 @@
 	<link rel="stylesheet" href="./proj5.css">
 </head>
 <body>
+	<div class="water" id="water">
 	<div class="tab">
 		<button class="tabLinks" onclick="openTab(event, 'Info')">Medication Information</button>
 		<button class="tabLinks" onclick="openTab(event, 'Tips')">Tips and Tricks</button>
 		<button class="tabLinks" onclick="openTab(event, 'How')">How This Works</button>
 	</div>
-
-
 	<div class="container">
 		<!---Tabs--->
 		<div class="tabContent" id="Info">
@@ -56,7 +55,7 @@
 				<input type="image" src="./Images/Plant02.png" id="two">
 				<input type="image" src="./Images/Plant03.png" id="three">
 			</div>
-		<!---Medication List--->
+		<!---Task List--->
 			<div class="row">
 				<input type="text" id="input-box" placeholder="Add your task!" maxlength="35">
 				<button onclick="addTask()">Add</button>

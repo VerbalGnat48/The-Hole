@@ -10,6 +10,7 @@ const plantContainer = document.getElementById("plants");
 const plantType = document.getElementById("plantTypes");
 const inputPlant = document.getElementById("input-box-plant");
 const storyNum = document.getElementById("info");
+const waterCount = document.getElementById("water");
 
 var plantDecayRate = 10-1;
 var plantDecayValue = 25;
@@ -28,6 +29,7 @@ storyArray[4] = "The plant got better and never died. The End";
 /////////////////////////////////////////////////
 // Methods
 //
+//get/setAttribute**
 
 function addPlants() {
 	if(plantFileName === '') {
@@ -41,20 +43,26 @@ function addPlants() {
 		//Add plantContainer Child
 		const plant = document.createElement("div");
 		var plantInstance = plantContainer.children.length;
-		//Plant Child 0
+		//Plant Child 0-1
 		plant.className = "plant";
 		plant.id = `plant${plantInstance}`;
-		plant.innerHTML = `<img src="./Images/${plantFileName}">`;
+		plant.innerHTML = `<img src="./Images/${plantFileName}">
+		<button id="plantInteractBtn"></button>`;
 		plantContainer.appendChild(plant);
-		//Plant Child 1
+		//Plant Child 2
 		const name = document.createElement("label");
 		name.innerHTML = inputPlant.value;
 		plant.appendChild(name);
-		//Plant Child 2
+		//Plant Child 3
 		const water = document.createElement("p");
 		water.innerHTML = "100";														//Plant Healthi Value
 		plant.appendChild(water);
 		plant.style.filter = `sepia(`+(1.00 - (parseInt(water.innerHTML)/100))+`)`;		//Plant Health Visual
+		//Child 4
+		const remove = document.createElement("span");
+		remove.id = "plantRemover";
+		remove.innerHTML = "\u00d7";
+		plant.appendChild(remove);
 
 		savePlant();
 		showPlant();
@@ -78,13 +86,13 @@ function updatePlants() {
 			for(var i=0; i<plantContainer.children.length; i++) {
 				var plant = plantContainer.children[i];
 				var sec = parseInt(plant.children[0].name);
-				var health = parseInt(plant.children[2].innerHTML);
+				var health = parseInt(plant.children[3].innerHTML);
 				if(sec <= nowSeconds && health > 0) {
 					plantUpdateFlag = true;
 					health -= plantDecayValue;
-					plant.children[2].innerHTML = health.toString();
+					plant.children[3].innerHTML = health.toString();
 					plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
-					plant.children[2].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+					plant.children[3].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
 				}
 			}
 		}
@@ -108,7 +116,8 @@ function addTask() {
 		li.innerHTML = `${inputBox.value}<br>is due at ${new Date(dueDate).toLocaleString()}`;
 		listContainer.appendChild(li);
 		li.name = `${inputBox.value}`;
-		li.data = `${new Date(dueDate)}`;
+//		li.data = `${new Date(dueDate)}`;
+//		li.setAttribute('data-time', `${new Date(dueDate).toLocaleString()}`);
 
 		//Adding "x"
 		let span = document.createElement("span");
@@ -155,7 +164,7 @@ function openTab(event, tabName) {
 // Listeners
 //
 
-//Add/Remove Task
+//Add/Remove Stuff
 listContainer.addEventListener("click", function(e) {
 	//Check off a task that is unchecked
 	if(e.target.tagName === "LI" && !e.target.classList.contains("checked") ) {
@@ -166,6 +175,7 @@ listContainer.addEventListener("click", function(e) {
 	else if(e.target.tagName === "SPAN" && e.target.id === "remover" ) {
 		e.target.parentNode.remove();
 		saveTask();
+		savePlant();
 	}
 	//Upload Button that checks for image before deleting task
 	else if( e.target.tagName === "LABEL" && e.target.id === "uploadBtn") {
@@ -211,6 +221,22 @@ listContainer.addEventListener("click", function(e) {
 	}
 }, false);
 
+//////////////////////////////////////
+// Toggle Selcted Plant from List
+//
+plantContainer.addEventListener("click", function(e) {
+	if(e.target.tagName === "SPAN" && e.target.id === "plantRemover" ) {
+		e.target.parentNode.remove();
+		savePlant();
+	}
+	else if(e.target.id === "plantInteractBtn" ) {
+		alert(plantContainer.children.length);
+	}
+}, false);
+
+//////////////////////////////////////
+// Toggle Selcted Plant to Make
+//
 plantType.addEventListener("click", function(e) {
 	for(var i=0; i<plantType.children.length; i++) {
 		plantType.children[i].classList.remove("selected");
