@@ -10,7 +10,6 @@ const plantContainer = document.getElementById("plants");
 const plantType = document.getElementById("plantTypes");
 const inputPlant = document.getElementById("input-box-plant");
 const storyNum = document.getElementById("info");
-const waterCount = document.getElementById("water");
 
 var plantDecayRate = 10-1;
 var plantDecayValue = 25;
@@ -25,6 +24,10 @@ storyArray[1] = "Daves plant started to wilt";
 storyArray[2] = "To fix this Dave started to set reminders";
 storyArray[3] = "Dave watered the plant almost every day";
 storyArray[4] = "The plant got better and never died. The End";
+
+const bucket = document.getElementById("bucket");
+
+//listContainer.setAttribute('data-waterPoints',parseInt(listContainer.getAttribute('data-waterPoints') )+50 );
 
 /////////////////////////////////////////////////
 // Methods
@@ -189,15 +192,27 @@ listContainer.addEventListener("click", function(e) {
 					if(plantContainer.hasChildNodes() ) {
 						for(var i=0; i<plantContainer.children.length; i++) {
 							var plant = plantContainer.children[i];
-							let health = parseInt(plant.children[2].innerHTML);
+							let health = parseInt(plant.children[3].innerHTML);
 							//Plant Improve
 							if(health < 100) {			
 								health += plantDecayValue;
-								plant.children[2].innerHTML = health.toString();
+								plant.children[3].innerHTML = health.toString();
 								plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
-								plant.children[2].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+								plant.children[3].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
 							}
 						}
+						if(bucket.innerHTML === "") {
+							bucket.innerHTML = "0";
+							alert("a");
+						}
+						else {
+							var point = parseInt(bucket.innerHTML);
+							point++;
+							bucket.innerHTML = point.toString();
+							alert("b");
+						}
+						saveWater();
+						alert(bucket.innerHTML);
 					}
 					//Story
 					var number = parseInt(storyNum.innerHTML,10);
@@ -261,13 +276,24 @@ function savePlant() {
 function saveStory() {
 	localStorage.setItem("storyData", storyNum.innerHTML);
 }
+function saveWater() {
+	localStorage.setItem("waterData", bucket.innerHTML);
+}
 
 //Show Data
 function showData() {
 	listContainer.innerHTML = localStorage.getItem("taskData");
 	plantContainer.innerHTML = localStorage.getItem("plantData");
 	storyNum.innerHTML = localStorage.getItem("storyData");
+//	bucket.innerHTML = localStorage.getItem("waterData");
 }
+
+window.onload = function() {
+	const savedContent = localStorage.getItem("waterData");
+	if(savedContent ) {
+		document.getElementById("bucket").innerHTML = savedContent;
+	}
+};
 
 //Clear Data
 function clearScreen() {

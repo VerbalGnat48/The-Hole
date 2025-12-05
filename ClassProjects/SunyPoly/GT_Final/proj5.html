@@ -7,7 +7,6 @@
 	<link rel="stylesheet" href="./proj5.css">
 </head>
 <body>
-	<div class="water" id="water">
 	<div class="tab">
 		<button class="tabLinks" onclick="openTab(event, 'Info')">Medication Information</button>
 		<button class="tabLinks" onclick="openTab(event, 'Tips')">Tips and Tricks</button>
@@ -63,6 +62,9 @@
 			</div>
 			<div class="row">
 				<input type="datetime-local" id="due-date">
+			</div>
+			<div class="waterHolder" id="waterHolder">
+				<span id="bucket"></span>
 			</div>
 			<div class="plants" id="plants"></div>
 			<div class="list-container">

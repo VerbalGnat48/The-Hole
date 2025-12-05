@@ -65,6 +65,33 @@
 }
 
 /* Plants */
+.waterHolder {
+	display:flex;
+	margin:auto;
+	align-items:center;
+	justify-content:center;
+}
+.waterHolder span {
+	display:flex;
+	margin:auto;
+	align-items:center;
+	justify-content:center;
+	background:#395a83;
+	color:#fff;
+	border-radius:30px;
+	margin-bottom:25px;
+	width:70px;
+	list-style:none;
+}
+.waterHolder span::before{
+	content:'';
+	height:30px;
+	width:30px;
+	border-radius:50%;
+	background-image:url(./Images/Water.png);
+	background-size:cover;
+	background-position:center;
+}
 .plants {
 	min-height:100px;
 	display:flex;
