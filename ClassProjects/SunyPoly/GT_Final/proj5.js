@@ -50,7 +50,7 @@ function addPlants() {
 		plant.className = "plant";
 		plant.id = `plant${plantInstance}`;
 		plant.innerHTML = `<img src="./Images/${plantFileName}">
-		<button id="plantInteractBtn"></button>`;
+		<button id="plantInstanceBtn">name="${plantInstance}"</button>`;
 		plantContainer.appendChild(plant);
 		//Plant Child 2
 		const name = document.createElement("label");
@@ -190,29 +190,11 @@ listContainer.addEventListener("click", function(e) {
 				if(event.target.files.length > 0) {
 					//Plants
 					if(plantContainer.hasChildNodes() ) {
-						for(var i=0; i<plantContainer.children.length; i++) {
-							var plant = plantContainer.children[i];
-							let health = parseInt(plant.children[3].innerHTML);
-							//Plant Improve
-							if(health < 100) {			
-								health += plantDecayValue;
-								plant.children[3].innerHTML = health.toString();
-								plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
-								plant.children[3].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
-							}
-						}
-						if(bucket.innerHTML === "") {
-							bucket.innerHTML = "0";
-							alert("a");
-						}
-						else {
-							var point = parseInt(bucket.innerHTML);
-							point++;
-							bucket.innerHTML = point.toString();
-							alert("b");
-						}
+						//Give Water Token
+						var point = parseInt(bucket.innerHTML);
+						point++;
+						bucket.innerHTML = point.toString();
 						saveWater();
-						alert(bucket.innerHTML);
 					}
 					//Story
 					var number = parseInt(storyNum.innerHTML,10);
@@ -240,12 +222,35 @@ listContainer.addEventListener("click", function(e) {
 // Toggle Selcted Plant from List
 //
 plantContainer.addEventListener("click", function(e) {
+//	let name = document.querySelectorAll('[id^="plant-"]');
+//	alert(name);
 	if(e.target.tagName === "SPAN" && e.target.id === "plantRemover" ) {
 		e.target.parentNode.remove();
 		savePlant();
 	}
-	else if(e.target.id === "plantInteractBtn" ) {
-		alert(plantContainer.children.length);
+//	else if(e.target.id === "plantInstanceBtn" ) {
+	else if(e.target.tagName === "BUTTON" ) {
+		//Water Plant
+		let value = e.target.innerHTML;
+		value = value.replace(/\D/g, "");
+		value = parseInt(value);
+		var plant = plantContainer.children[value];
+		let health = parseInt(plant.children[3].innerHTML);
+		var point = parseInt(bucket.innerHTML);
+		//Plant Improve
+		if(health < 100 && point > 0) {			
+			//Take Water Token
+			point--;
+			bucket.innerHTML = point.toString();
+			//Water
+			health += plantDecayValue;
+			plant.children[3].innerHTML = health.toString();
+			plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+			plant.children[3].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+			saveWater();
+			savePlant();
+		}
+		
 	}
 }, false);
 
