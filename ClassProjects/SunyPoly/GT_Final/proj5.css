@@ -100,6 +100,9 @@
 	background-color: rgba(255, 255, 255, 0.6);
 	text-align:center;
 }
+.plant {
+	position:relative;
+}
 .plant img {
 	width:100px;
 	height:100px;
@@ -132,6 +135,26 @@
 	word-wrap:break-word;
 	background-color:transparent;
 	color:transparent;
+	border:none;
+}
+#sick {
+	width:100px;
+	height:100px;
+	position:absolute;
+	top:0;
+	left:25px;
+	pointer-events:none;
+	z-index:1;
+	border:none;
+}
+#dead {
+	width:50px;
+	height:50px;
+	position:absolute;
+	top:25px;
+	left:25px;
+	pointer-events:none;
+	z-index:1;
 	border:none;
 }
 .plant-types input {

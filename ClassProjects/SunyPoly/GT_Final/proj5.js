@@ -66,6 +66,18 @@ function addPlants() {
 		remove.id = "plantRemover";
 		remove.innerHTML = "\u00d7";
 		plant.appendChild(remove);
+		//Child 5
+		const sick = document.createElement("img");
+		sick.id = "sick";
+		sick.src = "./Images/Sick01.png";
+		sick.style.display = "none";
+		plant.appendChild(sick);
+		//Child 6
+		const dead = document.createElement("img");
+		dead.id = "dead";
+		dead.src = "./Images/Skull.png";
+		dead.style.display = "none";
+		plant.appendChild(dead);
 
 		savePlant();
 		showPlant();
@@ -96,6 +108,14 @@ function updatePlants() {
 					plant.children[3].innerHTML = health.toString();
 					plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
 					plant.children[3].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+					//Thermometer
+					if(health <= 50) {
+						plant.children[5].style.display = "block";
+					}
+				}
+				else if (health == 0) {
+					plant.children[5].style.display = "none";
+					plant.children[6].style.display = "block";
 				}
 			}
 		}
@@ -242,15 +262,25 @@ plantContainer.addEventListener("click", function(e) {
 		let health = parseInt(plant.children[3].innerHTML);
 		var point = parseInt(bucket.innerHTML);
 		//Plant Improve
-		if(health < 100 && point > 0) {			
+		if(health < 100) {			
 			//Take Water Token
-			point--;
-			bucket.innerHTML = point.toString();
+			if(point > 0 ) {
+				point--;
+				bucket.innerHTML = point.toString();
+			}
 			//Water
 			health += plantDecayValue;
 			plant.children[3].innerHTML = health.toString();
 			plant.children[0].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
 			plant.children[3].style.filter = `sepia(`+(1.00 - (parseInt(health)/100))+`)`;
+			//Thermometer
+			if(health > 50) {
+				plant.children[5].style.display = "none";
+			}
+			if(health > 0) {
+				plant.children[5].style.display = "block";
+				plant.children[6].style.display = "none";
+			}
 			saveWater();
 			savePlant();
 		}
