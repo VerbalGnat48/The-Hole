@@ -119,6 +119,10 @@ function addTask() {
 		li.innerHTML = `${inputBox.value}<br>is due at ${new Date(dueDate).toLocaleString()}`;
 		listContainer.appendChild(li);
 		li.name = `${inputBox.value}`;
+		li.className = "sortable-item";
+		li.draggable = true;
+		li.ondragstart="dragStart(event)";
+		li.ondragover="dragOver(event)";
 //		li.data = `${new Date(dueDate)}`;
 //		li.setAttribute('data-time', `${new Date(dueDate).toLocaleString()}`);
 
@@ -290,7 +294,6 @@ function showData() {
 	listContainer.innerHTML = localStorage.getItem("taskData");
 	plantContainer.innerHTML = localStorage.getItem("plantData");
 	storyNum.innerHTML = localStorage.getItem("storyData");
-//	bucket.innerHTML = localStorage.getItem("waterData");
 }
 
 window.onload = function() {
@@ -317,6 +320,50 @@ function uploadImage() {
 	}
 }
 
+//////////////////////////////////////
+// Dragable List
+//
+
+const list = document.querySelector('.sortable-list');
+let draggingItem = null;
+list.addEventListener('dragstart', (e) => {
+	draggingItem = e.target;
+	e.target.classList.add('dragging');
+	saveTask();
+});
+list.addEventListener('dragend', (e) => {
+	e.target.classList.remove('dragging');
+	document.querySelectorAll('.sortable-item').forEach(item => item.classList.remove('over'));
+	draggingItem = null;
+	saveTask();
+});
+list.addEventListener('dragover', (e) => {
+	e.preventDefault();
+	const draggingOverItem = getDragAfterElement(list, e.clientY);
+	// Remove .over from all items
+	document.querySelectorAll('.sortable-item').forEach(item => item.classList.remove('over'));
+	if (draggingOverItem) {
+		draggingOverItem.classList.add('over'); // Add .over to the hovered item
+		list.insertBefore(draggingItem, draggingOverItem);
+	} else {
+		list.appendChild(draggingItem); // Append to the end if no item below
+	}
+	saveTask();
+});
+function getDragAfterElement(container, y) {
+	const draggableElements = [...container.querySelectorAll('.sortable-item:not(.dragging)')];
+
+	return draggableElements.reduce((closest, child) => {
+		const box = child.getBoundingClientRect();
+		const offset = y - box.top - box.height / 2;
+		if (offset < 0 && offset > closest.offset) {
+			return { offset: offset, element: child };
+		} else {
+			return closest;
+		}
+	}, { offset: Number.NEGATIVE_INFINITY }).element;
+	saveTask();
+}
 
 
 /////////////////////////////////////////////////

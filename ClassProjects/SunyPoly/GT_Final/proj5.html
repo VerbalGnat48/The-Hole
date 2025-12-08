@@ -25,6 +25,7 @@
 			</p>
 		</div>
 		<div class="tabContent" id="Tips">
+			<span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
 			<h2>Tips and Tricks</h2>
 			<p>
 				<br>Take your meds when doing other activities, like when brushing your teeth.
@@ -33,9 +34,11 @@
 			</p>
 		</div>
 		<div class="tabContent" id="How">
+			<span onclick="this.parentElement.style.display='none'" class="topright">&times</span>
 			<h2>How This Works</h2>
 			<p>
 				<br>After uploading a task use the "U" button to upload a photo as a simulation of you taking a photo of your medication when you take it.
+				<br>Every task successfully completed you are awarded 1 Water Token to water whichever plant you want with!
 				<br>Plant Decay Rate is set for 10 seconds for testing purposes!
 			</p>
 			<br>
@@ -64,11 +67,11 @@
 				<input type="datetime-local" id="due-date">
 			</div>
 			<div class="waterHolder" id="waterHolder">
-				<span id="bucket"></span>
+				<span id="bucket">0</span>
 			</div>
 			<div class="plants" id="plants"></div>
 			<div class="list-container">
-				<ol id="task-list"></ol>
+				<ol class="sortable-list" id="task-list"></ol>
 				<input type="file" accept="image/*" id="input-file" hidden>
 			</div>
 		</div>
