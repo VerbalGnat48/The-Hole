@@ -1,0 +1,88 @@
+cprog fall2023 eoce 0x1
+========================
+
+======GENERATING LETTER DIVISIONS======
+
+=====Background=====
+This  semester,  a regular  companion  to  our  weekly projects  was  the
+presence of  a letter division puzzle.  A long division problem  with the
+numbers  swapped  out  with  letters, it  helped  exercise  our  critical
+thinking and troubleshooting abilities.
+
+This problem explores the basis of that puzzle, where you will be writing
+a program that generates a numeric  long division problem (the first step
+in a process of writing our own letter division puzzle generator).
+
+=====Specification=====
+Your program is  as much about the  values generated as it  is the output
+formatted.
+
+  * subtraction  signs justified  to the  left-most digit  of the  longer
+    value being subtracted (see examples)
+
+  * quotient should not be less than 3 digits
+
+  * divisor should be 4-6 digits long
+
+  * dividend should be 7-9 digits long
+
+  * program runs through to final remainder
+
+  * note the alignment (spacing is VERY important for this task)
+  
+  * values should be randomly generated
+
+====Execution====
+Your program,  when run, will produce  a numeric visualization of  a long
+division problem (spacing  and formatting so everything lines  up). A few
+examples follow:
+
+<cli>
+            3320
+      +---------
+17382 | 57716687
+       -52146
+        =====
+         55706
+        -52146
+         =====
+          35608
+         -34764
+          =====
+            8447
+</cli>
+
+Another example:
+
+<cli>
+           11403
+      +---------
+ 6270 | 71498775
+       -6270
+        ====
+         8798
+        -6270
+         ====
+         25287
+        -25080
+         =====
+           20775
+          -18810
+           =====
+            1965
+</cli>
+
+Be sure to provide,  either as a comment block in the  source code, or as
+an obvious accompanying  file, a summary of what you  did, how to operate
+it (assuming  these aren't in  the form of on-screen  instructions during
+game play),  what isn't  working, what  from these  specifications hasn't
+been achieved.
+
+Your end result will be assessed based on implementation and  correctness
+of functionality, along with clear, ease of use operation of the program.
+
+The usual attributes of staying within the spirit of the project, a clean
+build, good indentation, descriptive comments, etc. all still apply.
+
+Please provide ALL assets and helper files, along with your source  code,
+in order to build your program.

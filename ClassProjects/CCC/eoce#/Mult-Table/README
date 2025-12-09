@@ -1,0 +1,159 @@
+cprog fall2023 eoce 0x4
+========================
+Your task here is  to implement a C program that  can display a specified
+mathematical  operation  table  (addition,  subtraction,  multiplication,
+division, or remainder; as indicated by the user, via the command-line).
+
+Program
+=======
+Write  a C  program that  generates  a table  for  a given  range with  a
+specified mathematical operation:
+
+  * looks for and uses the following arguments/inputs (if present):
+    * mathematical operation (default is multiplication)
+    * an optional row lower bound (default is 1)
+    * an optional row upper bound (default is 9)
+    * an optional column lower bound (default is 1)
+    * an optional column upper bound (default is 9)
+
+  * valid  lower and upper bound  values should fall within  the range of
+    0-15
+
+  * if a provided argument contains invalid information, display an error
+    and exit with a value of ( + argument number):
+    * display "ERROR: invalid operation"          for invalid operation
+    * display "ERROR: invalid row lower bound"    for invalid lower bound
+    * display "ERROR: invalid row upper bound"    for invalid upper bound
+    * display "ERROR: invalid column lower bound" for invalid lower bound
+    * display "ERROR: invalid column upper bound" for invalid upper bound
+
+  * validity  of output will  be based  on displayed information  AND the
+    conformity of output to example display formatting
+
+  * valid  math  operations  that can  be specified  are:
+    * '*' for multiplication
+    * '/' for division (integer division, no decimal points)
+    * '%' for remainder
+    * '+' for addition
+    * '-' for subtraction
+
+  * check to make  sure lower bound of column, row is  less than or equal
+    to the corresponding upper bound of column, row:
+    * if in  violation in row, display "ERROR: invalid range in row"  and
+      exit
+    * if in violation in column, display "ERROR: invalid range in column"
+      and exit
+    
+  * display the table, performing the indicated operation
+    * display both row and  column headers, in uniform fashion/formatting
+      throughout
+    * display  each  numerical  value in  organized, consistent  fashion,
+      assuming two-digit numbers
+
+  * Some  results  may be  negative, allow  for the  display of  negative
+    values in your output
+
+  * with certain (not all) operations on certain values, you might end up
+    with a mathematically impossible result.  In these cases,  check  for
+    and avoid performing the computation, instead displaying "NA" in  its
+    place
+
+  * For  the math operations that  are not associative, the  row value is
+    the one to be operated against (ie result=row-col)
+
+Sample Output
+=============
+Following will be some example runs of  the program. Use these to aid you
+in implementing your program.
+
+Your program's output should match when run in the particular way.
+
+Default, no options or settings alterations
+===========================================
+<code>
+  * |   1   2   3   4   5   6   7   8   9
+----+------------------------------------
+  1 |   1   2   3   4   5   6   7   8   9
+  2 |   2   4   6   8  10  12  14  16  18
+  3 |   3   6   9  12  15  18  21  24  27
+  4 |   4   8  12  16  20  24  28  32  36
+  5 |   5  10  15  20  25  30  35  40  45
+  6 |   6  12  18  24  30  36  42  48  54
+  7 |   7  14  21  28  35  42  49  56  63
+  8 |   8  16  24  32  40  48  56  64  72
+  9 |   9  18  27  36  45  54  63  72  81
+</code>
+
+Multiplication, altering lower and upper bounds of row and column
+=================================================================
+<code>
+  * |   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+----+------------------------------------------------------------
+  4 |   4   8  12  16  20  24  28  32  36  40  44  48  52  56  60
+  5 |   5  10  15  20  25  30  35  40  45  50  55  60  65  70  75
+  6 |   6  12  18  24  30  36  42  48  54  60  66  72  78  84  90
+  7 |   7  14  21  28  35  42  49  56  63  70  77  84  91  98 105
+  8 |   8  16  24  32  40  48  56  64  72  80  88  96 104 112 120
+  9 |   9  18  27  36  45  54  63  72  81  90  99 108 117 126 135
+</code>
+
+Addition, with altered row and column bounds
+============================================
+<code>
+  + |   8   9  10  11  12  13
+----+------------------------
+  5 |  13  14  15  16  17  18
+  6 |  14  15  16  17  18  19
+  7 |  15  16  17  18  19  20
+</code>
+
+Subtraction, with altered row and column bounds
+===============================================
+<code>
+  - |   6   7   8   9  10  11  12  13  14  15
+----+----------------------------------------
+  2 |  -4  -5  -6  -7  -8  -9 -10 -11 -12 -13
+  3 |  -3  -4  -5  -6  -7  -8  -9 -10 -11 -12
+  4 |  -2  -3  -4  -5  -6  -7  -8  -9 -10 -11
+  5 |  -1  -2  -3  -4  -5  -6  -7  -8  -9 -10
+  6 |   0  -1  -2  -3  -4  -5  -6  -7  -8  -9
+  7 |   1   0  -1  -2  -3  -4  -5  -6  -7  -8
+  8 |   2   1   0  -1  -2  -3  -4  -5  -6  -7
+</code>
+
+Division, with altered row and column bounds
+============================================
+<code>
+  / |   0   1   2   3   4
+----+--------------------
+  6 |  NA   6   3   2   1
+  7 |  NA   7   3   2   1
+  8 |  NA   8   4   2   2
+  9 |  NA   9   4   3   2
+</code>
+
+Remainder, with altered row and column bounds
+=============================================
+<code>
+  % |   1   2   3   4   5
+----+--------------------
+  5 |   0   1   2   1   0
+  6 |   0   0   0   2   1
+  7 |   0   1   1   3   2
+  8 |   0   0   2   0   3
+</code>
+
+Be sure to provide,  either as a comment block in the  source code, or as
+an obvious accompanying  file, a summary of what you  did, how to operate
+it (assuming  these aren't in  the form of on-screen  instructions during
+game play),  what isn't  working, what  from these  specifications hasn't
+been achieved.
+
+Your end result will be assessed based on implementation and  correctness
+of functionality, along with clear, ease of use operation of the program.
+
+The usual attributes of staying within the spirit of the project, a clean
+build, good indentation, descriptive comments, etc. all still apply.
+
+Please provide ALL assets and helper files, along with your source  code,
+in order to build the program.
