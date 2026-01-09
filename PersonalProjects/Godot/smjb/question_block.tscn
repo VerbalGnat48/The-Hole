@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://dg1aiegg1830e"]
+
+[ext_resource type="Texture2D" uid="uid://ca8y8s7bbfppr" path="res://Textures/SS_Items&Objects.png" id="1_kr330"]
+[ext_resource type="Script" uid="uid://x222n6s8yan7" path="res://question_block.gd" id="1_rq8x1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rq8x1"]
+atlas = ExtResource("1_kr330")
+region = Rect2(48, 64, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvbbc"]
+atlas = ExtResource("1_kr330")
+region = Rect2(112, 64, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yvgo7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rq8x1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvbbc")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nvbbc"]
+size = Vector2(16, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rq8x1"]
+size = Vector2(16, 3)
+
+[node name="question_block" type="Area2D"]
+script = ExtResource("1_rq8x1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(8, 8)
+sprite_frames = SubResource("SpriteFrames_yvgo7")
+
+[node name="body" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="body"]
+position = Vector2(8, 7)
+shape = SubResource("RectangleShape2D_nvbbc")
+
+[node name="underneath" type="CollisionShape2D" parent="."]
+position = Vector2(8, 15.5)
+shape = SubResource("RectangleShape2D_rq8x1")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

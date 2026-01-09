@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://ctjirqassby1r"]
+
+[ext_resource type="Script" uid="uid://371fe7e2kc3" path="res://goomba.gd" id="1_jke6y"]
+[ext_resource type="Texture2D" uid="uid://bpii54ukv4jm8" path="res://Textures/SS_Enemies.png" id="2_jke6y"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lwfim"]
+atlas = ExtResource("2_jke6y")
+region = Rect2(0, 14, 16, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yj1s3"]
+atlas = ExtResource("2_jke6y")
+region = Rect2(16, 14, 16, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yj1s3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lwfim")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yj1s3")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 4.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1ng5m"]
+radius = 7.0
+height = 14.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jke6y"]
+size = Vector2(16, 18)
+
+[node name="Goomba" type="CharacterBody2D"]
+script = ExtResource("1_jke6y")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_yj1s3")
+animation = &"walk"
+autoplay = "walk"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("CapsuleShape2D_1ng5m")
+
+[node name="hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitbox"]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_jke6y")
+
+[connection signal="body_entered" from="hitbox" to="." method="_on_hitbox_body_entered"]
