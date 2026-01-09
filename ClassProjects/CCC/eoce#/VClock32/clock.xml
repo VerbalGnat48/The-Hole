@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+    <rom type="cartridge" title="Clock Time" version="1.0" />
+    <binary path="obj/clock.vbin" />
+    <textures>
+        <texture path="obj/BClock.vtex" />
+		<texture path="obj/BSecHand.vtex" />
+		<texture path="obj/BMinHand.vtex" />
+		<texture path="obj/BHourHand.vtex" />
+    </textures>
+    <sounds>
+		<sound path="obj/Turncoat.vtex" />
+		<sound path="obj/UACT.vtex" />
+		<sound path="obj/TBBell.vtex" />
+		<sound path="obj/Mudkipcry.vtex" />
+	</sounds>
+</rom-definition>

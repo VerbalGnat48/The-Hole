@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<rom-definition version="1.0">
+    <rom type="cartridge" title="0x0" version="1.0" />
+    <binary path="obj/0x0.vbin" />
+    <textures>
+        <texture path="obj/Texture-Background.vtex" />
+		<texture path="obj/Texture-GameObjects.vtex" />
+		<texture path="obj/Texture-YOUDIED.vtex" />
+		<texture path="obj/smoltextbg.vtex" />
+		<texture path="obj/structbg.vtex" />
+    </textures>
+	<sounds>
+		<sound path="obj/Sound-Bezos1.vsnd" />
+		<sound path="obj/Sound-YOUDIED.vsnd" />
+		<sound path="obj/Sound-Cracking.vsnd" />
+		<sound path="obj/Sound-Score.vsnd" />
+		<sound path="obj/Sound-PCBootup.vsnd" />
+	  </sounds>
+</rom-definition>

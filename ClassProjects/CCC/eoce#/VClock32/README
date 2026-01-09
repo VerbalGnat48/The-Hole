@@ -1,0 +1,43 @@
+cprog fall2023 eoce 0x3
+========================
+======Project: Make A Clock======
+
+=====Objective=====
+Later  in the  semester, we  started  playing with  the Vircon32  fantasy
+console, allowing us  to make interactive and visual  programs. Here, you
+will be creating a Vircon32 program (and associated resources) to produce
+a functioning 12 hour wall clock, updating each second.
+
+=====Task=====
+Using the Vircon32 API, obtain the current second since the epoch (Jan 1,
+1970  at  midnight-  via  the  **get_time()**  function),  and  determine
+manually  the current  time (using  MATH, not  any of  the Vircon32  time
+translation functions).
+
+Render  a  12 hour  analog  wall  clock,  complete with  numbers,  minute
+divisions, and the hour, minute,  and second hands, correctly oriented to
+display the current time, and updating each second.
+
+Have the clock tick (or have some button toggle clicking).
+
+If you'd like, display some of  the other date information (also computed
+mathematically), or support different timezones.
+
+You could also have some level of interactive control, where the user can
+monkey  with  the  time, and  have  it  continue  on  from the  point  of
+manipulation.
+
+Be sure to provide,  either as a comment block in the  source code, or as
+an obvious accompanying  file, a summary of what you  did, how to operate
+it (assuming  these aren't in  the form of on-screen  instructions during
+operation),  what isn't  working, what  from these  specifications hasn't
+been achieved.
+
+Your end result will be assessed based on implementation and  correctness
+of functionality, along with clear, ease of use operation of the program.
+
+The usual attributes of staying within the spirit of the project, a clean
+build, good indentation, descriptive comments, etc. all still apply.
+
+Please provide ALL assets and helper files, along with your source  code,
+in order to build your cartridge.

@@ -1,0 +1,47 @@
+cprog fall2023 eoce 0x0
+========================
+======Project: Presentation of Concepts======
+
+=====Objective=====
+Take something  you've done this semester,  ensure it is in  full working
+order, and implement  some means of enabling (via some  unused button, or
+some code-based toggle),  to act as a toggle to  display some key concept
+and programming-related information to the screen for the user to see, or
+give them a choice in how to proceed, potentially impacting game logic.
+
+=====Task=====
+Occasionally, there are outreach opportunities  to present the program to
+the wider public (Open Houses, Student Expos, High School visits).
+
+As you may  well know, trying to describe to  others, who aren't familiar
+with Computer  Science, what  sort s  of things you  do in  your Computer
+Science classes, can be  a challenge. So much of what  we do is involving
+abstraction, well within the conceptual  domain. We implement things, but
+those  things are  merely harboring  various concepts  and patterns,  the
+focus of our study.
+
+What I'd  like for you to  do is to enhance  something so that it  can be
+used as a demo at such an event, where people could walk up, have minimal
+instructions  to operate,  and play  the thing,  while at  certain points
+being presented with opportunities to encounter and hopefully think about
+some concept embedded therein.
+
+Polished and presentable to the user: imagine this being the sort of demo
+you, before starting on your Computer Science journeys here at CCC, would
+have appreciated  encountering giving  you some  insight into  the layers
+beneath the surface.
+
+Be sure to provide,  either as a comment block in the  source code, or as
+an obvious accompanying  file, a summary of what you  did, how to operate
+it (assuming  these aren't in  the form of on-screen  instructions during
+game play),  what isn't  working, what  from these  specifications hasn't
+been achieved.
+
+Your end result will be assessed based on implementation and  correctness
+of functionality, along with clear, ease of use operation of the program.
+
+The usual attributes of staying within the spirit of the project, a clean
+build, good indentation, descriptive comments, etc. all still apply.
+
+Please provide ALL assets and helper files, along with your source  code,
+in order to build your cartridge.
