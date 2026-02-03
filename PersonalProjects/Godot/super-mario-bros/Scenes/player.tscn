@@ -466,18 +466,22 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
-collision_mask = 2
+collision_mask = 22
 script = ExtResource("1_6t5aa")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_i3pqv")
-animation = &"big_idle"
+animation = &"small_idle"
+frame_progress = 0.88763016
 script = ExtResource("3_vgqql")
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_mask = 20
 
 [node name="AreaCollisionShape" type="CollisionShape2D" parent="Area2D"]
 shape = ExtResource("2_cvnsp")
 
 [node name="BodyCollisionShape" type="CollisionShape2D" parent="."]
 shape = ExtResource("2_cvnsp")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]

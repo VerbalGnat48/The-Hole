@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b0c5mo30c1oi2"]
+[gd_scene load_steps=8 format=3 uid="uid://b0c5mo30c1oi2"]
 
 [ext_resource type="Texture2D" uid="uid://hm7hu55mpw2c" path="res://Textures/SS_Tiles.png" id="1_ig7tw"]
 [ext_resource type="PackedScene" uid="uid://dmxbqditok57l" path="res://Scenes/player.tscn" id="2_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://bmkaoec0bkfey" path="res://Scenes/goomba.tscn" id="3_8gbba"]
+[ext_resource type="PackedScene" uid="uid://dmyiudh0khtt1" path="res://Scenes/koopa.tscn" id="4_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://b2wvxphx1s0he" path="res://Scenes/brick.tscn" id="5_kry3j"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0xm2m"]
 texture = ExtResource("1_ig7tw")
@@ -1372,6 +1375,7 @@ texture = ExtResource("1_ig7tw")
 48:36/0 = 0
 49:36/0 = 0
 0:37/0 = 0
+0:37/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:37/0 = 0
 2:37/0 = 0
 3:37/0 = 0
@@ -2248,13 +2252,39 @@ sources/0 = SubResource("TileSetAtlasSource_0xm2m")
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_7dm0k")
 format = 2
-layer_0/tile_data = PackedInt32Array(1310720, 0, 0, 1376256, 0, 0, 1310721, 0, 0, 1376257, 0, 0, 1310722, 0, 0, 1376258, 0, 0, 1310723, 0, 0, 1376259, 0, 0, 1310724, 0, 0, 1376260, 0, 0, 1310725, 0, 0, 1376261, 0, 0, 1310726, 0, 0, 1376262, 0, 0, 1310727, 0, 0, 1376263, 0, 0, 1310728, 0, 0, 1376264, 0, 0, 1310729, 0, 0, 1376265, 0, 0, 1310730, 0, 0, 1376266, 0, 0, 1310731, 0, 0, 1376267, 0, 0, 1310732, 0, 0, 1376268, 0, 0, 1310733, 0, 0, 1376269, 0, 0, 1310734, 0, 0, 1376270, 0, 0, 1310735, 0, 0, 1376271, 0, 0, 1310736, 0, 0, 1376272, 0, 0, 1310737, 0, 0, 1376273, 0, 0, 1310738, 0, 0, 1376274, 0, 0, 1310739, 0, 0, 1376275, 0, 0, 1310740, 0, 0, 1376276, 0, 0, 1310741, 0, 0, 1376277, 0, 0, 1310742, 0, 0, 1376278, 0, 0, 1310743, 0, 0, 1376279, 0, 0, 1310744, 0, 0, 1376280, 0, 0, 1310745, 0, 0, 1376281, 0, 0, 1310746, 0, 0, 1376282, 0, 0, 1310747, 0, 0, 1376283, 0, 0, 1310748, 0, 0, 1376284, 0, 0, 1441792, 0, 0, 1441793, 0, 0, 1441794, 0, 0, 1441795, 0, 0, 1441796, 0, 0, 1441797, 0, 0, 1441798, 0, 0, 1441799, 0, 0, 1441800, 0, 0, 1441801, 0, 0, 1441802, 0, 0, 1441803, 0, 0, 1441804, 0, 0, 1441805, 0, 0, 1441806, 0, 0, 1441807, 0, 0, 1441808, 0, 0, 1441809, 0, 0, 1441810, 0, 0, 1441811, 0, 0, 1441812, 0, 0, 1441813, 0, 0, 1441814, 0, 0, 1441815, 0, 0, 1441816, 0, 0, 1441817, 0, 0, 1441818, 0, 0, 1441819, 0, 0, 1441820, 0, 0)
+layer_0/tile_data = PackedInt32Array(1245184, 0, 37, 1310720, 0, 0, 1376256, 0, 0, 1441792, 0, 0, 1310721, 0, 0, 1376257, 0, 0, 1441793, 0, 0, 1310722, 0, 0, 1376258, 0, 0, 1441794, 0, 0, 1310723, 0, 0, 1376259, 0, 0, 1441795, 0, 0, 1310724, 0, 0, 1376260, 0, 0, 1441796, 0, 0, 1310725, 0, 0, 1376261, 0, 0, 1441797, 0, 0, 1310726, 0, 0, 1376262, 0, 0, 1441798, 0, 0, 1310727, 0, 0, 1376263, 0, 0, 1441799, 0, 0, 1310728, 0, 0, 1376264, 0, 0, 1441800, 0, 0, 1310729, 0, 0, 1376265, 0, 0, 1441801, 0, 0, 1310730, 0, 0, 1376266, 0, 0, 1441802, 0, 0, 1310731, 0, 0, 1376267, 0, 0, 1441803, 0, 0, 1310732, 0, 0, 1376268, 0, 0, 1441804, 0, 0, 1310733, 0, 0, 1376269, 0, 0, 1441805, 0, 0, 1310734, 0, 0, 1376270, 0, 0, 1441806, 0, 0, 1310735, 0, 0, 1376271, 0, 0, 1441807, 0, 0, 1310736, 0, 0, 1376272, 0, 0, 1441808, 0, 0, 1310737, 0, 0, 1376273, 0, 0, 1441809, 0, 0, 1310738, 0, 0, 1376274, 0, 0, 1441810, 0, 0, 1310739, 0, 0, 1376275, 0, 0, 1441811, 0, 0, 1310740, 0, 0, 1376276, 0, 0, 1441812, 0, 0, 1310741, 0, 0, 1376277, 0, 0, 1441813, 0, 0, 1310742, 0, 0, 1376278, 0, 0, 1441814, 0, 0, 1310743, 0, 0, 1376279, 0, 0, 1441815, 0, 0, 1310744, 0, 0, 1376280, 0, 0, 1441816, 0, 0, 1310745, 0, 0, 1376281, 0, 0, 1441817, 0, 0, 1310746, 0, 0, 1376282, 0, 0, 1441818, 0, 0, 1310747, 0, 0, 1376283, 0, 0, 1441819, 0, 0, 1310748, 0, 0, 1376284, 0, 0, 1441820, 0, 0)
 
 [node name="Player" parent="." instance=ExtResource("2_bo1nx")]
 position = Vector2(24, 312)
+jump_velocity = -300
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(3, 3)
 limit_left = 0
 limit_top = 0
 limit_bottom = 360
+
+[node name="Enemies" type="Node" parent="."]
+
+[node name="Koopa" parent="Enemies" instance=ExtResource("4_jjvhh")]
+position = Vector2(280, 304)
+
+[node name="Goomba" parent="Enemies" instance=ExtResource("3_8gbba")]
+position = Vector2(248, 304)
+
+[node name="Koopa2" parent="Enemies" instance=ExtResource("4_jjvhh")]
+position = Vector2(392, 304)
+
+[node name="Goomba2" parent="Enemies" instance=ExtResource("3_8gbba")]
+position = Vector2(75, 236)
+horizontal_speed = 0
+
+[node name="Koopa3" parent="Enemies" instance=ExtResource("4_jjvhh")]
+position = Vector2(59, 236)
+horizontal_speed = 0
+
+[node name="Brick" parent="." instance=ExtResource("5_kry3j")]
+position = Vector2(75, 260)
+
+[node name="Brick2" parent="." instance=ExtResource("5_kry3j")]
+position = Vector2(59, 260)

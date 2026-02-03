@@ -2488,10 +2488,10 @@ position = Vector2(40, 320)
 
 [node name="Camera2D" type="Camera2D" parent="TileMap/Player"]
 position = Vector2(74, -359)
-limit_left = 257
-limit_top = -331
+limit_left = 0
+limit_top = 0
 limit_right = 10000257
-limit_bottom = 29
+limit_bottom = 360
 limit_smoothed = true
 
 [node name="interact" type="Area2D" parent="."]
