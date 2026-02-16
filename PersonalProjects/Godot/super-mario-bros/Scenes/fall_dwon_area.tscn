@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpa1vrcdui4qb"]
+
+[ext_resource type="Script" uid="uid://cpsj87vbse6sb" path="res://Scripts/fall_dwon_area.gd" id="1_n67xj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_81ff2"]
+size = Vector2(150, 20)
+
+[node name="FallDwonArea" type="Area2D"]
+collision_layer = 16
+script = ExtResource("1_n67xj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_81ff2")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

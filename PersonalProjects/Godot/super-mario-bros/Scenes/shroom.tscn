@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://cxelvdclyv500"]
+
+[ext_resource type="Script" uid="uid://nn1lqq6ib1ai" path="res://Scripts/shroom.gd" id="1_kt23t"]
+[ext_resource type="Texture2D" uid="uid://dok7kl4hkstle" path="res://Textures/SS_Items&Objects.png" id="1_vbctn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kt23t"]
+radius = 8.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kt23t"]
+size = Vector2(16, 16)
+
+[node name="Shroom" type="Area2D"]
+collision_layer = 32
+script = ExtResource("1_kt23t")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_vbctn")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kt23t")
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+shape = SubResource("RectangleShape2D_kt23t")
+target_position = Vector2(0, 0)
+collision_mask = 18
+collide_with_areas = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
