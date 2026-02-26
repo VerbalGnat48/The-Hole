@@ -6,6 +6,8 @@ This game is space invaders but "Animal Crossing: new Horizons" and "Doom" theme
 
 Was made in Fall, 2024 from 09/06 -> 10/02 with each version being a different week during that time.
 
+Creator of Vricon32 reacts: https://youtu.be/ZykJaCWGBE4?si=HAq9rVcZHCbnoB6n&t=46
+
 ////////// msi objectives //////////
 
 msi0 - Implement, using Vircon32, a space invaders game where the enemies are backed by a runtime-allocated array of sprite structs. Use pointer arithmetic for all array accesses.
