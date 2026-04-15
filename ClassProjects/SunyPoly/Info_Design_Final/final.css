@@ -1,0 +1,37 @@
+
+.overlay-btn {
+	background-color: rgba(100, 0, 0, 1);
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	width:100%;
+	height:100%;
+}
+
+
+.nine-slice-container {
+	/* Image */
+	border: 20px solid transparent;
+	border-image-source:url("./Images/Button.png");
+	border-image-slice:5% fill;
+	border-image-repeat:round;
+
+	/* Box Size */
+	width:400px;
+	height:200px;
+
+	/* Center Contents */
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+
+
+
+
+
+
+
