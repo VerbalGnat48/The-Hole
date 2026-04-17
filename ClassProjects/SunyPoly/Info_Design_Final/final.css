@@ -1,31 +1,218 @@
 
-.overlay-btn {
-	background-color: rgba(100, 0, 0, 1);
-	color: white;
-	border: none;
-	padding: 10px 20px;
-	cursor: pointer;
-	width:100%;
-	height:100%;
+@font-face {
+	font-family:'MinecraftFont';
+	src:url('Fonts/Minecraft.woff2') format('woff2'),
+		url('Fonts/Minecraft.woff') format('woff');
+	font-weight:normal;
+	font-style:normal;
+}
+
+* {
+	font-family:"MinecraftFont", sans-serif;
+}
+
+.header-group {
+	/* Position */
+	position:sticky;
+	top:0;
+	z-index:1000;
+	margin-left:-8px;
+	margin-top:-21px;
+	width:1920px;
+
+	/* Background */
+	background-image:url("./Images/Blocks/Stone_Dark.png");
+	background-position:left top;
+	background-repeat:repeat;
+	display:flex;
+
+	/* Content */
+	flex-direction:column;
+	text-align:center;
+	align-items:center;
+	justify-content:center;
+	overflow-x: hidden;
+}
+
+.header-group h1 {
+	display:block;
+	font-size:32px;
 }
 
 
-.nine-slice-container {
+.header-group h2 {
+	display:block;
+	font-size:16px;
+	color:#ffae25;
+}
+
+.side-blocks {
+	/* Position */
+	position:fixed;
+	margin-top:128px;
+	width:64px;
+	z-index:2;
+
 	/* Image */
-	border: 20px solid transparent;
-	border-image-source:url("./Images/Button.png");
+	background-position:left top;
+	background-repeat:repeat;
+}
+
+.side-water {
+	/* Position */
+	position:fixed;
+	margin-top:128px;
+	width:64px;
+	z-index:2;
+
+	/* Image */
+	background-image:url("./Images/Water.png");
+	background-position:left top;
+	background-repeat:repeat;
+
+	animation:animate-bg 0.25s infinite linear;
+}
+
+@keyframes animate-bg {
+	100% {
+		background-position:0px 50px;
+	}
+}
+
+.background-blocks {
+	/* Position */
+	margin-left:-8px;
+	width:1920px;
+	z-index:1;
+
+	/* Background */
+	background-position:left top;
+	background-repeat:repeat;
+
+	display:flex;
+	justify-content:center;
+	text-align:center;
+}
+
+.sliced-text-box-MC {
+	/* Image */
+	border:16px solid transparent;
+	border-image-source:url("./Images/Text_Box_Dark.png");
 	border-image-slice:5% fill;
+	border-image-width:8px;
 	border-image-repeat:round;
 
-	/* Box Size */
-	width:400px;
-	height:200px;
+	/* Position */
+	position:absolute;
+	display:block;
+	z-index:2;
+	top:128px;
+	left:0px;
 
 	/* Center Contents */
 	display:flex;
-	justify-content: center;
-	align-items: center;
+	justify-content:center;
+	align-items:center;
+
+	/* Format and Text */
+	padding:8px 8px;
+	color:white;
+	text-align:center;
 }
+
+.text-box {
+	/* Image */
+	background-color:#262423;
+
+	/* Position */
+	position:absolute;
+	display:block;
+	z-index:2;
+	top:128px;
+	left:0px;
+
+	/* Format and Text */
+	color:white;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	font size:8px;
+}
+
+.line {
+	/* Image */
+	background-color:#c6c6c6;
+	border:2px solid black;
+
+	/* Position */
+	position:absolute;
+	display:block;
+	z-index:0;
+}
+
+.nine-slice-btn-grey {
+	/* Image */
+	border:8px solid transparent;
+	border-image-source:url("./Images/Button.png");
+	border-image-slice:5% fill;
+	border-image-width:8px;
+	border-image-repeat:round;
+
+	/* Position */
+	position:absolute;
+	display:block;
+	z-index:3;
+	top:128px;
+	left:0px;
+
+	/* Center Contents */
+	display:flex;
+	justify-content:center;
+	align-items:center;
+
+	/* Format and Text */
+	padding: 8px 16px;
+	cursor:pointer;
+}
+
+.info-box {
+	display:none;
+}
+
+.nine-slice-btn-grey:hover .info-box {
+	/* Image */
+	border:8px solid transparent;
+	border-image-source:url("./Images/Tooltip.png");
+	border-image-slice:5% fill;
+	border-image-width:8px;
+	border-image-repeat:round;
+
+	/* Position */
+	width:auto;
+	height:auto;
+	position:fixed;
+	pointer-events:none;
+	transform:translate(-50%, -50%);
+	z-index:4;
+
+	/* Format and Text */
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	font size:32px;
+	color:white;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
