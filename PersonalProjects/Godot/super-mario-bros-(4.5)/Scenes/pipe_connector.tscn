@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://cvxslk4nfm57t"]
+
+[ext_resource type="Texture2D" uid="uid://hm7hu55mpw2c" path="res://Textures/SS_Tiles.png" id="1_a3byr"]
+[ext_resource type="Script" uid="uid://ibi8krl2ii6a" path="res://Scripts/pipe_connector.gd" id="1_m82xr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m82xr"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yatkf"]
+size = Vector2(16, 8)
+
+[node name="PipeConnector" type="StaticBody2D"]
+collision_layer = 16
+collision_mask = 5
+script = ExtResource("1_m82xr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_a3byr")
+region_enabled = true
+region_rect = Rect2(304, 96, 64, 32)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_m82xr")
+debug_color = Color(0.9881756, 0, 0.31007287, 0.41960785)
+
+[node name="Entrance" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entrance"]
+position = Vector2(-32, 12)
+shape = SubResource("RectangleShape2D_yatkf")
+
+[connection signal="body_entered" from="Entrance" to="." method="_on_entrance_body_entered"]
