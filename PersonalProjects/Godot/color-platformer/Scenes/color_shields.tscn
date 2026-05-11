@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://cged5fq21b2xx"]
+
+[ext_resource type="Texture2D" uid="uid://2nesw7cjswxq" path="res://Textures/Color Knight Guy Sheet.png" id="1_in5lb"]
+
+[node name="Color Shields" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_in5lb")
+region_enabled = true
+region_rect = Rect2(1, 80, 14, 16)
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+rect = Rect2(-7, -8, 14, 16)
