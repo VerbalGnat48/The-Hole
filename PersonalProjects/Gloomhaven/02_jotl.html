@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JoTL Stat Tracker</title>
+	<link rel="stylesheet" href="gloom.css">
+</head>
+<style>
+	table, th, td {
+		border:1px solid white;
+	}
+	#Demolitionist_Sheet { border:1px solid #ebb96e; color:#ebb96e; }
+	#Hatchet_Sheet { border:1px solid #96d3e4; color:#96d3e4; }
+	#Red_Guard_Sheet { border:1px solid #f0a9ba; color:#f0a9ba; }
+	#Void_Warden_Sheet { border:1px solid #6d40a7; color:#6d40a7; }
+</style>
+<body>
+	<div class="page-container" style="flex-direction:row;">
+		<!--Characters-->
+		<div class="box-container" style="column-gap:25px; row-gap:25px; flex-direction:column;">
+			<!--Demolitionist-->
+			<div class="box-long" id="Demolitionist">
+				<div class="box-tall" style="position:relative;">
+					<img src="./Images/JoTL/Demolitionist.png" width="auto" height="172">
+					<button class="character-sheet-selector" id="Demolitionist_Btn" onclick="showCharacterSheet(this.id)"></button>
+					<!--Progress Bars-->
+					<div class="box-long" style="column-gap:10px;">
+						<p>H:10/14</p>
+						<p>S:1</p>
+						<p>E:3</p>
+					</div>
+				</div>
+				<!--Action Buttons-->
+				<div class="box-tall">
+					<p>A</p>
+					<p>H</p>
+					<p>M</p>
+				</div>
+			</div>
+
+			<!--Hatchet-->
+			<div class="box-long" id="Hatchet">
+				<div class="box-tall" style="position:relative;">
+					<img src="./Images/JoTL/Hatchet.png" width="auto" height="172">
+					<button class="character-sheet-selector" id="Hatchet_Btn" onclick="showCharacterSheet(this.id)"></button>
+				</div>
+			</div>
+
+			<!--Red Guard-->
+			<div class="box-long" id="Red Guard">
+				<div class="box-tall" style="position:relative;">
+					<img src="./Images/JoTL/Red_Guard.png" width="auto" height="172">
+					<button class="character-sheet-selector" id="Red_Guard_Btn" onclick="showCharacterSheet(this.id)"></button>
+				</div>
+			</div>
+
+			<!--Void Warden-->
+			<div class="box-long" id="Void Warden">
+				<div class="box-tall" style="position:relative;">
+					<img src="./Images/JoTL/Void_Warden.png" width="auto" height="172">
+					<button class="character-sheet-selector" id="Void_Warden_Btn" onclick="showCharacterSheet(this.id)"></button>
+				</div>
+			</div>
+			<button id="Tables_Btn" onclick="makeTables()">Tables</button>
+		</div>
+
+		<!--Sheets-->
+		<div class="box-tall" id="Sheet_Box">
+			<!--Demolitionist Sheet-->
+			<table style="width:1200px;" id="Demolitionist_Sheet">
+				<!--Round-->
+				<tr scope="row" id="Demolitionist_Round">
+					<th>Round</th>
+					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
+					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
+				</tr>
+			</table>
+
+			<!--Hatchet Sheet-->
+			<table style="width:1200px;" id="Hatchet_Sheet">
+				<!--Round-->
+				<tr scope="row" id="Hatchet_Round">
+					<th>Round</th>
+					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
+					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
+				</tr>
+			</table>
+
+			<!--Red Guard Sheet-->
+			<table style="width:1200px;" id="Red_Guard_Sheet">
+				<!--Round-->
+				<tr scope="row" id="Red Guard_Round">
+					<th>Round</th>
+					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
+					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
+				</tr>
+			</table>
+
+			<!--Void Warden Sheet-->
+			<table style="width:1200px;" id="Void_Warden_Sheet">
+				<!--Round-->
+				<tr scope="row" id="Void Warden_Round">
+					<th>Round</th>
+					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
+					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
+				</tr>
+			</table>
+		</div>
+
+	</div>
+	<script src="./jotl.js"></script>
+</body>
+</html>
