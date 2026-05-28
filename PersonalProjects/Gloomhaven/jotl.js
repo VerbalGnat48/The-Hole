@@ -1,4 +1,4 @@
-////////////////////////
+////////////////////////////////////////////////////////////////////////////
 // Page 01 Functions
 //
 
@@ -78,7 +78,8 @@ function selectCharacterLevel(selectorID) {
 	const cardBox = document.getElementById(cardBoxID);
 
 	//Change Card Level Value
-	cardBox.dataset.level = selectorID.slice(-2);
+	const level = selectorID.slice(-2);
+	cardBox.dataset.level = level;
 
 	//Clear Selected Level
 	for (let child of cardBox.children) {
@@ -119,28 +120,71 @@ function setCharacters() {
 	sessionStorage.setItem("Hatchet_Status",  document.getElementById("Hatchet_Box").dataset.selected );
 	sessionStorage.setItem("Hatchet_Level",  document.getElementById("Hatchet_Box").dataset.level );
 
-	//Red Guard
-	sessionStorage.setItem("Red Guard_Status",  document.getElementById("Red Guard_Box").dataset.selected );
-	sessionStorage.setItem("Red Guard_Level",  document.getElementById("Red Guard_Box").dataset.level );
+	//RedGuard
+	sessionStorage.setItem("RedGuard_Status",  document.getElementById("RedGuard_Box").dataset.selected );
+	sessionStorage.setItem("RedGuard_Level",  document.getElementById("RedGuard_Box").dataset.level );
 
 	//Void Warden
-	sessionStorage.setItem("Void Warden_Status",  document.getElementById("Void Warden_Box").dataset.selected );
-	sessionStorage.setItem("Void Warden_Level",  document.getElementById("Void Warden_Box").dataset.level );
+	sessionStorage.setItem("Voidwarden_Status",  document.getElementById("Voidwarden_Box").dataset.selected );
+	sessionStorage.setItem("Voidwarden_Level",  document.getElementById("Voidwarden_Box").dataset.level );
+
+	location.href = "./02_jotl.html";
+	getCharacters();
 }
 
-////////////////////////
+////////////////////////////////////////////////////////////////////////////
 // Page 02 Functions
 //
+const characters = ["Demolitionist","Hatchet","RedGuard","Voidwarden"];
+var alive = [];
 
 function getCharacters() {
+	const selected = [];
+	const level = [];
+	alive = selected;
+
 	//Demolitionist
-	selected = sessionStorage.getItem("Demolitionist_Status");
-	level = sessionStorage.getItem("Demolitionist_Level");
+	selected.push(sessionStorage.getItem("Demolitionist_Status"));
+	level.push(sessionStorage.getItem("Demolitionist_Level"));
+
+	//Hatchet
+	selected.push(sessionStorage.getItem("Hatchet_Status"));
+	level.push(sessionStorage.getItem("Hatchet_Level"));
+
+	//RedGuard
+	selected.push(sessionStorage.getItem("RedGuard_Status"));
+	level.push(sessionStorage.getItem("RedGuard_Level"));
+
+	//Void Warden
+	selected.push(sessionStorage.getItem("Voidwarden_Status"));
+	level.push(sessionStorage.getItem("Voidwarden_Level"));
+
+	//Disappear Characters that were not selected
+	for (i=0; i<selected.length; i++) {
+		if (selected[i] === "false") {
+			document.getElementById(characters[i]).style.display = "none";
+		}
+	}
+	makeTables();
+	makeCharacterStats(selected, level);
+}
+
+function makeCharacterStats(selected, level) {
+	//Make Attributes for selected characters
+	for (i=0; i<selected.length; i++) {
+		if (selected[i] === "true") {
+			//Create Attributes
+			const box = document.createElement("box-long");
+			box.id = characters[i] + "_Attributes";
+			box.textContent = "L:" + level[i] + " H:" + "1" + "/" + "1" + " S:" + "0";
+			document.getElementById(characters[i] + "_Container").appendChild(box);
+		}
+	}
 }
 
 function makeTables() {
 	//Make Tables Array
-	const message = ["Demolitionist_Sheet","Hatchet_Sheet","Red_Guard_Sheet","Void_Warden_Sheet"];
+	const message = ["Demolitionist_Sheet","Hatchet_Sheet","RedGuard_Sheet","Voidwarden_Sheet"];
 
 	//Make Tables
 	for (k=0; k<message.length; k++) {
@@ -166,8 +210,12 @@ function makeTables() {
 		makeTableCells(message[k]);
 		document.getElementById(message[k]).style.display = "none";
 	}
-	document.getElementById("Tables_Btn").style.display = "none";
-	document.getElementById(message[0]).style.display = "block";
+	for (i=0; i<alive.length; i++) {
+		if (alive[i] === "true") {
+			document.getElementById(message[i]).style.display = "flex";
+			break;
+		}
+	}
 }
 
 function makeTableCells(message) {
@@ -197,9 +245,10 @@ function showCharacterSheet(selectorID) {
 	}
 	
 	//Turn the selected one back on
-	document.getElementById(characterSheet).style.display = "block";
+	document.getElementById(characterSheet).style.display = "flex";
 }
 
+//Table Math Calculations
 document.addEventListener("keypress", (event) => {
 	if (event.key === "Enter") {
 		var expression = event.target.value;
