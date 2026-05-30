@@ -14,9 +14,9 @@
 	#Voidwarden_Sheet { border:1px solid #6d40a7; color:#6d40a7; }
 </style>
 <body onload="getCharacters()">
-	<div class="page-container" style="flex-direction:row;">
+	<div class="page-container" style="flex-direction:row; column-gap:10px; justify-content: space-evenly;">
 		<!--Characters-->
-		<div class="box-container" style="column-gap:25px; row-gap:25px; flex-direction:column;">
+		<div class="box-container" style="column-gap:25px; flex-direction:column;">
 			<!--Demolitionist-->
 			<div class="box-long" id="Demolitionist">
 				<div class="box-tall" id="Demolitionist_Container" style="position:relative;">
@@ -25,9 +25,7 @@
 				</div>
 				<!--Action Buttons-->
 				<div class="box-tall">
-					<p>A</p>
-					<p>H</p>
-					<p>M</p>
+					<p>A</p><p>H</p><p>M</p>
 				</div>
 			</div>
 
@@ -97,6 +95,18 @@
 					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
 				</tr>
 			</table>
+		</div>
+
+		<!--Enemies-->
+		<div class="box-tall" id="Enemy_Container" style="height:100vh; row-gap:10px; justify-content:flex-start;">
+			<select name="enemies" id="Enemy_Selector">
+			</select>
+			<div class="box-long" style="column-gap:10px;">
+				<img src="./Images/Icons/Normal.png" class="enemy-selector" id="Add_Enemy" onclick="addEnemy(this.id)">
+				<img src="./Images/Icons/Elite.png" class="enemy-selector" id="Add_Enemy_Elite" onclick="addEnemy(this.id)">
+			</div>
+			<div class="box-enemy" id="Enemy_Box">
+			</div>
 		</div>
 
 	</div>

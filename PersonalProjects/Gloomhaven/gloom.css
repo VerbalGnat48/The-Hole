@@ -14,7 +14,7 @@ body {
 
 .page-container {
 	width:100%;
-	height:auto;
+	height:100vh;
 	display:flex;
 	flex-direction:column;
 	justify-content:center;
@@ -135,6 +135,30 @@ input {
 	height:172px;
 	top:0px;
 	left:0px;
+}
+
+.enemy-selector {
+	border-radius:50%;
+	cursor:pointer;
+	width:37px;
+	height:37px;
+}
+
+.box-enemy {
+	display:flex;
+	flex-wrap:wrap;
+	flex-direction:column;
+	justify-content:center;
+	align-items:flex-start;
+	text-align:center;
+
+	height:760px;
+	width:410px;
+	margin-top:auto;
+	margin-bottom:auto;
+	row-gap:10px;
+	column-gap:5px;
+	border:1px solid white;
 }
 
 
