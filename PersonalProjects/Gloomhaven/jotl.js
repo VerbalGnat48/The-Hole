@@ -133,32 +133,18 @@ function setCharacters() {
 }
 
 ////////////////////////////////////////////////////////////////////////////
+//
 // Page 02 Functions
 //
-const jotl_characters = ["Demolitionist","Hatchet","RedGuard","Voidwarden"];
-const jotl_health = [
-	[8,9,11,12,14,15,17,18,20],
-	[8,9,11,12,14,15,17,18,20],
-	[10,12,14,16,18,20,22,24,26],
-	[6,7,8,9,10,11,12,13,14]
+//////////////////////////////
+// Characters
+//
+//Name, Health
+const jotl_characters = [
+	["Demolitionist","Hatchet","RedGuard","Voidwarden"],
+	[ [8,9,11,12,14,15,17,18,20], [8,9,11,12,14,15,17,18,20], [10,12,14,16,18,20,22,24,26], [6,7,8,9,10,11,12,13,14], ],
 ];
 var alive = [];
-
-const jotl_enemies = [
-	//Name, Health/Elite Health, Attack/Elite Attack
-	[ "Black Imp",	[3,4,5,5,7,9,10,13,4,6,8,8,11,14,15,19], [1,1,1,2,2,2,3,3,2,2,2,3,3,3,4,4] ],
-	[ "Black Sludge", [4,5,7,8,9,10,12,16,8,9,11,11,13,15,16,18], [2,2,2,3,3,3,4,4,2,2,3,3,4,4,4,5] ],
-	[ "Blood Imp", [3,4,5,5,7,8,9,12,4,6,7,10,11,13,17,21], [1,1,1,2,2,2,3,3,2,2,2,2,3,3,3,4] ],
-	[ "Chaos Demon", [7,8,11,12,15,16,20,22,10,12,14,18,21,26,30,35], [2,3,3,4,4,5,5,6,3,4,5,5,6,6,7,8] ],
-	[ "Giant Viper", [2,3,4,4,6,7,8,10,3,5,7,8,11,13,14,18], [1,1,1,2,2,3,3,3,2,2,2,3,3,3,4,4] ],
-	[ "Living Corpse", [5,7,9,10,11,13,14,16,10,11,14,14,16,18,23,29], [3,3,3,4,4,4,4,5,3,4,4,5,5,6,6,6] ],
-	[ "Rat Monstrosity", [4,4,5,6,8,10,12,12,6,7,8,10,12,13,14,16], [1,2,2,3,3,3,3,4,2,2,3,3,3,4,4,5] ],
-	[ "Stone Golem", [10,10,11,11,12,13,16,16,10,11,13,14,16,18,20,21], [3,3,4,4,4,5,5,5,4,4,5,5,6,6,7,7] ],
-	[ "Vermling Raider", [4,5,9,12,12,15,17,19,8,10,14,16,19,23,27,31], [2,2,2,2,3,3,3,4,2,2,3,4,4,4,5,6] ],
-	[ "Vermling Scout", [2,3,3,5,6,8,10,13,4,5,5,7,8,11,13,17], [1,1,2,2,3,3,3,3,2,2,3,3,4,4,4,4] ],
-	[ "Zealot", [4,6,7,8,10,12,14,16,7,8,11,13,17,18,22,26], [2,2,3,3,3,3,4,5,3,3,3,4,4,5,6,7] ],
-//	[ "", [], [] ],
-];
 
 function getCharacters() {
 	const selected = [];
@@ -184,7 +170,7 @@ function getCharacters() {
 	//Disappear Characters that were not selected
 	for (i=0; i<selected.length; i++) {
 		if (selected[i] === "false") {
-			document.getElementById(characters[i]).style.display = "none";
+			document.getElementById(jotl_characters[0][i]).style.display = "none";
 		}
 	}
 	makeTables();
@@ -193,36 +179,27 @@ function getCharacters() {
 }
 
 function makeCharacterStats(selected, level) {
+	const box = document.getElementById("Character_Box_Container")
 	//Make Attributes for selected characters
 	for (i=0; i<selected.length; i++) {
 		if (selected[i] === "true") {
-			//Create Attributes Box
-			const box = document.createElement("box-long");
-			box.id = jotl_characters[i] + "_Attributes";
-			box.style.flexWrap = "nowrap";
-			document.getElementById(jotl_characters[i] + "_Container").appendChild(box);
 
-			//Level
-			var element = document.createElement("p");
-			element.style.display = "inline-block";
-			element.id = jotl_characters[i] + "_Level";
-			element.textContent = "L:" + level[i];
-			box.append(element, " ", ".", " ");
-
-			//Health
-			element = document.createElement("p");
-			element.style.display = "inline-block";
-			var p = Number(level[i]) - 1;
-			element.id = jotl_characters[i] + "_Health";
-			element.textContent = "H:" + jotl_health[i][p] + "/" + jotl_health[i][p];
-			box.append(element, " ", ".", " ");
-
-			//Shield
-			element = document.createElement("p");
-			element.style.display = "inline-block";
-			element.id = jotl_characters[i] + "_Shield";
-			element.textContent = "S:0";
-			box.appendChild(element);
+			const characterBoxContainer = document.createElement("box-container");
+			box.appendChild(characterBoxContainer);
+			const characterSrc = "./Images/JoTL/" + jotl_characters[0][i] + ".png";
+			characterBoxContainer.innerHTML = `
+				<div class="box-long" id="${jotl_characters[0][i]}">
+					<div class="box-tall" id="${jotl_characters[0][i] + '_Container'}" style="position:relative">
+						<img src="${characterSrc}" height="172" width="auto">
+						<button class="character-sheet-selector" id="${jotl_characters[0][i] + '_Btn'}" onclick="showCharacterSheet(this.id)"></button>
+						<div class="box-long" style="column-gap:10px;">
+							<p style="margin:5px; color:white;">L: ${level[i]}</p>
+							<p style="margin:5px; color:white;">H: ${jotl_characters[1][i][Number(level[i]) - 1]}</p>
+							<p style="margin:5px; color:white;">S:0</p>
+						</div>
+					</div>
+				</div>
+			`;
 		}
 	}
 }
@@ -231,57 +208,138 @@ function getAttribute() {
 	
 }
 
-function makeTables() {
-	//Make Tables Array
-	const message = ["Demolitionist_Sheet","Hatchet_Sheet","RedGuard_Sheet","Voidwarden_Sheet"];
+//////////////////////////////
+// Sheets
+//
+//Name, BG Color, Text Color
+const sheets = [
+	["Demolitionist_Sheet","Hatchet_Sheet","RedGuard_Sheet","Voidwarden_Sheet"],
+	["#582715","#0f2a37","#440f0f","#322e2d"],
+	["#ebb96e","#71b6d1","#ed8da2","#c6c4c2"],
+];
+var roundNumber = 1;
+var roundRangeMin = document.getElementById("sheetRangeMin").value;
+var roundRangeMax = document.getElementById("sheetRangeMax").value;
 
+function makeTables() {
 	//Make Tables
-	for (k=0; k<message.length; k++) {
+	for (k=0; k<sheets[0].length; k++) {
 		//Get Sheet
-		const sheet = document.getElementById(message[k]);
+		const table = document.getElementById(sheets[0][k]);
 
 		//Make Rows Array
-		const rows = ["Tiles Moved","Attack","Damage","Kills","Consumed","Infused","Healing Recieved","Healing Done","Positive","Negative","Traps","Coins","Chests","Objective","Exhausted"];
+		const rows = ["Rounds","Tiles Moved","Attack","Damage","Kills","Consumed","Infused","Healing Recieved","Healing Done","Positive","Negative","Traps","Coins","Chests","Objective","Exhausted"];
+		const nums = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20'];
+
 		//Making Table
 		for (i=0; i<rows.length; i++) {	
-			//Make Rows
-			const row = document.createElement("tr");
-			row.id = message[k] + "_" + rows[i];
-
-			//Make First Row Cell
-			const cell = document.createElement("th");
-			cell.textContent = rows[i];
-
-			//Append Cell and Row
-			row.appendChild(cell);
-			sheet.firstElementChild.appendChild(row);
+			//Rows
+			const newRow = table.insertRow(-1);
+			//Cells
+			for (j=0; j<=20; j++) {
+				const cell = newRow.insertCell(j);
+				cell.style.backgroundColor = sheets[1][k];
+				cell.style.color = sheets[2][k];
+				//Start of Row
+				if (j === 0) {
+					cell.textContent = rows[i];
+					cell.style.fontWeight = "bold";
+				}
+				//Round Cells
+				else if (i === 0 && j != 0) {
+					cell.textContent = nums[j-1];
+					cell.style.fontWeight = "bold";
+				}
+				//Other Cells
+				else {
+					const input = document.createElement("input");
+					cell.appendChild(input);
+				}
+			}
 		}
-		makeTableCells(message[k]);
-		document.getElementById(message[k]).style.display = "none";
+		//Hide Tables
+		document.getElementById(sheets[0][k]).style.display = "none";
 	}
+	//Hide Column Range
+	showRound(sheets[0], roundNumber);
+
+	//Show First Table
 	for (i=0; i<alive.length; i++) {
 		if (alive[i] === "true") {
-			document.getElementById(message[i]).style.display = "flex";
+			document.getElementById(sheets[0][i]).style.display = "flex";
 			break;
 		}
 	}
 }
 
-function makeTableCells(message) {
-	//Get Sheet
-	const sheet = document.getElementById(message);
+function showRound(pages, number) {
+	for (k=0; k<pages.length; k++) {
+		const table = document.getElementById(pages[k]);
+		for (i=0; i<table.rows.length; i++) {
+			for (j=1; j<table.rows[i].cells.length; j++) {
+				//Hide all rows but 0
+				table.rows[i].cells[j].style.display = "none";
+				table.rows[i].cells[j].style.border = "1px solid white";
 
-	//Iterate through Sheet grandchildren
-	for (i=1; i<sheet.firstElementChild.children.length; i++) {
-		row = sheet.firstElementChild.children[i];
-		//Make X amount of Row Cells
-		for (j=1; j<=20; j++) {
-			cell = row.insertCell(j);
-			const input = document.createElement("input");
-			cell.appendChild(input);
+				//Get Table SHow Range
+				var lowerRange = Number(number) - Number(roundRangeMin);
+				if (lowerRange < 1) { lowerRange = 1 }
+				var higherRange = Number(number) + Number(roundRangeMax);
+				if (higherRange > 20) { higherRange = 20 }
+
+				//Show Table Range
+				if (j >= lowerRange && j <= higherRange) { table.rows[i].cells[j].style.display = ""; }
+
+				//Show Current Round Column
+				if (j === number) {
+					table.rows[i].cells[j].style.display = "";
+					table.rows[i].cells[j].style.border = "3px solid red";
+				}
+			}
 		}
 	}
 }
+
+function nextRound() {
+	if (roundNumber + 1 != 21) { roundNumber++; }
+	for (k=0; k<sheets[0].length; k++) {
+		const table = document.getElementById(sheets[k]);
+		showRound(sheets[0], roundNumber);
+	}
+}
+
+function previousRound() {
+	if (roundNumber - 1 != 0) { roundNumber--; }
+	for (k=0; k<sheets[0].length; k++) {
+		const table = document.getElementById(sheets[k]);
+		showRound(sheets[0], roundNumber);
+	}
+}
+
+//Update Min Sheet Range
+var myInput = document.querySelector("#sheetRangeMin");
+myInput.addEventListener("input", (event) => {
+	if (document.getElementById("sheetRangeMin").value < 0) {
+		document.getElementById("sheetRangeMin").value = 0;
+	}
+	var min = document.getElementById("sheetRangeMin");
+	roundRangeMin = min.value;
+	showRound(sheets[0], roundNumber);
+	if (roundRangeMin >= 10) { min.style.width = "30px"; }
+	else { min.style.width = "25px"; }
+});
+//Update Max Sheet Range
+myInput = document.querySelector("#sheetRangeMax");
+myInput.addEventListener("input", (event) => {
+	if (document.getElementById("sheetRangeMax").value < 0) {
+		document.getElementById("sheetRangeMax").value = 0;
+	}
+	var max = document.getElementById("sheetRangeMax");
+	roundRangeMax = max.value;
+	showRound(sheets[0], roundNumber);
+	if (roundRangeMax >= 10) { max.style.width = "30px"; }
+	else { max.style.width = "25px"; }
+});
 
 function showCharacterSheet(selectorID) {
 	//Get Charater and Box Sheets
@@ -289,8 +347,9 @@ function showCharacterSheet(selectorID) {
 	const sheetBox = document.getElementById("Sheet_Box");
 
 	//Make all Sheets Invisible
-	for (const child of sheetBox.children) {
-		child.style.display = "none";
+	for (i=0; i<sheets[0].length; i++) {
+		const table = document.getElementById(sheets[0][i]);
+		table.style.display = "none";
 	}
 	
 	//Turn the selected one back on
@@ -320,12 +379,42 @@ document.addEventListener("keypress", (event) => {
 	}
 });
 
+//////////////////////////////
+// Enemies
+//
+var enemyTotal = 0;
+const jotl_enemies = [
+	//Name, Health/Elite Health, Attack/Elite Attack, Move/Elite Move
+	[ "Black Imp",	[3,4,5,5,7,9,10,13,4,6,8,8,11,14,15,19], [1,1,1,2,2,2,3,3,2,2,2,3,3,3,4,4], [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] ],
+	[ "Black Sludge", [4,5,7,8,9,10,12,16,8,9,11,11,13,15,16,18], [2,2,2,3,3,3,4,4,2,2,3,3,4,4,4,5], [1,1,1,1,2,2,2,2,1,1,1,2,2,3,3,3] ],
+	[ "Blood Imp", [3,4,5,5,7,8,9,12,4,6,7,10,11,13,17,21], [1,1,1,2,2,2,3,3,2,2,2,2,3,3,3,4], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
+	[ "Chaos Demon", [7,8,11,12,15,16,20,22,10,12,14,18,21,26,30,35], [2,3,3,4,4,5,5,6,3,4,5,5,6,6,7,8], [3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5] ],
+	[ "Giant Viper", [2,3,4,4,6,7,8,10,3,5,7,8,11,13,14,18], [1,1,1,2,2,3,3,3,2,2,2,3,3,3,4,4], [2,2,3,3,3,3,4,4,2,2,3,3,3,4,4,4] ],
+	[ "Living Corpse", [5,7,9,10,11,13,14,16,10,11,14,14,16,18,23,29], [3,3,3,4,4,4,4,5,3,4,4,5,5,6,6,6], [1,1,1,1,2,2,2,2,1,1,1,2,2,2,2,2] ],
+	[ "Rat Monstrosity", [4,4,5,6,8,10,12,12,6,7,8,10,12,13,14,16], [1,2,2,3,3,3,3,4,2,2,3,3,3,4,4,5], [1,1,2,2,2,3,3,3,1,1,1,2,2,2,3,3] ],
+	[ "Stone Golem", [10,10,11,11,12,13,16,16,10,11,13,14,16,18,20,21], [3,3,4,4,4,5,5,5,4,4,5,5,6,6,7,7], [1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3] ],
+	[ "Vermling Raider", [4,5,9,12,12,15,17,19,8,10,14,16,19,23,27,31], [2,2,2,2,3,3,3,4,2,2,3,4,4,4,5,6], [1,1,2,3,3,3,4,4,1,1,3,3,4,4,4,4] ],
+	[ "Vermling Scout", [2,3,3,5,6,8,10,13,4,5,5,7,8,11,13,17], [1,1,2,2,3,3,3,3,2,2,3,3,4,4,4,4], [3,3,3,3,3,3,4,4,3,3,4,4,4,4,5,5] ],
+	[ "Zealot", [4,6,7,8,10,12,14,16,7,8,11,13,17,18,22,26], [2,2,3,3,3,3,4,5,3,3,3,4,4,5,6,7], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
+//	[ "", [], [] ],
+];
+
 function makeEnemyList() {
-	const father = document.getElementById("Enemy_Selector");
-	for (i=0; i<jotl_enemies.length; i++ ) {
+	//Make Enemy Selection List
+	var father = document.getElementById("Enemy_Selector");
+	for (i=0; i<jotl_enemies.length; i++) {
 		const option = document.createElement("option");
 		option.value = i;
 		option.text = jotl_enemies[i][0];
+		father.appendChild(option);
+	}
+
+	//Make Enemy Level List
+	father = document.getElementById("Enemy_Selector_Levels");
+	for (i=0; i<8; i++) {
+		const option = document.createElement("option");
+		option.value = i;
+		option.text = i;
 		father.appendChild(option);
 	}
 }
@@ -341,18 +430,72 @@ function addEnemy(selectorID) {
 		end += 8;
 		color = "3px solid gold"
 	}
-	console.log(color);
+	enemyTotal++;
 
-	//Make the Enemy
-	const selection = document.getElementById("Enemy_Selector");
-	const enemy = document.createElement("img");
+	//Make Enemy Container(s)
+	const enemySelection = document.getElementById("Enemy_Selector")
+	const enemyBoxContainer = document.createElement("box-container");
+	box.appendChild(enemyBoxContainer);
 
-	enemy.src = "./Images/Enemies/" + jotl_enemies[selection.value][0].replace(/\s+/g,"") + ".png";
-	enemy.style.height = "93px";
-	enemy.style.width = "auto";
-	enemy.style.border = color;
-	box.appendChild(enemy);
+	const enemySrc = "./Images/Enemies/" + jotl_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+	const level = document.getElementById("Enemy_Selector_Levels");
+	var total = Number(start) + Number(level.value);
+	var enemyName = jotl_enemies[enemySelection.value][0].replace(/\s+/g,"");
+	var health = 0;
+	var move = 0;
+	var attack = 0;
+
+	//Get Enemy Name Index
+	var index = 0;
+	for (i=0; i<jotl_enemies.length; i++) {
+		if (jotl_enemies[i][0].includes(jotl_enemies[enemySelection.value][0]) ) {
+			health = jotl_enemies[i][1][total];
+			move = jotl_enemies[i][3][total];
+			attack = jotl_enemies[i][2][total];
+		}
+	}
+
+	enemyBoxContainer.innerHTML = `
+	<div class="box-long" style="column-gap:5px;">
+		<div class="box-tall" id="${enemyName + "_" + enemyTotal}" style="position:relative">
+			<img src="${enemySrc}" class="enemy-image" style="border:${color}">
+			<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_" + enemyTotal})">
+			<input type="number" class="enemy-ID">
+		</div>
+		<div class="box-tall" style="column-gap:10px;">
+			<p style="margin:5px; color:red;">H:${health}</p>
+			<p style="margin:5px; color:white;">M:${move}</p>
+			<p style="margin:5px; color:green;">A:${attack}</p>
+		</div>
+	</div>
+	`;
+
 }
+
+function removeEnemy(selectorID) {
+	const selection = document.getElementById(selectorID);
+	selection.remove();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

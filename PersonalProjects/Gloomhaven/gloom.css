@@ -152,7 +152,7 @@ input {
 	align-items:flex-start;
 	text-align:center;
 
-	height:760px;
+	height:800px;
 	width:410px;
 	margin-top:auto;
 	margin-bottom:auto;
@@ -161,7 +161,27 @@ input {
 	border:1px solid white;
 }
 
+.enemy-image {
+	height:102px;
+	width:70px;
+}
 
+.enemy-delete {
+	position:absolute;
+	height:25px;
+	width:25px;
+	top:3px;
+	right:3px;
+	cursor:pointer;
+	content:url("./Images/Icons/Minus_1.png");
+}
+
+.enemy-ID {
+	position:absolute;
+	width:30px;
+	top:3px;
+	left:3px;
+}
 
 
 

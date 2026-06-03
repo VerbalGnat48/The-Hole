@@ -8,104 +8,45 @@
 	table, th, td {
 		border:1px solid white;
 	}
-	#Demolitionist_Sheet { border:1px solid #ebb96e; color:#ebb96e; }
-	#Hatchet_Sheet { border:1px solid #96d3e4; color:#96d3e4; }
-	#RedGuard_Sheet { border:1px solid #f0a9ba; color:#f0a9ba; }
-	#Voidwarden_Sheet { border:1px solid #6d40a7; color:#6d40a7; }
 </style>
 <body onload="getCharacters()">
 	<div class="page-container" style="flex-direction:row; column-gap:10px; justify-content: space-evenly;">
 		<!--Characters-->
-		<div class="box-container" style="column-gap:25px; flex-direction:column;">
-			<!--Demolitionist-->
-			<div class="box-long" id="Demolitionist">
-				<div class="box-tall" id="Demolitionist_Container" style="position:relative;">
-					<img src="./Images/JoTL/Demolitionist.png" width="auto" height="172">
-					<button class="character-sheet-selector" id="Demolitionist_Btn" onclick="showCharacterSheet(this.id)"></button>
-				</div>
-				<!--Action Buttons-->
-				<div class="box-tall">
-					<p>A</p><p>H</p><p>M</p>
-				</div>
-			</div>
-
-			<!--Hatchet-->
-			<div class="box-long" id="Hatchet">
-				<div class="box-tall" id="Hatchet_Container" style="position:relative;">
-					<img src="./Images/JoTL/Hatchet.png" width="auto" height="172">
-					<button class="character-sheet-selector" id="Hatchet_Btn" onclick="showCharacterSheet(this.id)"></button>
-				</div>
-			</div>
-
-			<!--RedGuard-->
-			<div class="box-long" id="RedGuard">
-				<div class="box-tall" id="RedGuard_Container" style="position:relative;">
-					<img src="./Images/JoTL/RedGuard.png" width="auto" height="172">
-					<button class="character-sheet-selector" id="RedGuard_Btn" onclick="showCharacterSheet(this.id)"></button>
-				</div>
-			</div>
-
-			<!--Void Warden-->
-			<div class="box-long" id="Voidwarden">
-				<div class="box-tall" id="Voidwarden_Container" style="position:relative;">
-					<img src="./Images/JoTL/Voidwarden.png" width="auto" height="172">
-					<button class="character-sheet-selector" id="Voidwarden_Btn" onclick="showCharacterSheet(this.id)"></button>
-				</div>
-			</div>
-		</div>
+		<div class="box-container" id="Character_Box_Container" style="column-gap:25px; flex-direction:column;"></div>
 
 		<!--Sheets-->
-		<div class="box-tall" id="Sheet_Box">
+		<div class="box-tall" id="Sheet_Box" style="row-gap:25px;">
 			<!--Demolitionist Sheet-->
-			<table style="width:1200px;" id="Demolitionist_Sheet">
-				<!--Round-->
-				<tr scope="row" id="Demolitionist_Round">
-					<th>Round</th>
-					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
-					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
-				</tr>
-			</table>
+			<table style="max-width:1200px;" id="Demolitionist_Sheet"></table>
 
 			<!--Hatchet Sheet-->
-			<table style="width:1200px;" id="Hatchet_Sheet">
-				<!--Round-->
-				<tr scope="row" id="Hatchet_Round">
-					<th>Round</th>
-					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
-					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
-				</tr>
-			</table>
+			<table style="max-width:1200px;" id="Hatchet_Sheet"></table>
 
 			<!--RedGuard Sheet-->
-			<table style="width:1200px;" id="RedGuard_Sheet">
-				<!--Round-->
-				<tr scope="row" id="RedGuard_Round">
-					<th>Round</th>
-					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
-					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
-				</tr>
-			</table>
+			<table style="max-width:1200px;" id="RedGuard_Sheet"></table>
 
 			<!--Void Warden Sheet-->
-			<table style="width:1200px;" id="Voidwarden_Sheet">
-				<!--Round-->
-				<tr scope="row" id="Voidwarden_Round">
-					<th>Round</th>
-					<th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th>
-					<th>11</th><th>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
-				</tr>
-			</table>
+			<table style="max-width:1200px;" id="Voidwarden_Sheet"></table>
+
+			<div class="box-long" style="column-gap:10px;">
+				<input type="number" id="sheetRangeMin" value="2" style="width:25px;">
+				<button onclick="nextRound()">Next Round</button>
+				<input type="number" id="sheetRangeMax" value="0" style="width:25px;">
+			</div>
+			<button onclick="previousRound()">Previous Round</button>
 		</div>
 
 		<!--Enemies-->
 		<div class="box-tall" id="Enemy_Container" style="height:100vh; row-gap:10px; justify-content:flex-start;">
-			<select name="enemies" id="Enemy_Selector">
-			</select>
+			<div class="box-long" style="column-gap:10px;">
+				<select name="enemies" id="Enemy_Selector"></select>
+				<select name="levels" id="Enemy_Selector_Levels"></select>
+			</div>
 			<div class="box-long" style="column-gap:10px;">
 				<img src="./Images/Icons/Normal.png" class="enemy-selector" id="Add_Enemy" onclick="addEnemy(this.id)">
 				<img src="./Images/Icons/Elite.png" class="enemy-selector" id="Add_Enemy_Elite" onclick="addEnemy(this.id)">
 			</div>
-			<div class="box-enemy" id="Enemy_Box">
+			<div class="box-enemy" id="Enemy_Box" style="position:relative;">
 			</div>
 		</div>
 
