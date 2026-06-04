@@ -183,6 +183,11 @@ input {
 	left:3px;
 }
 
+.action-Btn {
+	height:50px;
+	width:auto;
+	cursor:pointer;
+}
 
 
 

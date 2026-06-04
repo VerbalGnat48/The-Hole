@@ -145,6 +145,7 @@ const jotl_characters = [
 	[ [8,9,11,12,14,15,17,18,20], [8,9,11,12,14,15,17,18,20], [10,12,14,16,18,20,22,24,26], [6,7,8,9,10,11,12,13,14], ],
 ];
 var alive = [];
+var actionArray = [];
 
 function getCharacters() {
 	const selected = [];
@@ -167,12 +168,6 @@ function getCharacters() {
 	selected.push(sessionStorage.getItem("Voidwarden_Status"));
 	level.push(sessionStorage.getItem("Voidwarden_Level"));
 
-	//Disappear Characters that were not selected
-	for (i=0; i<selected.length; i++) {
-		if (selected[i] === "false") {
-			document.getElementById(jotl_characters[0][i]).style.display = "none";
-		}
-	}
 	makeTables();
 	makeCharacterStats(selected, level);
 	makeEnemyList();
@@ -198,6 +193,16 @@ function makeCharacterStats(selected, level) {
 							<p style="margin:5px; color:white;">S:0</p>
 						</div>
 					</div>
+					<div class="box-tall" style="row-gap:15px;">
+						<img src="./Images/Icons/Attack.png" id="${jotl_characters[0][i] + '_Attack_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+						<img src="./Images/Icons/Heal.png" id="${jotl_characters[0][i] + '_Heal_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+						<img src="./Images/Icons/Shield.png" id="${jotl_characters[0][i] + '_Shield_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+					</div>
+					<div class="box-tall" style="row-gap:43px;">
+						<input type="number" id="${jotl_characters[0][i] + '_Attack_Value'}" style="width:25px;">
+						<input type="number" id="${jotl_characters[0][i] + '_Heal_Value'}" style="width:25px;">
+						<input type="number" id="${jotl_characters[0][i] + '_Shield_Value'}"style="width:25px;">
+					</div>
 				</div>
 			`;
 		}
@@ -207,6 +212,87 @@ function makeCharacterStats(selected, level) {
 function getAttribute() {
 	
 }
+
+function characterAction(ID) {
+	//Clear Array
+	actionArray.length = 0;
+
+	//Set Array
+	const character = ID.split("_")[0];
+	const action = ID.split("_")[1];
+	const attackValue = document.getElementById(character + "_" + action + "_Value");
+	actionArray.push(action, character, attackValue.value);
+
+	//Hide Tables
+	for (k=0; k<sheets[0].length; k++) {
+		document.getElementById(sheets[0][k]).style.display = "none";
+	}
+
+	//Show Selected Table
+	document.getElementById(character + "_Sheet").style.display = "flex";
+
+	//Set Cursor
+	document.documentElement.style.cursor = `url("${ './Images/Icons/' + action +'_Cursor.png' }"), auto`;
+}
+
+//Action Selected
+document.addEventListener('click', function(event) {
+    // This is the exact DOM element under the mouse
+    const clickedElement = event.target; 
+    
+	//If Player Action is Attack and Target is Enemy
+	if ( (clickedElement.className === "enemy-image" || clickedElement.className === "action-Btn") && actionArray[0] === "Attack" ) {
+		if (clickedElement.className === "action-Btn") {
+			return;
+		}
+		//Get Enemy Helath
+		const ID = document.getElementById(clickedElement.parentElement.id);
+		const health = document.getElementById(ID.id + "_Health");
+		const healthValue = health.textContent.split(":")[1];
+
+		//Make Enemy new Health
+		var newHealth = Number(healthValue);
+		var damageDone = 0;
+		if (newHealth !== 0) {
+			for (i=1;i<=Number(actionArray[2]); i++) {
+				newHealth = newHealth - 1;
+				damageDone++;
+				if (newHealth === 0) {
+					break;
+				}
+			}
+			health.textContent = "H:" + newHealth;
+		}
+
+		//Update Character Sheet(Attack)
+		const table = document.getElementById(actionArray[1] + "_Sheet");
+		var attackValue = table.rows[2].cells[roundNumber].children[0].value;
+		attackValue = Number(attackValue) + damageDone;
+		table.rows[2].cells[roundNumber].children[0].value = attackValue;
+
+		//Clear Array/Cursor
+		actionArray.length = 0;
+		document.documentElement.style.cursor = "default";
+	}
+	else {
+		//Clear Array/Cursor
+		actionArray.length = 0;
+		document.documentElement.style.cursor = "default";
+	}
+});
+
+//Change Character Action Input Size based on Value
+window.addEventListener('load', (event) => {
+	const numberInputs = document.querySelectorAll('input[type="number"]');
+	numberInputs.forEach(input => {
+		input.addEventListener('input', (event) => {
+			if (input.value < 0) { input.value = 0; }
+			if (input.value >= 10) { input.style.width = "30px"; }
+			else { input.style.width = "25px"; }
+		});
+	});
+});
+
 
 //////////////////////////////
 // Sheets
@@ -281,7 +367,7 @@ function showRound(pages, number) {
 				table.rows[i].cells[j].style.display = "none";
 				table.rows[i].cells[j].style.border = "1px solid white";
 
-				//Get Table SHow Range
+				//Get Table Show Range
 				var lowerRange = Number(number) - Number(roundRangeMin);
 				if (lowerRange < 1) { lowerRange = 1 }
 				var higherRange = Number(number) + Number(roundRangeMax);
@@ -357,25 +443,29 @@ function showCharacterSheet(selectorID) {
 }
 
 //Table Math Calculations
-document.addEventListener("keypress", (event) => {
-	if (event.key === "Enter") {
-		var expression = event.target.value;
-		var operands = expression.split(/[+-]/);
-		var results = expression.replace(/[^+-]/g, "");
-		var sum = 0;
-		for (var i = 0; i < operands.length; i++) {
-			console.log(operands[i] + " and " + results[i]);
-			if (sum === 0) {
-				sum += parseInt(operands[i]);
+document.addEventListener('click', function(event) {
+	const clickedCell = event.target.closest("td"); 
+	if (clickedCell) {
+		document.addEventListener("keypress", (event) => {
+			if (event.key === "Enter") {
+				var expression = clickedCell.children[0].value;
+				var operands = expression.split(/[+-]/);
+				var results = expression.replace(/[^+-]/g, "");
+				var sum = 0;
+				for (var i = 0; i < operands.length; i++) {
+					if (sum === 0) {
+						sum += parseInt(operands[i]);
+					}
+					if (results[i-1] === "+") {
+						sum += parseInt(operands[i]);
+					}
+					else if (results[i-1] === "-") {
+						sum -= parseInt(operands[i]);
+					}
+				}
+				clickedCell.children[0].value = sum;
 			}
-			if (results[i-1] === "+") {
-				sum += parseInt(operands[i]);
-			}
-			else if (results[i-1] === "-") {
-				sum -= parseInt(operands[i]);
-			}
-		}
-		event.target.value = sum;
+		});
 	}
 });
 
@@ -463,7 +553,7 @@ function addEnemy(selectorID) {
 			<input type="number" class="enemy-ID">
 		</div>
 		<div class="box-tall" style="column-gap:10px;">
-			<p style="margin:5px; color:red;">H:${health}</p>
+			<p id="${enemyName + "_" + enemyTotal + "_Health"}" style="margin:5px; color:red;">H:${health}</p>
 			<p style="margin:5px; color:white;">M:${move}</p>
 			<p style="margin:5px; color:green;">A:${attack}</p>
 		</div>
