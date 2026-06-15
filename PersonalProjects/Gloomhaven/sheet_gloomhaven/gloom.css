@@ -118,7 +118,6 @@ body {
 /* chartInput */
 input {
 	width:40px;
-	text-align:center;
 }
 
 .character-sheet-selector {
@@ -167,11 +166,6 @@ input {
 	width:auto;
 }
 
-.enemy-stat-image {
-	height:85px;
-	width:auto;
-}
-
 .enemy-delete {
 	position:absolute;
 	height:25px;
@@ -204,25 +198,6 @@ input {
 	font-size:15px;
 }
 
-.element {
-	height:50px;
-	width:auto;
-	cursor:pointer;
-}
-
-.element-box {
-	display:flex;
-	flex-wrap:wrap;
-	flex-direction:column;
-	justify-content:center;
-	align-items:center;
-	text-align:center;
-
-	border:1px solid white;
-	height:250px;
-	width:250px;
-	row-gap:20px;
-}
 
 
 

@@ -12,41 +12,57 @@
 <body onload="getCharacters()">
 	<div class="page-container" style="flex-direction:row; column-gap:10px; justify-content: space-evenly;">
 		<!--Characters-->
-		<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column;"></div>
+		<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; hieght:100vh;"></div>
 
-		<!--Sheets-->
-		<div class="box-tall" id="Sheet_Box" style="row-gap:25px;">
-			<!--Demolitionist Sheet-->
-			<table style="max-width:1200px;" id="Demolitionist_Sheet"></table>
-
-			<!--Hatchet Sheet-->
-			<table style="max-width:1200px;" id="Hatchet_Sheet"></table>
-
-			<!--RedGuard Sheet-->
-			<table style="max-width:1200px;" id="RedGuard_Sheet"></table>
-
-			<!--Void Warden Sheet-->
-			<table style="max-width:1200px;" id="Voidwarden_Sheet"></table>
-
-			<div class="box-long" style="column-gap:10px;">
-				<input type="number" id="sheetRangeMin" value="2" style="width:25px;">
-				<button onclick="nextRound()">Next Round</button>
-				<input type="number" id="sheetRangeMax" value="0" style="width:25px;">
+		<!--Elements-->
+		<div class="box-tall">
+			<div class="box-tall" style="row-gap:10px;">
+				<!--Strong-->
+				<div class="element-box" id="Strong" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+				<div class="box-long" style="height:50px;width:250px;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Waning', 'Strong')" style="width:50px;height:50px; cursor:pointer;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Strong', 'Waning')" style="width:50px;height:50px; cursor:pointer; rotate:180deg;">
+				</div>
+				<!--Waning-->
+				<div class="element-box" id="Waning" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
+				<div class="box-long" style="height:50px;width:250px;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Inert', 'Waning')" style="width:50px;height:50px; cursor:pointer;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Waning', 'Inert')" style="width:50px;height:50px; cursor:pointer; rotate:180deg;">
+				</div>
+				<!--Inert-->
+				<div class="element-box" id="Inert" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
+					<img src="./Images/Icons/Elements/Fire.png" id="Fire" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Ice.png" id="Ice" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Grass.png" id="Grass" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Wind.png" id="Wind" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Dark.png" id="Dark" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Light.png" id="Light" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+				</div>
 			</div>
-			<button onclick="previousRound()">Previous Round</button>
 		</div>
-
 		<!--Enemies-->
-		<div class="box-tall" id="Enemy_Container" style="height:100vh; row-gap:10px; justify-content:flex-start;">
-			<div class="box-long" style="column-gap:10px;">
-				<select name="enemies" id="Enemy_Selector"></select>
-				<select name="levels" id="Enemy_Selector_Levels"></select>
+		<div class="box-long" style="column-gap:20px;">
+			<div class="box-tall">
+				<!img src="./Images/Icons/Attack.png" class="enemy-selector" id="Attack_Player">
+				<div class="box-tall" id="Enemy_Stat_Box" style="height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
 			</div>
-			<div class="box-long" style="column-gap:10px;">
-				<img src="./Images/Icons/Normal.png" class="enemy-selector" id="Add_Enemy" onclick="addEnemy(this.id)">
-				<img src="./Images/Icons/Elite.png" class="enemy-selector" id="Add_Enemy_Elite" onclick="addEnemy(this.id)">
-			</div>
-			<div class="box-enemy" id="Enemy_Box" style="position:relative;">
+			<div class="box-tall" id="Enemy_Container" style="height:100vh; justify-content:flex-start;">
+				<div class="box-long" style="column-gap:10px;">
+					<select name="enemies" id="Enemy_Selector"></select>
+					<select name="levels" id="Enemy_Selector_Levels"></select>
+					<img src="./Images/Icons/Normal.png" class="enemy-selector" id="Add_Enemy" onclick="addEnemy(this.id)">
+					<img src="./Images/Icons/Elite.png" class="enemy-selector" id="Add_Enemy_Elite" onclick="addEnemy(this.id)">
+				</div>
+				<div class="box-long" style="column-gap:10px;">
+					<div class="box-tall" style="row-gap:10px;">
+						<img src="./Images/Icons/Shuffle.png" class="action-Btn" style="height:25px" onclick="shuffleEnemyModifierDeck()">
+						<img src="./Images/Icons/Flip.png" class="action-Btn" style="height:25px" onclick="flipEnemyModifierDeck()">
+						<img src="./Images/Icons/Wormie.png" class="action-Btn" style="height:25px">
+						<img src="./Images/Icons/Wormie.png" class="action-Btn" style="height:25px">
+					</div>
+					<img id="EnemyModDeck" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px;">
+				</div>
+				<div class="box-enemy" id="Enemy_Box" style="position:relative;"></div>
 			</div>
 		</div>
 

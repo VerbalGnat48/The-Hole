@@ -90,6 +90,8 @@ function selectCharacterLevel(selectorID) {
 
 	//Change Selected Level Color to indicate it being Chosen
 	document.getElementById(selectorID).style.webkitTextStroke = cardBox.dataset.color;
+
+	selectCharacterStatus(selectorID.split("_")[0] + "_Selector")
 }
 
 function selectCharacterStatus(selectorID) {
@@ -168,9 +170,9 @@ function getCharacters() {
 	selected.push(sessionStorage.getItem("Voidwarden_Status"));
 	level.push(sessionStorage.getItem("Voidwarden_Level"));
 
-	makeTables();
 	makeCharacterStats(selected, level);
 	makeEnemyList();
+	makeEnemyScoreCards();
 }
 
 function makeCharacterStats(selected, level) {
@@ -181,27 +183,46 @@ function makeCharacterStats(selected, level) {
 
 			const characterBoxContainer = document.createElement("box-container");
 			box.appendChild(characterBoxContainer);
-			const characterSrc = "./Images/JoTL/" + jotl_characters[0][i] + ".png";
+			const character = jotl_characters[0][i];
+			const characterSrc = "./Images/JoTL/" + character + ".png";
 			characterBoxContainer.innerHTML = `
-				<div class="box-long" id="${jotl_characters[0][i]}">
-					<div class="box-tall" id="${jotl_characters[0][i] + '_Container'}" style="position:relative">
-						<img src="${characterSrc}" height="172" width="auto">
-						<button class="character-sheet-selector" id="${jotl_characters[0][i] + '_Btn'}" onclick="showCharacterSheet(this.id)"></button>
-						<div class="box-long" style="column-gap:10px;">
+				<div class="box-long" id="${character}" style="column-gap:10px;">
+					<div class="box-tall" id="${character + '_Positives'}" style="position:relative; width:30px;height:172px; border:2px solid white;">
+					</div>
+					<div class="box-tall" id="${character + '_Negatives'}" style="position:relative; width:30px;height:172px; border:2px solid white;">
+					</div>
+					<div class="box-tall" id="${character + '_Container'}" style="position:relative">
+						<img src="${characterSrc}" class="Player" height="172" width="auto">
+						<div class="box-long" style="column-gap:10px">
 							<p style="margin:5px; color:white;">L: ${level[i]}</p>
-							<p style="margin:5px; color:white;">H: ${jotl_characters[1][i][Number(level[i]) - 1]}</p>
-							<p style="margin:5px; color:white;">S:0</p>
 						</div>
 					</div>
 					<div class="box-tall" style="row-gap:15px;">
-						<img src="./Images/Icons/Attack.png" id="${jotl_characters[0][i] + '_Attack_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
-						<img src="./Images/Icons/Heal.png" id="${jotl_characters[0][i] + '_Heal_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
-						<img src="./Images/Icons/Shield.png" id="${jotl_characters[0][i] + '_Shield_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
-					</div>
-					<div class="box-tall" style="row-gap:43px;">
-						<input type="number" id="${jotl_characters[0][i] + '_Attack_Value'}" style="width:25px;">
-						<input type="number" id="${jotl_characters[0][i] + '_Heal_Value'}" style="width:25px;">
-						<input type="number" id="${jotl_characters[0][i] + '_Shield_Value'}"style="width:25px;">
+						<div class="box-long">
+							<img src="./Images/Icons/Attack.png" id="${character + '_Attack_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+							<p id="${character + '_Attack'}" class="attribute-input">0</p>
+							<div class="box-tall">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${character + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${character + '_Attack'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+							</div>
+						</div>
+						<div class="box-long">
+							<img src="./Images/Icons/Heal.png" id="${character + '_Heal_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+							<p id="${character + '_Health'}" class="attribute-input">${jotl_characters[1][i][Number(level[i]) - 1]}</p>
+							<p class="attribute-input">${'/ ' + jotl_characters[1][i][Number(level[i]) - 1]}</p>
+							<div class="box-tall">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${character + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${character + '_Health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+							</div>
+						</div>
+						<div class="box-long">
+							<img src="./Images/Icons/Shield.png" id="${character + '_Shield_Btn'}" class="action-Btn">
+							<p id="${character + '_Shield'}" class="attribute-input">0</p>
+							<div class="box-tall">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${character + '_Shield'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${character + '_Shield'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+							</div>
+						</div>
 					</div>
 				</div>
 			`;
@@ -220,66 +241,12 @@ function characterAction(ID) {
 	//Set Array
 	const character = ID.split("_")[0];
 	const action = ID.split("_")[1];
-	const attackValue = document.getElementById(character + "_" + action + "_Value");
-	actionArray.push(action, character, attackValue.value);
-
-	//Hide Tables
-	for (k=0; k<sheets[0].length; k++) {
-		document.getElementById(sheets[0][k]).style.display = "none";
-	}
-
-	//Show Selected Table
-	document.getElementById(character + "_Sheet").style.display = "flex";
+	const attackValue = document.getElementById(character + "_" + action);
+	actionArray.push(action, character, attackValue.textContent);
 
 	//Set Cursor
 	document.documentElement.style.cursor = `url("${ './Images/Icons/' + action +'_Cursor.png' }"), auto`;
 }
-
-//Action Selected
-document.addEventListener('click', function(event) {
-    // This is the exact DOM element under the mouse
-    const clickedElement = event.target; 
-    
-	//If Player Action is Attack and Target is Enemy
-	if ( (clickedElement.className === "enemy-image" || clickedElement.className === "action-Btn") && actionArray[0] === "Attack" ) {
-		if (clickedElement.className === "action-Btn") {
-			return;
-		}
-		//Get Enemy Helath
-		const ID = document.getElementById(clickedElement.parentElement.id);
-		const health = document.getElementById(ID.id + "_Health");
-		const healthValue = health.textContent.split(":")[1];
-
-		//Make Enemy new Health
-		var newHealth = Number(healthValue);
-		var damageDone = 0;
-		if (newHealth !== 0) {
-			for (i=1;i<=Number(actionArray[2]); i++) {
-				newHealth = newHealth - 1;
-				damageDone++;
-				if (newHealth === 0) {
-					break;
-				}
-			}
-			health.textContent = "H:" + newHealth;
-		}
-
-		//Update Character Sheet(Attack)
-		const table = document.getElementById(actionArray[1] + "_Sheet");
-		var attackValue = table.rows[2].cells[roundNumber].children[0].value;
-		attackValue = Number(attackValue) + damageDone;
-		table.rows[2].cells[roundNumber].children[0].value = attackValue;
-
-		//Clear Array/Cursor
-		actionArray.length = 0;
-		document.documentElement.style.cursor = "default";
-	}
-	else {
-		//Clear Array/Cursor
-		actionArray.length = 0;
-		document.documentElement.style.cursor = "default";
-	}
-});
 
 //Change Character Action Input Size based on Value
 window.addEventListener('load', (event) => {
@@ -287,8 +254,8 @@ window.addEventListener('load', (event) => {
 	numberInputs.forEach(input => {
 		input.addEventListener('input', (event) => {
 			if (input.value < 0) { input.value = 0; }
-			if (input.value >= 10) { input.style.width = "30px"; }
-			else { input.style.width = "25px"; }
+			if (input.value >= 10) { input.style.width = "32px"; }
+			else { input.style.width = "27px"; }
 		});
 	});
 });
@@ -304,170 +271,30 @@ const sheets = [
 	["#ebb96e","#71b6d1","#ed8da2","#c6c4c2"],
 ];
 var roundNumber = 1;
-var roundRangeMin = document.getElementById("sheetRangeMin").value;
-var roundRangeMax = document.getElementById("sheetRangeMax").value;
 
-function makeTables() {
-	//Make Tables
-	for (k=0; k<sheets[0].length; k++) {
-		//Get Sheet
-		const table = document.getElementById(sheets[0][k]);
-
-		//Make Rows Array
-		const rows = ["Rounds","Tiles Moved","Attack","Damage","Kills","Consumed","Infused","Healing Recieved","Healing Done","Positive","Negative","Traps","Coins","Chests","Objective","Exhausted"];
-		const nums = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20'];
-
-		//Making Table
-		for (i=0; i<rows.length; i++) {	
-			//Rows
-			const newRow = table.insertRow(-1);
-			//Cells
-			for (j=0; j<=20; j++) {
-				const cell = newRow.insertCell(j);
-				cell.style.backgroundColor = sheets[1][k];
-				cell.style.color = sheets[2][k];
-				//Start of Row
-				if (j === 0) {
-					cell.textContent = rows[i];
-					cell.style.fontWeight = "bold";
-				}
-				//Round Cells
-				else if (i === 0 && j != 0) {
-					cell.textContent = nums[j-1];
-					cell.style.fontWeight = "bold";
-				}
-				//Other Cells
-				else {
-					const input = document.createElement("input");
-					cell.appendChild(input);
-				}
-			}
-		}
-		//Hide Tables
-		document.getElementById(sheets[0][k]).style.display = "none";
-	}
-	//Hide Column Range
-	showRound(sheets[0], roundNumber);
-
-	//Show First Table
-	for (i=0; i<alive.length; i++) {
-		if (alive[i] === "true") {
-			document.getElementById(sheets[0][i]).style.display = "flex";
-			break;
-		}
-	}
+//////////////////////////////
+// Elements
+//
+const elements = ["Fire", "Ice", "Grass", "Wind", "Dark", "Light"];
+function dragstartHandler(ev) {
+	ev.dataTransfer.setData("text", ev.target.id);
 }
 
-function showRound(pages, number) {
-	for (k=0; k<pages.length; k++) {
-		const table = document.getElementById(pages[k]);
-		for (i=0; i<table.rows.length; i++) {
-			for (j=1; j<table.rows[i].cells.length; j++) {
-				//Hide all rows but 0
-				table.rows[i].cells[j].style.display = "none";
-				table.rows[i].cells[j].style.border = "1px solid white";
-
-				//Get Table Show Range
-				var lowerRange = Number(number) - Number(roundRangeMin);
-				if (lowerRange < 1) { lowerRange = 1 }
-				var higherRange = Number(number) + Number(roundRangeMax);
-				if (higherRange > 20) { higherRange = 20 }
-
-				//Show Table Range
-				if (j >= lowerRange && j <= higherRange) { table.rows[i].cells[j].style.display = ""; }
-
-				//Show Current Round Column
-				if (j === number) {
-					table.rows[i].cells[j].style.display = "";
-					table.rows[i].cells[j].style.border = "3px solid red";
-				}
-			}
-		}
-	}
+function dragoverHandler(ev) {
+	ev.preventDefault();
 }
 
-function nextRound() {
-	if (roundNumber + 1 != 21) { roundNumber++; }
-	for (k=0; k<sheets[0].length; k++) {
-		const table = document.getElementById(sheets[k]);
-		showRound(sheets[0], roundNumber);
-	}
+function dropHandler(ev) {
+	ev.preventDefault();
+	const data = ev.dataTransfer.getData("text");
+	ev.target.appendChild(document.getElementById(data));
 }
 
-function previousRound() {
-	if (roundNumber - 1 != 0) { roundNumber--; }
-	for (k=0; k<sheets[0].length; k++) {
-		const table = document.getElementById(sheets[k]);
-		showRound(sheets[0], roundNumber);
-	}
+function moveElementFrom(from, to) {
+	const fromBox = document.getElementById(from);
+	const toBox = document.getElementById(to);
+	toBox.prepend(...fromBox.children);
 }
-
-//Update Min Sheet Range
-var myInput = document.querySelector("#sheetRangeMin");
-myInput.addEventListener("input", (event) => {
-	if (document.getElementById("sheetRangeMin").value < 0) {
-		document.getElementById("sheetRangeMin").value = 0;
-	}
-	var min = document.getElementById("sheetRangeMin");
-	roundRangeMin = min.value;
-	showRound(sheets[0], roundNumber);
-	if (roundRangeMin >= 10) { min.style.width = "30px"; }
-	else { min.style.width = "25px"; }
-});
-//Update Max Sheet Range
-myInput = document.querySelector("#sheetRangeMax");
-myInput.addEventListener("input", (event) => {
-	if (document.getElementById("sheetRangeMax").value < 0) {
-		document.getElementById("sheetRangeMax").value = 0;
-	}
-	var max = document.getElementById("sheetRangeMax");
-	roundRangeMax = max.value;
-	showRound(sheets[0], roundNumber);
-	if (roundRangeMax >= 10) { max.style.width = "30px"; }
-	else { max.style.width = "25px"; }
-});
-
-function showCharacterSheet(selectorID) {
-	//Get Charater and Box Sheets
-	const characterSheet = selectorID.replace("Btn", "Sheet");
-	const sheetBox = document.getElementById("Sheet_Box");
-
-	//Make all Sheets Invisible
-	for (i=0; i<sheets[0].length; i++) {
-		const table = document.getElementById(sheets[0][i]);
-		table.style.display = "none";
-	}
-	
-	//Turn the selected one back on
-	document.getElementById(characterSheet).style.display = "flex";
-}
-
-//Table Math Calculations
-document.addEventListener('click', function(event) {
-	const clickedCell = event.target.closest("td"); 
-	if (clickedCell) {
-		document.addEventListener("keypress", (event) => {
-			if (event.key === "Enter") {
-				var expression = clickedCell.children[0].value;
-				var operands = expression.split(/[+-]/);
-				var results = expression.replace(/[^+-]/g, "");
-				var sum = 0;
-				for (var i = 0; i < operands.length; i++) {
-					if (sum === 0) {
-						sum += parseInt(operands[i]);
-					}
-					if (results[i-1] === "+") {
-						sum += parseInt(operands[i]);
-					}
-					else if (results[i-1] === "-") {
-						sum -= parseInt(operands[i]);
-					}
-				}
-				clickedCell.children[0].value = sum;
-			}
-		});
-	}
-});
 
 //////////////////////////////
 // Enemies
@@ -488,6 +315,24 @@ const jotl_enemies = [
 	[ "Zealot", [4,6,7,8,10,12,14,16,7,8,11,13,17,18,22,26], [2,2,3,3,3,3,4,5,3,3,3,4,4,5,6,7], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
 //	[ "", [], [] ],
 ];
+
+const jotl_enemy_extras = [
+	//Name, Shield/Elite Shield, Effects
+	[ "Black Imp", [] ],
+	[ "Black Sludge", [0,1,1,1,1,1,1,1,0,1,1,1,1,1,2,2] ],
+	[ "Blood Imp", [] ],
+	[ "Chaos Demon", [] ],
+	[ "Giant Viper", [] ],
+	[ "Living Corpse", [] ],
+	[ "Rat Monstrosity", [] ],
+	[ "Stone Golem", [0,1,1,2,2,2,2,3,1,2,2,3,3,3,3,4] ],
+	[ "Vermling Raider", [] ],
+	[ "Vermling Scout", [] ],
+	[ "Zealot", [] ],
+//	[ "", [], [] ],
+];
+
+var enemy_stat_cards = [];
 
 function makeEnemyList() {
 	//Make Enemy Selection List
@@ -527,13 +372,21 @@ function addEnemy(selectorID) {
 	const enemyBoxContainer = document.createElement("box-container");
 	box.appendChild(enemyBoxContainer);
 
-	const enemySrc = "./Images/Enemies/" + jotl_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+	const enemySrc = "./Images/JoTL/Enemies/" + jotl_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
 	const level = document.getElementById("Enemy_Selector_Levels");
 	var total = Number(start) + Number(level.value);
 	var enemyName = jotl_enemies[enemySelection.value][0].replace(/\s+/g,"");
 	var health = 0;
 	var move = 0;
+	var moveElite = 0;
 	var attack = 0;
+	var attackElite = 0;
+	var shield = 0;
+
+	var NM = 0;
+	var NA = 0;
+	var EM = 0;
+	var EA = 0;
 
 	//Get Enemy Name Index
 	var index = 0;
@@ -542,8 +395,20 @@ function addEnemy(selectorID) {
 			health = jotl_enemies[i][1][total];
 			move = jotl_enemies[i][3][total];
 			attack = jotl_enemies[i][2][total];
+			if (jotl_enemy_extras[i][1].length > 0) {
+				shield = jotl_enemy_extras[i][1][total];
+			}
+			if (total < 8) {
+				NM = jotl_enemies[i][1][total]; NA = jotl_enemies[i][2][total];
+				EM = jotl_enemies[i][1][total + 8]; EA = jotl_enemies[i][2][total + 8];
+			}
+			else if (total >= 8) {
+				NM = jotl_enemies[i][1][total - 8]; NA = jotl_enemies[i][2][total - 8];
+				EM = jotl_enemies[i][1][total]; EA = jotl_enemies[i][2][total];
+			}
 		}
 	}
+	const enemy = enemyName + "_" + enemyTotal;
 
 	enemyBoxContainer.innerHTML = `
 	<div class="box-long" style="column-gap:5px;">
@@ -552,19 +417,361 @@ function addEnemy(selectorID) {
 			<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_" + enemyTotal})">
 			<input type="number" class="enemy-ID">
 		</div>
-		<div class="box-tall" style="column-gap:10px;">
-			<p id="${enemyName + "_" + enemyTotal + "_Health"}" style="margin:5px; color:red;">H:${health}</p>
-			<p style="margin:5px; color:white;">M:${move}</p>
-			<p style="margin:5px; color:green;">A:${attack}</p>
+		<div class="box-tall" style="row-gap:10px;">
+			<div class="box-tall">
+				<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemy + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
+				<p id="${enemy + "_Health"}" style="margin:5px; color:red;">${health}</p>
+				<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemy + '_Health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+			</div>
+			<div class="box-tall">
+				<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemy + '_Shield'})" style="width:10px;height:10px; cursor:pointer;">
+				<p id="${enemy + "_Shield"}" style="margin:5px; color:blue;">${shield}</p>
+				<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemy + '_Shield'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+			</div>
 		</div>
 	</div>
 	`;
 
+	//Track different types of enemies on screen
+	for (let child of box.children) {
+		var guy = child.children[0].children[0].id;
+		var name = guy.split("_")[0];
+		if (!enemy_stat_cards.includes(name) ) {
+			enemy_stat_cards.push(name);
+
+			//Adding Enemy Type Stat Card
+			const statBox = document.getElementById("Enemy_Stat_Box");
+			const enemyStatSrc = "./Images/JoTL/Enemies/Cards/" + jotl_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+			const enemyStatContainer = document.createElement("box-container");
+			statBox.appendChild(enemyStatContainer);
+			
+			enemyStatContainer.innerHTML = `
+			<div class="box-long" style="position:relative; column-gap:10px;">
+				<div class="box-tall" id="${enemyName + "_Stat"}" style="position:relative">
+					<img src="${enemyStatSrc}" class="enemy-stat-image">
+					<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_Stat"})">
+					<div class="box-long">
+						<p style="margin:5px; color:white;">M:${NM}</p>
+						<p style="margin:5px; color:green;">A:${NA}</p>
+					</div>
+					<div class="box-long">
+						<p style="margin:5px; color:gold;">M:${EM}</p>
+						<p style="margin:5px; color:lawngreen;">A:${EA}</p>
+					</div>
+				</div>
+				<div class="box-tall" id="${enemyName + "_Card"}" style="position:relative">
+					<div class="box-long" style="column-gap:10px;">
+						<div class="box-long">
+							<img src="./Images/Icons/Attack.png" id="${enemyName + '_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+							<p id="${enemyName + '_Attack'}" class="attribute-input" data-attack="${NA}" >${NA}</p>
+							<div class="box-tall">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+							</div>
+						</div>
+						<img src="./Images/Icons/Shuffle.png" onclick="shuffleScores(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
+						<img src="./Images/Icons/Flip.png" onclick="flipEnemy(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
+					</div>
+					<img src="./Images/JoTL/Enemies/Initiatives/Monster_Back.jpg" id="${enemyName + '_Score_Img'}" style="height:auto;width:300px;">
+				</div>
+			</div>
+			`;
+		}
+	}
+
 }
 
 function removeEnemy(selectorID) {
-	const selection = document.getElementById(selectorID);
-	selection.remove();
+	const selection = document.getElementById(selectorID.id);
+	selection.parentElement.remove();
+}
+
+
+
+
+//////////////////////////////
+// Ememy Cards
+//
+const jotl_enemy_cards = [
+	//Name, Usabel Score Cards, Unusable Score Cards
+	[ "Black Imp", [] ],
+	[ "Black Sludge", [] ],
+	[ "Blood Imp", [] ],
+	[ "Chaos Demon", [] ],
+	[ "Giant Viper", [], [] ],
+	[ "Living Corpse", [], [] ],
+	[ "Rat Monstrosity", [], [] ],
+	[ "Stone Golem", [], [] ],
+	[ "Vermling Raider", [], [] ],
+	[ "Vermling Scout", [], [] ],
+	[ "Zealot", [], [] ],
+];
+
+function makeEnemyScoreCard(enemyName, score, move, attack01, attack02, shield, heal, img) {
+	//Have an array that has [ [enemyName], [score values/these cards] ] that these cards ar added to
+	var image = img;
+	if (img === "A") {
+		image = img.replace("A","");
+	}
+	var cardSrc = "./Images/JoTL/Enemies/Initiatives/" + enemyName.replaceAll(" ","") + "_" + score + image + ".png";
+	var array = [];
+	for (i=0; i<jotl_enemy_cards.length; i++ ) {
+		if (jotl_enemy_cards[i][0] === enemyName) {
+			array.push(enemyName, score, move, attack01, attack02, shield, heal, cardSrc, img, true);
+			jotl_enemy_cards[i][1].push(array);
+		}
+	}
+}
+
+function makeEnemyScoreCards() {
+	//Black Imp
+	makeEnemyScoreCard("Black Imp", 5, 0, 0, 0, 5, 1, "");
+	makeEnemyScoreCard("Black Imp", 37, 0, 0, 0, 0, 0, "A");
+	makeEnemyScoreCard("Black Imp", 37, 0, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Black Imp", 42, 1, 0, 0, 0, 0, "_1");
+	makeEnemyScoreCard("Black Imp", 42, 0, -1, 0, 0, 0, "_2");
+	makeEnemyScoreCard("Black Imp", 76, -1, 1, 0, 0, 0, "");
+	makeEnemyScoreCard("Black Imp", 42, 0, -1, 0, 0, 0, "_3");
+	makeEnemyScoreCard("Black Imp", 24, 0, 0, 0, 0, 0, "");
+
+	//Black Sludge
+	makeEnemyScoreCard("Black Sludge", 36, 1, -1, 0, 0, 0, "");
+	makeEnemyScoreCard("Black Sludge", 57, 0, 0, 0, 0, 0,"_1");
+	makeEnemyScoreCard("Black Sludge", 57, 0, 0, 0, 0, 0, "_2");
+	makeEnemyScoreCard("Black Sludge", 66, -1, 1, 0, 0, 0, "_1");
+	makeEnemyScoreCard("Black Sludge", 66, 0, 0, 0, 0, 2, "_2");
+	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 0, "_1");
+	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 1, "_2"); //1+L/2
+	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 0, "_3"); //1+L/2
+
+	//Blood Imp
+	makeEnemyScoreCard("Blood Imp", 5, 0, 0, 0, 5, 1, "");
+	makeEnemyScoreCard("Blood Imp", 37, 0, 0, 0, 0, 0, "A");
+	makeEnemyScoreCard("Blood Imp", 37, 0, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Blood Imp", 42, 1, 0, 0, 0, 0, "_1");
+	makeEnemyScoreCard("Blood Imp", 42, 0, -1, 0, 0, 0, "_2");
+	makeEnemyScoreCard("Blood Imp", 76, -1, 1, 0, 0, 0, "");
+	makeEnemyScoreCard("Blood Imp", 42, 0, -1, 0, 0, 0, "_3");
+	makeEnemyScoreCard("Blood Imp", 24, 0, 0, 0, 0, 0, "");
+
+	//Chaos Demon
+	makeEnemyScoreCard("Chaos Demon", 1, -1, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 13, 1, -1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 20, -2, 1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 41, 0, -1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 52, 0, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 67, -1, 1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 76, 0, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 98, -1, -1, 0, 0, 0, "A");
+	makeEnemyScoreCard("Chaos Demon", 98, 0, 0, 0, 0, 0, "");
+
+	//Name, Active Array, Card, [1] is Score
+//	console.log(jotl_enemy_cards[0][1][0]);
+//	console.log(jotl_enemy_cards[0][1][0][1]);
+//	console.log(jotl_enemy_cards[0][1][7]);
+//	console.log(jotl_enemy_cards[0][1][7][1]);
+}
+
+function enemyAction(ID) {
+	//Clear Array
+	actionArray.length = 0;
+
+	//Set Array
+	const enemy = ID.split("_")[0];
+	const action = ID.split("_")[1];
+	const attackValue = document.getElementById(enemy + "_" + action);
+	actionArray.push(action, enemy, attackValue.textContent);
+
+	//Set Cursor
+	document.documentElement.style.cursor = `url("${ './Images/Icons/' + action +'_Cursor.png' }"), auto`;
+}
+
+function flipEnemy(element) {
+	//Flip Enemy Score Card
+	var scoreArray = [];
+	for (i=0; i<jotl_enemy_cards.length; i++ ) {
+		if (jotl_enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
+			//Make Array of Enemy Scores
+			for (j=0; j<jotl_enemy_cards[i][1].length; j++) {
+				if (jotl_enemy_cards[i][1][j][9] === true) {
+					var card = jotl_enemy_cards[i][1][j][1] + jotl_enemy_cards[i][1][j][8];
+					scoreArray.push(card);
+				}
+			}
+
+			//Shuffle Cards if hand is empty
+			if (scoreArray.length === 0) {
+				shuffleScores(element);
+				break;
+			}
+
+			//Randomly select a Number/Score
+			var number = getRandomIntExclusive(0,scoreArray.length);
+			var score = scoreArray[number];
+
+			//Get/Combine Attack Value(s)
+			for (j=0; j<jotl_enemy_cards[i][1].length; j++) {
+				var card = jotl_enemy_cards[i][1][j][1] + jotl_enemy_cards[i][1][j][8];
+				if (card === score) {
+					jotl_enemy_cards[i][1][j][9] = false;
+					var attack = jotl_enemy_cards[i][1][j][3] + jotl_enemy_cards[i][1][j][4];
+					break;
+				}
+			}
+
+			//Add New Attack Value to Displayed Enemy Attack Value
+			var enemyName = jotl_enemy_cards[i][0].replace(" ","");
+			var enemyAttack = document.getElementById(enemyName + "_Attack");
+			enemyAttack.textContent = Number(enemyAttack.dataset.attack) + attack;
+
+			//Update Displayed Card
+			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
+			enemyScoreImage.src = jotl_enemy_cards[i][1][j][7];
+		}
+	}
+}
+
+function shuffleScores(element) {
+	for (i=0; i<jotl_enemy_cards.length; i++ ) {
+		if (jotl_enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
+			for (j=0; j<jotl_enemy_cards[i][1].length; j++) {
+				jotl_enemy_cards[i][1][j][9] = true
+			}
+			var enemyName = jotl_enemy_cards[i][0].replace(" ","");
+			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
+			enemyScoreImage.src = "./Images/JoTL/Enemies/Initiatives/Monster_Back.jpg";
+			break;
+		}
+	}
+}
+
+////////////////////////
+//Enemy Modifier Deck
+const enemyModifiers = [
+	[0,0,0,0,0,0,+1,+1,+1,+1,+1,-1,-1,-1,-1,-1,-2,+2,"Null","Crit"],
+	[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],
+];
+
+function flipEnemyModifierDeck() {
+	//Random Number
+	var number;
+	do {
+		number = getRandomIntExclusive(0,enemyModifiers[0].length);
+	} while (!enemyModifiers[1][number] && enemyModifiers[1].includes(true) );
+
+	//Make Display match selected Number/Card
+	if (enemyModifiers[1][number]) {
+		const modDeck = document.getElementById("EnemyModDeck");
+		modDeck.src = "./Images/AttackModifiers/" + enemyModifiers[0][number] + ".png";
+	}
+	enemyModifiers[1][number] = false;
+
+	//Shiffle at End of Cards
+	if (enemyModifiers[1].every(value => value === false) ) {
+		shuffleEnemyModifierDeck();
+	}
+}
+
+function shuffleEnemyModifierDeck() {
+	for (i=0; i<enemyModifiers[1].length; i++) {
+		enemyModifiers[1][i] = true;
+	}
+	const modDeck = document.getElementById("EnemyModDeck");
+	modDeck.src = "./Images/AttackModifiers/Back.png";
+}
+
+//////////////////////////////
+// Actions/Attributes
+//
+//Action Selected
+document.addEventListener('click', function(event) {
+    // This is the exact DOM element under the mouse
+    const clickedElement = event.target; 
+    
+	//If Player Action is Attack and Target is Enemy
+	if ( (clickedElement.className === "enemy-image" || clickedElement.className === "action-Btn") && actionArray[0] === "Attack" ) {
+		if (clickedElement.className === "action-Btn") {
+			return;
+		}
+
+		//Get Enemy Helath
+		const ID = document.getElementById(clickedElement.parentElement.id);
+		const health = document.getElementById(ID.id + "_Health");
+		const healthValue = health.textContent;
+
+		//Make Enemy new Health
+		var newHealth = Number(healthValue);
+		var attackValue = Number(actionArray[2]);
+		var shield = Number(document.getElementById(ID.id + "_Shield").textContent);
+		if (shield !== 0 ) {
+			attackValue -= shield;
+			if (attackValue < 0) { attackValue = 0; }
+		}
+		if (newHealth !== 0) {
+			for (i=1; i<=attackValue; i++) {
+				newHealth = newHealth - 1;
+				if (newHealth === 0) {
+					break;
+				}
+			}
+			health.textContent = newHealth;
+		}
+		//Clear Array/Cursor
+		actionArray.length = 0;
+		document.documentElement.style.cursor = "default";
+	}
+	//If Enemy Action is Attack and Target is Player
+	else if ( (clickedElement.className === "Player" || clickedElement.className === "action-Btn") && actionArray[0] === "Attack" ) {
+		if (clickedElement.className === "action-Btn") {
+			return;
+		}
+
+		//Get Player Helath
+		const ID = document.getElementById(clickedElement.parentElement.parentElement.id);
+		const health = document.getElementById(ID.id + "_Health");
+		const healthValue = health.textContent;
+
+		//Make Player new Health
+		var newHealth = Number(healthValue);
+		var attackValue = Number(actionArray[2]);
+		var shield = Number(document.getElementById(ID.id + "_Shield").textContent);
+		if (shield !== 0 ) {
+			attackValue -= shield;
+			if (attackValue < 0) { attackValue = 0; }
+		}
+		if (newHealth !== 0) {
+			for (i=1; i<=attackValue; i++) {
+				newHealth = newHealth - 1;
+				if (newHealth === 0) {
+					break;
+				}
+			}
+			health.textContent = newHealth;
+		}
+		//Clear Array/Cursor
+		actionArray.length = 0;
+		document.documentElement.style.cursor = "default";
+	}
+	else {
+		//Clear Array/Cursor
+		actionArray.length = 0;
+		document.documentElement.style.cursor = "default";
+	}
+});
+
+function addAttribute(ID) {
+	const selected = document.getElementById(ID.id);
+	var attribute = Number(selected.textContent);
+	attribute++;
+	selected.textContent = attribute;
+}
+
+function subAttribute(ID, extra) {
+	const selected = document.getElementById(ID.id);
+	var attribute = Number(selected.textContent);
+	attribute--;
+	if (attribute < 0) { attribute = 0; }
+	selected.textContent = attribute;
 }
 
 
@@ -572,6 +779,16 @@ function removeEnemy(selectorID) {
 
 
 
+
+
+
+
+//////////////////////////////
+// Extra
+//
+function getRandomIntExclusive(min, max) {
+	return Math.floor(Math.random() * (max - min)) + min;
+}
 
 
 
