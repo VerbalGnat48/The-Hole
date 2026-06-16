@@ -145,6 +145,8 @@ function setCharacters() {
 const jotl_characters = [
 	["Demolitionist","Hatchet","RedGuard","Voidwarden"],
 	[ [8,9,11,12,14,15,17,18,20], [8,9,11,12,14,15,17,18,20], [10,12,14,16,18,20,22,24,26], [6,7,8,9,10,11,12,13,14], ],
+	["#582715","#0f2a37","#440f0f","#322e2d"],
+	["#ebb96e","#71b6d1","#ed8da2","#c6c4c2"],
 ];
 var alive = [];
 var actionArray = [];
@@ -187,10 +189,10 @@ function makeCharacterStats(selected, level) {
 			const characterSrc = "./Images/JoTL/" + character + ".png";
 			characterBoxContainer.innerHTML = `
 				<div class="box-long" id="${character}" style="column-gap:10px;">
-					<div class="box-tall" id="${character + '_Positives'}" style="position:relative; width:30px;height:172px; border:2px solid white;">
-					</div>
-					<div class="box-tall" id="${character + '_Negatives'}" style="position:relative; width:30px;height:172px; border:2px solid white;">
-					</div>
+					<div class="box-tall" id="${character + '_Positives'}" ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"
+						style="min-width:50px;max-width:100px;height:172px; border:2px solid ${jotl_characters[3][i]};"></div>
+					<div class="box-tall" id="${character + '_Negatives'}" ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)" 
+						style="min-width:50px;max-width:100px;height:172px; border:2px solid ${jotl_characters[2][i]};"></div>
 					<div class="box-tall" id="${character + '_Container'}" style="position:relative">
 						<img src="${characterSrc}" class="Player" height="172" width="auto">
 						<div class="box-long" style="column-gap:10px">
@@ -228,10 +230,6 @@ function makeCharacterStats(selected, level) {
 			`;
 		}
 	}
-}
-
-function getAttribute() {
-	
 }
 
 function characterAction(ID) {
@@ -273,9 +271,14 @@ const sheets = [
 var roundNumber = 1;
 
 //////////////////////////////
-// Elements
+// Elements and Conditions/Drag and Drops
 //
+
 const elements = ["Fire", "Ice", "Grass", "Wind", "Dark", "Light"];
+const conditions = [
+	["Positive", ["Strengthen"] ],
+	["Negative", ["Wound", "Poison", "Muddle"] ],
+];
 function dragstartHandler(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
 }
@@ -288,6 +291,36 @@ function dropHandler(ev) {
 	ev.preventDefault();
 	const data = ev.dataTransfer.getData("text");
 	ev.target.appendChild(document.getElementById(data));
+}
+
+function dropConditionHandler(ev) {
+	//"Copy and Paste" Condition to Player Condition Boxes
+	ev.preventDefault();
+	const data = ev.dataTransfer.getData("text");
+	const condition = document.getElementById(data);
+
+	//Only Put + Conditions in + Box
+	if (ev.target.id.split("_")[1] === "Positives" && conditions[0][1].includes(condition.id) ) {
+		const clonedCondition = condition.cloneNode(true);
+		clonedCondition.id = condition.id +"_"+ ev.target.id.split("_")[0];
+		clonedCondition.onclick = removeElement(clonedCondition);
+		ev.target.appendChild(clonedCondition);
+	}
+
+	//Only Put - Conditions in - Box
+	else if (ev.target.id.split("_")[1] === "Negatives" && conditions[1][1].includes(condition.id) ) {
+		const clonedCondition = condition.cloneNode(true);
+		clonedCondition.id = condition.id +"_"+ ev.target.id.split("_")[0];
+		ev.target.appendChild(clonedCondition);
+	}
+
+	//Put Conditions in Specific Enemy Condition Boxes
+	else if (conditions[0][1].includes(condition.id) || conditions[1][1].includes(condition.id) ) {
+		const clonedCondition = condition.cloneNode(true);
+		clonedCondition.id = condition.id +"_"+ ev.target.id.split("_")[0];
+		clonedCondition.style.height = "30px";
+		ev.target.appendChild(clonedCondition);
+	}
 }
 
 function moveElementFrom(from, to) {
@@ -306,29 +339,29 @@ const jotl_enemies = [
 	[ "Black Sludge", [4,5,7,8,9,10,12,16,8,9,11,11,13,15,16,18], [2,2,2,3,3,3,4,4,2,2,3,3,4,4,4,5], [1,1,1,1,2,2,2,2,1,1,1,2,2,3,3,3] ],
 	[ "Blood Imp", [3,4,5,5,7,8,9,12,4,6,7,10,11,13,17,21], [1,1,1,2,2,2,3,3,2,2,2,2,3,3,3,4], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
 	[ "Chaos Demon", [7,8,11,12,15,16,20,22,10,12,14,18,21,26,30,35], [2,3,3,4,4,5,5,6,3,4,5,5,6,6,7,8], [3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5] ],
-	[ "Giant Viper", [2,3,4,4,6,7,8,10,3,5,7,8,11,13,14,18], [1,1,1,2,2,3,3,3,2,2,2,3,3,3,4,4], [2,2,3,3,3,3,4,4,2,2,3,3,3,4,4,4] ],
-	[ "Living Corpse", [5,7,9,10,11,13,14,16,10,11,14,14,16,18,23,29], [3,3,3,4,4,4,4,5,3,4,4,5,5,6,6,6], [1,1,1,1,2,2,2,2,1,1,1,2,2,2,2,2] ],
-	[ "Rat Monstrosity", [4,4,5,6,8,10,12,12,6,7,8,10,12,13,14,16], [1,2,2,3,3,3,3,4,2,2,3,3,3,4,4,5], [1,1,2,2,2,3,3,3,1,1,1,2,2,2,3,3] ],
-	[ "Stone Golem", [10,10,11,11,12,13,16,16,10,11,13,14,16,18,20,21], [3,3,4,4,4,5,5,5,4,4,5,5,6,6,7,7], [1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3] ],
-	[ "Vermling Raider", [4,5,9,12,12,15,17,19,8,10,14,16,19,23,27,31], [2,2,2,2,3,3,3,4,2,2,3,4,4,4,5,6], [1,1,2,3,3,3,4,4,1,1,3,3,4,4,4,4] ],
-	[ "Vermling Scout", [2,3,3,5,6,8,10,13,4,5,5,7,8,11,13,17], [1,1,2,2,3,3,3,3,2,2,3,3,4,4,4,4], [3,3,3,3,3,3,4,4,3,3,4,4,4,4,5,5] ],
-	[ "Zealot", [4,6,7,8,10,12,14,16,7,8,11,13,17,18,22,26], [2,2,3,3,3,3,4,5,3,3,3,4,4,5,6,7], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
+//	[ "Giant Viper", [2,3,4,4,6,7,8,10,3,5,7,8,11,13,14,18], [1,1,1,2,2,3,3,3,2,2,2,3,3,3,4,4], [2,2,3,3,3,3,4,4,2,2,3,3,3,4,4,4] ],
+//	[ "Living Corpse", [5,7,9,10,11,13,14,16,10,11,14,14,16,18,23,29], [3,3,3,4,4,4,4,5,3,4,4,5,5,6,6,6], [1,1,1,1,2,2,2,2,1,1,1,2,2,2,2,2] ],
+//	[ "Rat Monstrosity", [4,4,5,6,8,10,12,12,6,7,8,10,12,13,14,16], [1,2,2,3,3,3,3,4,2,2,3,3,3,4,4,5], [1,1,2,2,2,3,3,3,1,1,1,2,2,2,3,3] ],
+//	[ "Stone Golem", [10,10,11,11,12,13,16,16,10,11,13,14,16,18,20,21], [3,3,4,4,4,5,5,5,4,4,5,5,6,6,7,7], [1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3] ],
+//	[ "Vermling Raider", [4,5,9,12,12,15,17,19,8,10,14,16,19,23,27,31], [2,2,2,2,3,3,3,4,2,2,3,4,4,4,5,6], [1,1,2,3,3,3,4,4,1,1,3,3,4,4,4,4] ],
+//	[ "Vermling Scout", [2,3,3,5,6,8,10,13,4,5,5,7,8,11,13,17], [1,1,2,2,3,3,3,3,2,2,3,3,4,4,4,4], [3,3,3,3,3,3,4,4,3,3,4,4,4,4,5,5] ],
+//	[ "Zealot", [4,6,7,8,10,12,14,16,7,8,11,13,17,18,22,26], [2,2,3,3,3,3,4,5,3,3,3,4,4,5,6,7], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
 //	[ "", [], [] ],
 ];
 
 const jotl_enemy_extras = [
 	//Name, Shield/Elite Shield, Effects
-	[ "Black Imp", [] ],
-	[ "Black Sludge", [0,1,1,1,1,1,1,1,0,1,1,1,1,1,2,2] ],
-	[ "Blood Imp", [] ],
-	[ "Chaos Demon", [] ],
-	[ "Giant Viper", [] ],
-	[ "Living Corpse", [] ],
-	[ "Rat Monstrosity", [] ],
-	[ "Stone Golem", [0,1,1,2,2,2,2,3,1,2,2,3,3,3,3,4] ],
-	[ "Vermling Raider", [] ],
-	[ "Vermling Scout", [] ],
-	[ "Zealot", [] ],
+	[ "Black Imp", [], [0, "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison"] ],
+	[ "Black Sludge", [0,1,1,1,1,1,1,1,0,1,1,1,1,1,2,2], [] ],
+	[ "Blood Imp", [], [0, "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle"] ],
+	[ "Chaos Demon", [], ["Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle"] ],
+//	[ "Giant Viper", [] ],
+//	[ "Living Corpse", [] ],
+//	[ "Rat Monstrosity", [] ],
+//	[ "Stone Golem", [0,1,1,2,2,2,2,3,1,2,2,3,3,3,3,4] ],
+//	[ "Vermling Raider", [] ],
+//	[ "Vermling Scout", [] ],
+//	[ "Zealot", [] ],
 //	[ "", [], [] ],
 ];
 
@@ -378,15 +411,18 @@ function addEnemy(selectorID) {
 	var enemyName = jotl_enemies[enemySelection.value][0].replace(/\s+/g,"");
 	var health = 0;
 	var move = 0;
-	var moveElite = 0;
 	var attack = 0;
-	var attackElite = 0;
 	var shield = 0;
+	var condition;
 
 	var NM = 0;
 	var NA = 0;
+	var NS = 0;
+	var NC;
 	var EM = 0;
 	var EA = 0;
+	var ES = 0;
+	var EC;
 
 	//Get Enemy Name Index
 	var index = 0;
@@ -395,8 +431,17 @@ function addEnemy(selectorID) {
 			health = jotl_enemies[i][1][total];
 			move = jotl_enemies[i][3][total];
 			attack = jotl_enemies[i][2][total];
+			//Shield
 			if (jotl_enemy_extras[i][1].length > 0) {
 				shield = jotl_enemy_extras[i][1][total];
+				if (total < 8) { NS = jotl_enemy_extras[i][1][total]; ES = jotl_enemy_extras[i][1][total + 8]; }
+				else if (total >= 8) { NS = jotl_enemy_extras[i][1][total - 8]; ES = jotl_enemy_extras[i][1][total]; }
+			}
+			//Condition
+			if (jotl_enemy_extras[i][2].length > 0) {
+				condition = jotl_enemy_extras[i][2][total];
+				if (total < 8) { NC = jotl_enemy_extras[i][2][total]; EC = jotl_enemy_extras[i][2][total + 8]; }
+				else if (total >= 8) { NC = jotl_enemy_extras[i][2][total - 8]; EC = jotl_enemy_extras[i][2][total]; }
 			}
 			if (total < 8) {
 				NM = jotl_enemies[i][1][total]; NA = jotl_enemies[i][2][total];
@@ -412,23 +457,29 @@ function addEnemy(selectorID) {
 
 	enemyBoxContainer.innerHTML = `
 	<div class="box-long" style="column-gap:5px;">
-		<div class="box-tall" id="${enemyName + "_" + enemyTotal}" style="position:relative">
+		<div class="box-tall" id="${enemy}" style="position:relative">
 			<img src="${enemySrc}" class="enemy-image" style="border:${color}">
-			<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_" + enemyTotal})">
+			<img class="enemy-delete" onclick="removeEnemy(${enemy})">
 			<input type="number" class="enemy-ID">
-		</div>
-		<div class="box-tall" style="row-gap:10px;">
-			<div class="box-tall">
-				<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemy + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
-				<p id="${enemy + "_Health"}" style="margin:5px; color:red;">${health}</p>
-				<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemy + '_Health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+			<div class="box-long" style="column-gap:5px;">
+				<div class="box-long">
+					<p id="${enemy + "_Health"}" style="margin:5px; color:red; font-size:24px;">${health}</p>
+					<div class="box-tall">
+						<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemy + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
+						<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemy + '_Health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+					</div>
+				</div>
+				<div class="box-long">
+					<p id="${enemy + "_Shield"}" style="margin:5px; color:cyan; font-size:24px;">${shield}</p>
+					<div class="box-tall">
+						<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemy + '_Shield'})" style="width:10px;height:10px; cursor:pointer;">
+						<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemy + '_Shield'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+					</div>
+				</div>
 			</div>
-			<div class="box-tall">
-				<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemy + '_Shield'})" style="width:10px;height:10px; cursor:pointer;">
-				<p id="${enemy + "_Shield"}" style="margin:5px; color:blue;">${shield}</p>
-				<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemy + '_Shield'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
-			</div>
 		</div>
+		<div class="box-tall" id="${enemy + '_Conditions'}" style="border:${color}; min-width:35px;max-width:60px;height:160px;"
+			ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"></div>
 	</div>
 	`;
 
@@ -451,22 +502,35 @@ function addEnemy(selectorID) {
 					<img src="${enemyStatSrc}" class="enemy-stat-image">
 					<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_Stat"})">
 					<div class="box-long">
-						<p style="margin:5px; color:white;">M:${NM}</p>
-						<p style="margin:5px; color:green;">A:${NA}</p>
+						<div class="box-tall" id="${enemyName + "_Normal"}">
+							<p style="margin:5px; color:white; font-size:20px;">M:${NM}</p>
+							<p style="margin:5px; color:green; font-size:20px;">A:${NA}</p>
+							<p style="margin:5px; color:blue; font-size:20px;">M:${NS}</p>
+						</div>
+						<div class="box-tall" id="${enemyName + "_Elite"}">
+							<p style="margin:5px; color:gold; font-size:20px;">M:${EM}</p>
+							<p style="margin:5px; color:lawngreen; font-size:20px;">A:${EA}</p>
+							<p style="margin:5px; color:cyan; font-size:20px;">A:${ES}</p>
+						</div>
 					</div>
-					<div class="box-long">
-						<p style="margin:5px; color:gold;">M:${EM}</p>
-						<p style="margin:5px; color:lawngreen;">A:${EA}</p>
-					</div>
+					<div class="box-long" id="${enemyName + "_Conditions"}"></div>
 				</div>
 				<div class="box-tall" id="${enemyName + "_Card"}" style="position:relative">
 					<div class="box-long" style="column-gap:10px;">
 						<div class="box-long">
-							<img src="./Images/Icons/Attack.png" id="${enemyName + '_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
-							<p id="${enemyName + '_Attack'}" class="attribute-input" data-attack="${NA}" >${NA}</p>
+							<img src="./Images/Icons/Attack.png" id="${enemyName + '_Normal_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+							<p id="${enemyName + '_Attack_Normal'}" class="attribute-input" style="font-size:20px;" data-base-Attack="${NA}" data-extra-Attack="${NA}" >${NA}</p>
 							<div class="box-tall">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack_Normal'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack_Normal'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+							</div>
+						</div>
+						<div class="box-long">
+							<img src="./Images/Icons/Attack_Elite.png" id="${enemyName + '_Elite_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+							<p id="${enemyName + '_Attack_Elite'}" class="attribute-input" style="font-size:20px; color:gold; border-color:gold" data-base-Attack="${EA}" data-extra-Attack="${EA}" >${EA}</p>
+							<div class="box-tall">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack_Elite'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack_Elite'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
 							</div>
 						</div>
 						<img src="./Images/Icons/Shuffle.png" onclick="shuffleScores(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
@@ -476,6 +540,26 @@ function addEnemy(selectorID) {
 				</div>
 			</div>
 			`;
+
+			//Show Enemy Applied Conditions
+			if (NC) {
+				var conBox = document.getElementById(enemyName + "_Normal");
+				var image = document.createElement("img");
+				image.id = enemyName + "_Neg_" + NC;
+				image.src = "./Images/Conditions/" + NC + ".png";
+				image.style.height = "25px";
+				image.style.width = "auto";
+				conBox.appendChild(image);
+			}
+			if (EC) {
+				var conBox = document.getElementById(enemyName + "_Elite");
+				var image = document.createElement("img");
+				image.id = enemyName + "_Neg_" + EC;
+				image.src = "./Images/Conditions/" + EC + ".png";
+				image.style.height = "25px";
+				image.style.width = "auto";
+				conBox.appendChild(image);
+			}
 		}
 	}
 
@@ -498,14 +582,16 @@ const jotl_enemy_cards = [
 	[ "Black Sludge", [] ],
 	[ "Blood Imp", [] ],
 	[ "Chaos Demon", [] ],
-	[ "Giant Viper", [], [] ],
-	[ "Living Corpse", [], [] ],
-	[ "Rat Monstrosity", [], [] ],
-	[ "Stone Golem", [], [] ],
-	[ "Vermling Raider", [], [] ],
-	[ "Vermling Scout", [], [] ],
-	[ "Zealot", [], [] ],
+//	[ "Giant Viper", [], [] ],
+//	[ "Living Corpse", [], [] ],
+//	[ "Rat Monstrosity", [], [] ],
+//	[ "Stone Golem", [], [] ],
+//	[ "Vermling Raider", [], [] ],
+//	[ "Vermling Scout", [], [] ],
+//	[ "Zealot", [], [] ],
 ];
+
+const enemy_types = ["_Normal", "_Elite"];
 
 function makeEnemyScoreCard(enemyName, score, move, attack01, attack02, shield, heal, img) {
 	//Have an array that has [ [enemyName], [score values/these cards] ] that these cards ar added to
@@ -540,9 +626,9 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("Black Sludge", 57, 0, 0, 0, 0, 0, "_2");
 	makeEnemyScoreCard("Black Sludge", 66, -1, 1, 0, 0, 0, "_1");
 	makeEnemyScoreCard("Black Sludge", 66, 0, 0, 0, 0, 2, "_2");
-	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 0, "_1");
+	makeEnemyScoreCard("Black Sludge", 85, 0, 1, 0, 0, 0, "_1");
 	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 1, "_2"); //1+L/2
-	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 0, "_3"); //1+L/2
+	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 1, "_3"); //1+L/2
 
 	//Blood Imp
 	makeEnemyScoreCard("Blood Imp", 5, 0, 0, 0, 5, 1, "");
@@ -555,15 +641,15 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("Blood Imp", 24, 0, 0, 0, 0, 0, "");
 
 	//Chaos Demon
-	makeEnemyScoreCard("Chaos Demon", 1, -1, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 13, 1, -1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 20, -2, 1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 41, 0, -1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 52, 0, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 67, -1, 1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 13, -1, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 1, 1, -1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 67, -2, 1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 20, 0, -1, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 41, 0, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 52, -1, 1, 0, 0, 0, "");
 	makeEnemyScoreCard("Chaos Demon", 76, 0, 0, 0, 0, 0, "");
 	makeEnemyScoreCard("Chaos Demon", 98, -1, -1, 0, 0, 0, "A");
-	makeEnemyScoreCard("Chaos Demon", 98, 0, 0, 0, 0, 0, "");
+	makeEnemyScoreCard("Chaos Demon", 76, 0, 0, 0, 0, 0, "");
 
 	//Name, Active Array, Card, [1] is Score
 //	console.log(jotl_enemy_cards[0][1][0]);
@@ -578,9 +664,10 @@ function enemyAction(ID) {
 
 	//Set Array
 	const enemy = ID.split("_")[0];
-	const action = ID.split("_")[1];
-	const attackValue = document.getElementById(enemy + "_" + action);
-	actionArray.push(action, enemy, attackValue.textContent);
+	const action = ID.split("_")[2];
+	const type = ID.split("_")[1];
+	const attackValue = document.getElementById(enemy + "_" + action + "_" + type);
+	actionArray.push(action, enemy, attackValue.textContent, type);
 
 	//Set Cursor
 	document.documentElement.style.cursor = `url("${ './Images/Icons/' + action +'_Cursor.png' }"), auto`;
@@ -621,8 +708,11 @@ function flipEnemy(element) {
 
 			//Add New Attack Value to Displayed Enemy Attack Value
 			var enemyName = jotl_enemy_cards[i][0].replace(" ","");
-			var enemyAttack = document.getElementById(enemyName + "_Attack");
-			enemyAttack.textContent = Number(enemyAttack.dataset.attack) + attack;
+			for (index=0; index<enemy_types.length; index++) {
+				var enemyAttack = document.getElementById(enemyName + "_Attack" + enemy_types[index]);
+				enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
+				enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
+			}
 
 			//Update Displayed Card
 			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
@@ -645,8 +735,30 @@ function shuffleScores(element) {
 	}
 }
 
+function flipEnemyAll() {
+	var index = 0;
+	while (index < jotl_enemy_cards.length ) {
+		if (document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") ) {
+			flipEnemy( document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") );
+		}
+		index++;
+	}
+}
+
+function shuffleEnemyAll() {
+	var index = 0;
+	while (index < jotl_enemy_cards.length ) {
+		if (document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") ) {
+			shuffleScores( document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") );
+		}
+		index++;
+	}
+}
+
 ////////////////////////
-//Enemy Modifier Deck
+// Enemy Modifier Deck
+//
+var curses = 0;
 const enemyModifiers = [
 	[0,0,0,0,0,0,+1,+1,+1,+1,+1,-1,-1,-1,-1,-1,-2,+2,"Null","Crit"],
 	[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],
@@ -662,13 +774,42 @@ function flipEnemyModifierDeck() {
 	//Make Display match selected Number/Card
 	if (enemyModifiers[1][number]) {
 		const modDeck = document.getElementById("EnemyModDeck");
+		const modDeckOld = document.getElementById("EnemyModDeckOld");
+		modDeckOld.src = modDeck.src;
 		modDeck.src = "./Images/AttackModifiers/" + enemyModifiers[0][number] + ".png";
 	}
 	enemyModifiers[1][number] = false;
+	var attack = enemyModifiers[0][number];
 
-	//Shiffle at End of Cards
+	//Shuffle at End of Cards
 	if (enemyModifiers[1].every(value => value === false) ) {
 		shuffleEnemyModifierDeck();
+	}
+
+	//Add New Attack Value to Displayed Enemy Attack Value(s)
+	for (i=0; i<enemy_stat_cards.length; i++) {
+		var enemyName = enemy_stat_cards[i].replace(" ","");
+		for (index=0; index<enemy_types.length; index++) {
+			var enemyAttack = document.getElementById(enemyName + "_Attack" + enemy_types[index]);
+			console.log(attack);
+			if (attack != "Null" && attack != "Curse" && attack != "Crit" && attack != "Bless" && enemyAttack) {
+				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + attack;
+			}
+			if ( (attack === "Crit" || attack === "Bless" ) && enemyAttack) {
+				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + Number(enemyAttack.dataset.extraAttack);
+			}
+		}
+	}
+
+	//Remove any Bless/Curse cards after being pulled
+	if (attack === "Bless" || attack === "Curse") {
+		if (number > -1) {
+			enemyModifiers[0].splice(number,1);
+			enemyModifiers[1].splice(number,1);
+		}
+		if (attack === "Curse") { 
+			curses--;
+		}
 	}
 }
 
@@ -678,6 +819,24 @@ function shuffleEnemyModifierDeck() {
 	}
 	const modDeck = document.getElementById("EnemyModDeck");
 	modDeck.src = "./Images/AttackModifiers/Back.png";
+
+	for (i=0; i<enemy_stat_cards.length; i++) {
+		var enemyName = enemy_stat_cards[i].replace(" ","");
+		var enemyAttack = document.getElementById(enemyName + "_Attack");
+		enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack);
+	}
+}
+
+function modifyEnemyModifierDeck(action) {
+	if (curses < 10 && action === "Curse") {
+		enemyModifiers[0].push(action);
+		enemyModifiers[1].push(true);
+		curses++;
+	}
+	else {
+		enemyModifiers[0].push(action);
+		enemyModifiers[1].push(true);
+	}
 }
 
 //////////////////////////////
@@ -702,6 +861,14 @@ document.addEventListener('click', function(event) {
 		//Make Enemy new Health
 		var newHealth = Number(healthValue);
 		var attackValue = Number(actionArray[2]);
+
+		//See if enemy has Negative Conditions
+		const negBox = document.getElementById(ID.id + "_Conditions");
+		if (negBox.querySelector('[id*="Poison"]') !== null) {
+			attackValue++;
+		}
+
+		//Make Enemy new Health Continued
 		var shield = Number(document.getElementById(ID.id + "_Shield").textContent);
 		if (shield !== 0 ) {
 			attackValue -= shield;
@@ -720,6 +887,7 @@ document.addEventListener('click', function(event) {
 		actionArray.length = 0;
 		document.documentElement.style.cursor = "default";
 	}
+
 	//If Enemy Action is Attack and Target is Player
 	else if ( (clickedElement.className === "Player" || clickedElement.className === "action-Btn") && actionArray[0] === "Attack" ) {
 		if (clickedElement.className === "action-Btn") {
@@ -734,6 +902,32 @@ document.addEventListener('click', function(event) {
 		//Make Player new Health
 		var newHealth = Number(healthValue);
 		var attackValue = Number(actionArray[2]);
+
+		//Get Player Conditions
+		var conArray = [];
+		for (p=0; p<document.getElementById(ID.id + "_Negatives").children.length; p++) {
+			conArray.push(document.getElementById(ID.id + "_Negatives").children[p].id.split("_")[0] );
+		}
+
+		//Apply Negative Condition is Applicable
+		var enemyConditions = document.getElementById(actionArray[1] + "_" + actionArray[3]);
+		for (p=0; p<enemyConditions.children.length; p++) {
+			let child = enemyConditions.children[p];
+			if (child.id.includes("Neg") && !conArray.includes(child.id.split("_")[2]) ) {
+				const clonedCondition = child.cloneNode(true);
+				clonedCondition.id = child.id.split("_")[2] +"_"+ ID.id;
+				clonedCondition.style.height = "50px";
+				document.getElementById(ID.id + "_Negatives").appendChild(clonedCondition);
+			}
+		}
+
+		//See if Player has Negative Conditions
+		const negBox = document.getElementById(ID.id + "_Negatives");
+		if (negBox.querySelector('[id*="Poison"]') !== null) {
+			attackValue++;
+		}
+
+		//Make Player new Health Continued
 		var shield = Number(document.getElementById(ID.id + "_Shield").textContent);
 		if (shield !== 0 ) {
 			attackValue -= shield;
@@ -751,6 +945,11 @@ document.addEventListener('click', function(event) {
 		//Clear Array/Cursor
 		actionArray.length = 0;
 		document.documentElement.style.cursor = "default";
+	}
+	
+	//Remove Player Condition is Clicked
+	else if ( (conditions[0][1].includes(clickedElement.id.split("_")[0]) || conditions[1][1].includes(clickedElement.id.split("_")[0]) ) && jotl_characters[0].includes(clickedElement.id.split("_")[1]) ) {
+		clickedElement.remove();
 	}
 	else {
 		//Clear Array/Cursor
@@ -790,7 +989,9 @@ function getRandomIntExclusive(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-
+function removeElement(ID) {
+	const element = document.getElementById(ID.id);
+}
 
 
 

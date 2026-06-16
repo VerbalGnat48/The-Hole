@@ -12,7 +12,15 @@
 <body onload="getCharacters()">
 	<div class="page-container" style="flex-direction:row; column-gap:10px; justify-content: space-evenly;">
 		<!--Characters-->
-		<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; hieght:100vh;"></div>
+		<div class="box-long" style="column-gap:10px;">
+			<div class="box-tall" id="Conditions" style="row-gap:25px; flex-direction:column; height:75vh; border:1px solid white;">
+				<img src="./Images/Conditions/Wound.png" id="Wound" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Poison.png" id="Poison" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Strengthen.png" id="Strengthen" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Muddle.png" id="Muddle" class="element" ondragstart="dragstartHandler(event)">
+			</div>
+			<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; height:100vh;"></div>
+		</div>
 
 		<!--Elements-->
 		<div class="box-tall">
@@ -31,12 +39,12 @@
 				</div>
 				<!--Inert-->
 				<div class="element-box" id="Inert" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
-					<img src="./Images/Icons/Elements/Fire.png" id="Fire" class="element" draggable="true" ondragstart="dragstartHandler(event)">
-					<img src="./Images/Icons/Elements/Ice.png" id="Ice" class="element" draggable="true" ondragstart="dragstartHandler(event)">
-					<img src="./Images/Icons/Elements/Grass.png" id="Grass" class="element" draggable="true" ondragstart="dragstartHandler(event)">
-					<img src="./Images/Icons/Elements/Wind.png" id="Wind" class="element" draggable="true" ondragstart="dragstartHandler(event)">
-					<img src="./Images/Icons/Elements/Dark.png" id="Dark" class="element" draggable="true" ondragstart="dragstartHandler(event)">
-					<img src="./Images/Icons/Elements/Light.png" id="Light" class="element" draggable="true" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Fire.png" id="Fire" class="element" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Ice.png" id="Ice" class="element" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Grass.png" id="Grass" class="element" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Wind.png" id="Wind" class="element" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Dark.png" id="Dark" class="element" ondragstart="dragstartHandler(event)">
+					<img src="./Images/Icons/Elements/Light.png" id="Light" class="element" ondragstart="dragstartHandler(event)">
 				</div>
 			</div>
 		</div>
@@ -44,6 +52,10 @@
 		<div class="box-long" style="column-gap:20px;">
 			<div class="box-tall">
 				<!img src="./Images/Icons/Attack.png" class="enemy-selector" id="Attack_Player">
+				<div class="box-long" style="column-gap:20px;">
+					<p onclick="shuffleEnemyAll()" style="margin-top:50px; cursor:pointer;">Shuffle All</p>
+					<p onclick="flipEnemyAll()" style="margin-top:50px; cursor:pointer;">Flip All</p>
+				</div>
 				<div class="box-tall" id="Enemy_Stat_Box" style="height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
 			</div>
 			<div class="box-tall" id="Enemy_Container" style="height:100vh; justify-content:flex-start;">
@@ -57,10 +69,11 @@
 					<div class="box-tall" style="row-gap:10px;">
 						<img src="./Images/Icons/Shuffle.png" class="action-Btn" style="height:25px" onclick="shuffleEnemyModifierDeck()">
 						<img src="./Images/Icons/Flip.png" class="action-Btn" style="height:25px" onclick="flipEnemyModifierDeck()">
-						<img src="./Images/Icons/Wormie.png" class="action-Btn" style="height:25px">
-						<img src="./Images/Icons/Wormie.png" class="action-Btn" style="height:25px">
+						<img src="./Images/Icons/Bless.png" class="action-Btn" style="height:35px" onclick="modifyEnemyModifierDeck('Bless')">
+						<img src="./Images/Icons/Curse.png" class="action-Btn" style="height:35px" onclick="modifyEnemyModifierDeck('Curse')">
 					</div>
 					<img id="EnemyModDeck" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px;">
+					<img id="EnemyModDeckOld" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px;">
 				</div>
 				<div class="box-enemy" id="Enemy_Box" style="position:relative;"></div>
 			</div>
