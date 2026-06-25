@@ -1,85 +1,41 @@
 ////////////////////////////////////////////////////////////////////////////
 // Page 01 Functions
 //
+//////////////////////////////
+// Characters
+//
+//Name, Level, Health, Color 01, Color 02
+//Pics start at 32,34 and box is 190,240
+const characters = [
+	["Bruiser",			1, [10,12,14,16,18,20,22,24,26],	"#6896c8", "#03233c"],
+	["Cragheart",		1, [10,12,14,16,18,20,22,24,26],	"#cace70", "#313713"],
+	["Mindthief",		1, [6,7,8,9,10,11,12,13,14],		"#8891b0", "#2e292f"],
+	["SilentKnife",		1, [8,9,11,12,14,15,17,18,20],		"#90c654", "#1d2e1b"],
+	["Spellweaver",		1, [6,7,8,9,10,11,12,13,14],		"#a279b5", "#381b47"],
+	["Tinkerer",		1, [8,9,11,12,14,15,17,18,20],		"#cbb699", "#291f1d"],
 
-function addCharacter(elementID) {
-	//Create Charater ID and see if Already Exists
-	const ID_name = elementID.replace("add-", "");
-	if (!ID_name) {
-		ID_name.charAt(0).toUpperCase() + ID_name.slice(1);
-	}
-	const character = document.getElementById(ID_name)
+	["Berserker",		1, [10,12,14,16,18,20,22,24,26],	"#a3301e", "#3a2720"],
+	["Bladeswarm",		1, [8,9,11,12,14,15,17,18,20],		"#bc8045", "#593215"],
+	["Doomstalker", 	1, [8,9,11,12,14,15,17,18,20],		"#008eae", "#00374b"],
+	["Elementalist",	1, [6,7,8,9,10,11,12,13,14],		"#497e8e", "#1a272d"],
+	["Nightshroud",		1, [8,9,11,12,14,15,17,18,20],		"#3f4d67", "#222433"],
+	["Plagueherald",	1, [6,7,8,9,10,11,12,13,14],		"#206463", "#242336"],
 
-	//If Not Exist then make
-	if (!character) {
-		//Create a new Character
-		const character = document.createElement("box-container");
-		
-		//Create Character Name
-		const name = document.createTextNode(ID_name);
+	["Quartermaster",	1, [10,12,14,16,18,20,22,24,26],	"#8f481a", "#292019"],
+	["Sawbones",		1, [8,9,11,12,14,15,17,18,20],		"#a9aaac", "#492115"],
+	["Sunkeeper",		1, [10,12,14,16,18,20,22,24,26],	"#b7892b", "#621505"],
+	["Soothsinger",		1, [6,7,8,9,10,11,12,13,14],		"#945077", "#520529"],
+	["Soultether",		1, [6,7,8,9,10,11,12,13,14],		"#784882", "#541f2f"],
+	["Wildfury",		1, [6,7,8,9,10,11,12,13,14],		"#7f3c29", "#1a1f23", [10,12,14,16,18,20,22,24,26] ],
+];
 
-		//Append Name to Character/Set ID
-		character.appendChild(name);
-		character.id = ID_name;
-
-		//Append Character to Character List
-		document.getElementById("character-list").appendChild(character);
-
-		//Add Charachter Level Input Field
-		const inputField = document.createElement("input");
-		inputField.type = "number";
-		inputField.placeholder = "Enter Level";
-		inputField.id = ID_name + "_Level"; 
-		document.getElementById(character.id).appendChild(inputField);
-	}
-
-	// If Exist then Kill
-	else {
-		character.remove();
-	}
-}
-
-function flipCharacterCard(selectorID) {
-	//Get ID
-	const cardID = selectorID.replace("Flipper", "Card");
-	const cardBoxID = selectorID.replace("Flipper", "Box");
-	const cardSrc = document.getElementById(cardID).src;
-	const cardBox = document.getElementById(cardBoxID);
-
-	//Flip Front to Back
-	if(cardSrc.includes("Front")) {
-		document.getElementById(cardID).src = cardSrc.replace("Front", "Back");
-		//Disable Level Buttons
-		for (let child of cardBox.children) {
-			if( child.id.includes("Level") || child.id.includes("Select") ) {
-				document.getElementById(child.id).disabled = true;
-				document.getElementById(child.id).style.display = "none";
-			}
-		}
-	}
-
-	//Flip Back to Front
-	else {
-		document.getElementById(cardID).src = cardSrc.replace("Back", "Front");
-		//Enable Level Buttons
-		for (let child of cardBox.children) {
-			if( child.id.includes("Level") || child.id.includes("Select") ) {
-				document.getElementById(child.id).disabled = false;
-				document.getElementById(child.id).style.display = "flex";
-			}
-		}
-	}
-}
+var selected_characters = [];
 
 function selectCharacterLevel(selectorID) {
 	//Access Parent Card/Box
 	cardBoxID = selectorID.split("_")[0];
 	cardBoxID += "_Box";
 	const cardBox = document.getElementById(cardBoxID);
-
-	//Change Card Level Value
-	const level = selectorID.slice(-1);
-	cardBox.dataset.level = level;
 
 	//Clear Selected Level
 	for (let child of cardBox.children) {
@@ -89,49 +45,55 @@ function selectCharacterLevel(selectorID) {
 	}
 
 	//Change Selected Level Color to indicate it being Chosen
-	document.getElementById(selectorID).style.webkitTextStroke = cardBox.dataset.color;
+	for (i=0; i<characters.length; i++ ) {
+		if (characters[i][0] === selectorID.split("_")[0]) {
+			document.getElementById(selectorID).style.webkitTextStrokeWidth = "1px";
+			document.getElementById(selectorID).style.webkitTextStrokeColor = characters[i][3];
+			//Change Card Level Value
+			characters[i][1] = selectorID.slice(-1);
+		}
+	}
 
 	selectCharacterStatus(selectorID.split("_")[0] + "_Selector")
 }
 
 function selectCharacterStatus(selectorID) {
-	//Access Parent Card/Box
-	const cardBoxID = selectorID.replace("Selector", "Box");
-	const cardBox = document.getElementById(cardBoxID);
+	//Access Src and See if Character is in Selected Array
 	const src = document.getElementById(selectorID).src;
+	const exists = selected_characters.some(row => row.includes(selectorID.split("_")[0]) );
 
 	//Change Card Status to True
-	if (cardBox.dataset.selected === "false") {
+	if (!exists) {
 		document.getElementById(selectorID).src = src.replace("Null","Plus_1");
-		cardBox.dataset.selected = true;
+
+		//Add Selected Characer to list
+		for (i=0; i<characters.length; i++ ) {
+			if (characters[i][0] === selectorID.split("_")[0]) {
+				selected_characters.push(characters[i]);
+
+				//Set Health Value
+				var level = selected_characters.at(-1)[1] - 1;
+				selected_characters.at(-1)[2] = selected_characters.at(-1)[2][level];
+			}
+		}
 	}
 
 	//Change Card Status to False
 	else {
 		document.getElementById(selectorID).src = src.replace("Plus_1","Null");
-		cardBox.dataset.selected = false;
+
+		//Remove Selected Characer to list
+		for (i=0; i<characters.length; i++ ) {
+			if (characters[i][0] === selectorID.split("_")[0]) {
+				selected_characters.splice( i, 1 );
+			}
+		}
 	}
 }
 
-function setCharacters() {
-	//Demolitionist
-	sessionStorage.setItem("Demolitionist_Status",  document.getElementById("Demolitionist_Box").dataset.selected );
-	sessionStorage.setItem("Demolitionist_Level",  document.getElementById("Demolitionist_Box").dataset.level );
-
-	//Hatchet
-	sessionStorage.setItem("Hatchet_Status",  document.getElementById("Hatchet_Box").dataset.selected );
-	sessionStorage.setItem("Hatchet_Level",  document.getElementById("Hatchet_Box").dataset.level );
-
-	//RedGuard
-	sessionStorage.setItem("RedGuard_Status",  document.getElementById("RedGuard_Box").dataset.selected );
-	sessionStorage.setItem("RedGuard_Level",  document.getElementById("RedGuard_Box").dataset.level );
-
-	//Void Warden
-	sessionStorage.setItem("Voidwarden_Status",  document.getElementById("Voidwarden_Box").dataset.selected );
-	sessionStorage.setItem("Voidwarden_Level",  document.getElementById("Voidwarden_Box").dataset.level );
-
-	location.href = "./02_jotl.html";
-//	getCharacters();
+function startGame() {
+	sessionStorage.setItem('selected_characters', JSON.stringify(selected_characters));
+	location.href = "./02_gloomhaven.html";
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -141,95 +103,76 @@ function setCharacters() {
 //////////////////////////////
 // Characters
 //
-//Name, Health
-const jotl_characters = [
-	["Demolitionist","Hatchet","RedGuard","Voidwarden"],
-	[ [8,9,11,12,14,15,17,18,20], [8,9,11,12,14,15,17,18,20], [10,12,14,16,18,20,22,24,26], [6,7,8,9,10,11,12,13,14], ],
-	["#582715","#0f2a37","#440f0f","#322e2d"],
-	["#ebb96e","#71b6d1","#ed8da2","#c6c4c2"],
-];
 var alive = [];
 var actionArray = [];
 
-function getCharacters() {
-	const selected = [];
-	const level = [];
-	alive = selected;
-
-	//Demolitionist
-	selected.push(sessionStorage.getItem("Demolitionist_Status"));
-	level.push(sessionStorage.getItem("Demolitionist_Level"));
-
-	//Hatchet
-	selected.push(sessionStorage.getItem("Hatchet_Status"));
-	level.push(sessionStorage.getItem("Hatchet_Level"));
-
-	//RedGuard
-	selected.push(sessionStorage.getItem("RedGuard_Status"));
-	level.push(sessionStorage.getItem("RedGuard_Level"));
-
-	//Void Warden
-	selected.push(sessionStorage.getItem("Voidwarden_Status"));
-	level.push(sessionStorage.getItem("Voidwarden_Level"));
-
-	makeCharacterStats(selected, level);
-	makeEnemyList();
-	makeEnemyScoreCards();
-}
-
-function makeCharacterStats(selected, level) {
+function makeSelectedCharacters() {
 	const box = document.getElementById("Character_Box_Container")
-	//Make Attributes for selected characters
-	for (i=0; i<selected.length; i++) {
-		if (selected[i] === "true") {
 
-			const characterBoxContainer = document.createElement("box-container");
-			box.appendChild(characterBoxContainer);
-			const character = jotl_characters[0][i];
-			const characterSrc = "./Images/JoTL/" + character + ".png";
-			characterBoxContainer.innerHTML = `
-				<div class="box-long" id="${character}" style="column-gap:10px;">
-					<div class="box-tall" id="${character + '_Positives'}" ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"
-						style="min-width:50px;max-width:100px;height:172px; border:2px solid ${jotl_characters[3][i]};"></div>
-					<div class="box-tall" id="${character + '_Negatives'}" ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)" 
-						style="min-width:50px;max-width:100px;height:172px; border:2px solid ${jotl_characters[2][i]};"></div>
-					<div class="box-tall" id="${character + '_Container'}" style="position:relative">
-						<img src="${characterSrc}" class="Player" height="172" width="auto">
-						<div class="box-long" style="column-gap:10px">
-							<p style="margin:5px; color:white;">L: ${level[i]}</p>
+	//Re-assign Selected Chartacter to array
+	const tempString = sessionStorage.getItem('selected_characters');
+	selected_characters = JSON.parse(tempString);
+
+
+	//Make Attributes for selected characters
+	for (i=0; i<selected_characters.length; i++) {
+
+		//Set Useful Variables
+		const charBoxContainer = document.createElement("box-container");
+		box.appendChild(charBoxContainer);
+		const charName = selected_characters[i][0];
+		const charSrc = "./Images/Gloomhaven_2e/" + charName + ".png";
+
+		//Make Characters
+		charBoxContainer.innerHTML = `
+			<div class="box-long" id="${charName}" style="column-gap:10px;">
+				<div class="box-tall" id="${charName + '_Positives'}" ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"
+					style="min-width:50px;max-width:100px;height:172px; border:2px solid ${selected_characters[i][3]};">
+				</div>
+				<div class="box-tall" id="${charName + '_Negatives'}" ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"
+					style="min-width:50px;max-width:100px;height:172px; border:2px solid ${selected_characters[i][4]};">
+				</div>
+				<div class="box-tall" id="${charName + '_Container'}" style="position:relative">
+					<img src="${charSrc}" class="Player" height="172" width="136">
+					<div class="box-long" style="column-gap:10px">
+						<p style="margin:5px; color:white;">L: ${selected_characters[i][1]}</p>
+					</div>
+				</div>
+				<div class="box-tall" style="row-gap:15px;">
+					<div class="box-long">
+						<img src="./Images/Icons/Attack.png" id="${charName + '_Attack_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+						<p id="${charName + '_Attack'}" class="attribute-input">0</p>
+						<div class="box-tall">
+							<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
+							<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${charName + '_Attack'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
 						</div>
 					</div>
-					<div class="box-tall" style="row-gap:15px;">
+					<div class="box-long" style="column-gap:10px;">
+						<img src="./Images/Icons/Heal.png" id="${charName + '_Heal_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
 						<div class="box-long">
-							<img src="./Images/Icons/Attack.png" id="${character + '_Attack_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
-							<p id="${character + '_Attack'}" class="attribute-input">0</p>
+							<p id="${charName + '_Health'}" class="attribute-input">${selected_characters[i][2]}</p>
+							<p class="attribute-input">${'/ ' + selected_characters[i][2]}</p>
 							<div class="box-tall">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${character + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${character + '_Attack'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${charName + '_health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
 							</div>
 						</div>
-						<div class="box-long">
-							<img src="./Images/Icons/Heal.png" id="${character + '_Heal_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
-							<p id="${character + '_Health'}" class="attribute-input">${jotl_characters[1][i][Number(level[i]) - 1]}</p>
-							<p class="attribute-input">${'/ ' + jotl_characters[1][i][Number(level[i]) - 1]}</p>
-							<div class="box-tall">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${character + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${character + '_Health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
-							</div>
-						</div>
-						<div class="box-long">
-							<img src="./Images/Icons/Shield.png" id="${character + '_Shield_Btn'}" class="action-Btn">
-							<p id="${character + '_Shield'}" class="attribute-input">0</p>
-							<div class="box-tall">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${character + '_Shield'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${character + '_Shield'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
-							</div>
+					</div>
+					<div class="box-long">
+						<img src="./Images/Icons/Shield.png" id="${charName + '_Shield_Btn'}" class="action-Btn">
+						<p id="${charName + '_Shield'}" class="attribute-input">0</p>
+						<div class="box-tall">
+							<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Shield'})" style="width:10px;height:10px; cursor:pointer;">
+							<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${charName + '_Shield'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
 						</div>
 					</div>
 				</div>
-			`;
-		}
+			</div>
+		`;
 	}
+
+	makeEnemyList();
+	makeEnemyScoreCards();
 }
 
 function characterAction(ID) {
@@ -259,15 +202,6 @@ window.addEventListener('load', (event) => {
 });
 
 
-//////////////////////////////
-// Sheets
-//
-//Name, BG Color, Text Color
-const sheets = [
-	["Demolitionist_Sheet","Hatchet_Sheet","RedGuard_Sheet","Voidwarden_Sheet"],
-	["#582715","#0f2a37","#440f0f","#322e2d"],
-	["#ebb96e","#71b6d1","#ed8da2","#c6c4c2"],
-];
 var roundNumber = 1;
 
 //////////////////////////////
@@ -315,7 +249,7 @@ function dropConditionHandler(ev) {
 	}
 
 	//Put Conditions in Specific Enemy Condition Boxes
-	else if (conditions[0][1].includes(condition.id) || conditions[1][1].includes(condition.id) ) {
+	else if ( ev.target.id.split("_")[2] === "All" && (conditions[0][1].includes(condition.id) || conditions[1][1].includes(condition.id) ) ) {
 		const clonedCondition = condition.cloneNode(true);
 		clonedCondition.id = condition.id +"_"+ ev.target.id.split("_")[0];
 		clonedCondition.style.height = "30px";
@@ -333,36 +267,20 @@ function moveElementFrom(from, to) {
 // Enemies
 //
 var enemyTotal = 0;
-const jotl_enemies = [
+const enemies = [
 	//Name, Health/Elite Health, Attack/Elite Attack, Move/Elite Move
 	[ "Black Imp",	[3,4,5,5,7,9,10,13,4,6,8,8,11,14,15,19], [1,1,1,2,2,2,3,3,2,2,2,3,3,3,4,4], [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] ],
 	[ "Black Sludge", [4,5,7,8,9,10,12,16,8,9,11,11,13,15,16,18], [2,2,2,3,3,3,4,4,2,2,3,3,4,4,4,5], [1,1,1,1,2,2,2,2,1,1,1,2,2,3,3,3] ],
 	[ "Blood Imp", [3,4,5,5,7,8,9,12,4,6,7,10,11,13,17,21], [1,1,1,2,2,2,3,3,2,2,2,2,3,3,3,4], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
 	[ "Chaos Demon", [7,8,11,12,15,16,20,22,10,12,14,18,21,26,30,35], [2,3,3,4,4,5,5,6,3,4,5,5,6,6,7,8], [3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5] ],
-//	[ "Giant Viper", [2,3,4,4,6,7,8,10,3,5,7,8,11,13,14,18], [1,1,1,2,2,3,3,3,2,2,2,3,3,3,4,4], [2,2,3,3,3,3,4,4,2,2,3,3,3,4,4,4] ],
-//	[ "Living Corpse", [5,7,9,10,11,13,14,16,10,11,14,14,16,18,23,29], [3,3,3,4,4,4,4,5,3,4,4,5,5,6,6,6], [1,1,1,1,2,2,2,2,1,1,1,2,2,2,2,2] ],
-//	[ "Rat Monstrosity", [4,4,5,6,8,10,12,12,6,7,8,10,12,13,14,16], [1,2,2,3,3,3,3,4,2,2,3,3,3,4,4,5], [1,1,2,2,2,3,3,3,1,1,1,2,2,2,3,3] ],
-//	[ "Stone Golem", [10,10,11,11,12,13,16,16,10,11,13,14,16,18,20,21], [3,3,4,4,4,5,5,5,4,4,5,5,6,6,7,7], [1,1,1,1,2,2,2,2,2,2,2,2,2,3,3,3] ],
-//	[ "Vermling Raider", [4,5,9,12,12,15,17,19,8,10,14,16,19,23,27,31], [2,2,2,2,3,3,3,4,2,2,3,4,4,4,5,6], [1,1,2,3,3,3,4,4,1,1,3,3,4,4,4,4] ],
-//	[ "Vermling Scout", [2,3,3,5,6,8,10,13,4,5,5,7,8,11,13,17], [1,1,2,2,3,3,3,3,2,2,3,3,4,4,4,4], [3,3,3,3,3,3,4,4,3,3,4,4,4,4,5,5] ],
-//	[ "Zealot", [4,6,7,8,10,12,14,16,7,8,11,13,17,18,22,26], [2,2,3,3,3,3,4,5,3,3,3,4,4,5,6,7], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
-//	[ "", [], [] ],
 ];
 
-const jotl_enemy_extras = [
+const enemy_extras = [
 	//Name, Shield/Elite Shield, Effects
 	[ "Black Imp", [], [0, "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison"] ],
 	[ "Black Sludge", [0,1,1,1,1,1,1,1,0,1,1,1,1,1,2,2], [] ],
 	[ "Blood Imp", [], [0, "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle"] ],
 	[ "Chaos Demon", [], ["Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle"] ],
-//	[ "Giant Viper", [] ],
-//	[ "Living Corpse", [] ],
-//	[ "Rat Monstrosity", [] ],
-//	[ "Stone Golem", [0,1,1,2,2,2,2,3,1,2,2,3,3,3,3,4] ],
-//	[ "Vermling Raider", [] ],
-//	[ "Vermling Scout", [] ],
-//	[ "Zealot", [] ],
-//	[ "", [], [] ],
 ];
 
 var enemy_stat_cards = [];
@@ -370,10 +288,10 @@ var enemy_stat_cards = [];
 function makeEnemyList() {
 	//Make Enemy Selection List
 	var father = document.getElementById("Enemy_Selector");
-	for (i=0; i<jotl_enemies.length; i++) {
+	for (i=0; i<enemies.length; i++) {
 		const option = document.createElement("option");
 		option.value = i;
-		option.text = jotl_enemies[i][0];
+		option.text = enemies[i][0];
 		father.appendChild(option);
 	}
 
@@ -405,10 +323,10 @@ function addEnemy(selectorID) {
 	const enemyBoxContainer = document.createElement("box-container");
 	box.appendChild(enemyBoxContainer);
 
-	const enemySrc = "./Images/JoTL/Enemies/" + jotl_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+	const enemySrc = "./Images/JoTL/Enemies/" + enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
 	const level = document.getElementById("Enemy_Selector_Levels");
 	var total = Number(start) + Number(level.value);
-	var enemyName = jotl_enemies[enemySelection.value][0].replace(/\s+/g,"");
+	var enemyName = enemies[enemySelection.value][0].replace(/\s+/g,"");
 	var health = 0;
 	var move = 0;
 	var attack = 0;
@@ -426,30 +344,30 @@ function addEnemy(selectorID) {
 
 	//Get Enemy Name Index
 	var index = 0;
-	for (i=0; i<jotl_enemies.length; i++) {
-		if (jotl_enemies[i][0].includes(jotl_enemies[enemySelection.value][0]) ) {
-			health = jotl_enemies[i][1][total];
-			move = jotl_enemies[i][3][total];
-			attack = jotl_enemies[i][2][total];
+	for (i=0; i<enemies.length; i++) {
+		if (enemies[i][0].includes(enemies[enemySelection.value][0]) ) {
+			health = enemies[i][1][total];
+			move = enemies[i][3][total];
+			attack = enemies[i][2][total];
 			//Shield
-			if (jotl_enemy_extras[i][1].length > 0) {
-				shield = jotl_enemy_extras[i][1][total];
-				if (total < 8) { NS = jotl_enemy_extras[i][1][total]; ES = jotl_enemy_extras[i][1][total + 8]; }
-				else if (total >= 8) { NS = jotl_enemy_extras[i][1][total - 8]; ES = jotl_enemy_extras[i][1][total]; }
+			if (enemy_extras[i][1].length > 0) {
+				shield = enemy_extras[i][1][total];
+				if (total < 8) { NS = enemy_extras[i][1][total]; ES = enemy_extras[i][1][total + 8]; }
+				else if (total >= 8) { NS = enemy_extras[i][1][total - 8]; ES = enemy_extras[i][1][total]; }
 			}
 			//Condition
-			if (jotl_enemy_extras[i][2].length > 0) {
-				condition = jotl_enemy_extras[i][2][total];
-				if (total < 8) { NC = jotl_enemy_extras[i][2][total]; EC = jotl_enemy_extras[i][2][total + 8]; }
-				else if (total >= 8) { NC = jotl_enemy_extras[i][2][total - 8]; EC = jotl_enemy_extras[i][2][total]; }
+			if (enemy_extras[i][2].length > 0) {
+				condition = enemy_extras[i][2][total];
+				if (total < 8) { NC = enemy_extras[i][2][total]; EC = enemy_extras[i][2][total + 8]; }
+				else if (total >= 8) { NC = enemy_extras[i][2][total - 8]; EC = enemy_extras[i][2][total]; }
 			}
 			if (total < 8) {
-				NM = jotl_enemies[i][1][total]; NA = jotl_enemies[i][2][total];
-				EM = jotl_enemies[i][1][total + 8]; EA = jotl_enemies[i][2][total + 8];
+				NM = enemies[i][1][total]; NA = enemies[i][2][total];
+				EM = enemies[i][1][total + 8]; EA = enemies[i][2][total + 8];
 			}
 			else if (total >= 8) {
-				NM = jotl_enemies[i][1][total - 8]; NA = jotl_enemies[i][2][total - 8];
-				EM = jotl_enemies[i][1][total]; EA = jotl_enemies[i][2][total];
+				NM = enemies[i][1][total - 8]; NA = enemies[i][2][total - 8];
+				EM = enemies[i][1][total]; EA = enemies[i][2][total];
 			}
 		}
 	}
@@ -478,7 +396,7 @@ function addEnemy(selectorID) {
 				</div>
 			</div>
 		</div>
-		<div class="box-tall" id="${enemy + '_Conditions'}" style="border:${color}; min-width:35px;max-width:60px;height:160px;"
+		<div class="box-tall" id="${enemy + '_All_Conditions'}" style="border:${color}; min-width:35px;max-width:60px;height:160px;"
 			ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"></div>
 	</div>
 	`;
@@ -492,7 +410,7 @@ function addEnemy(selectorID) {
 
 			//Adding Enemy Type Stat Card
 			const statBox = document.getElementById("Enemy_Stat_Box");
-			const enemyStatSrc = "./Images/JoTL/Enemies/Cards/" + jotl_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+			const enemyStatSrc = "./Images/JoTL/Enemies/Cards/" + enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
 			const enemyStatContainer = document.createElement("box-container");
 			statBox.appendChild(enemyStatContainer);
 			
@@ -576,19 +494,12 @@ function removeEnemy(selectorID) {
 //////////////////////////////
 // Ememy Cards
 //
-const jotl_enemy_cards = [
+const enemy_cards = [
 	//Name, Usabel Score Cards, Unusable Score Cards
 	[ "Black Imp", [] ],
 	[ "Black Sludge", [] ],
 	[ "Blood Imp", [] ],
 	[ "Chaos Demon", [] ],
-//	[ "Giant Viper", [], [] ],
-//	[ "Living Corpse", [], [] ],
-//	[ "Rat Monstrosity", [], [] ],
-//	[ "Stone Golem", [], [] ],
-//	[ "Vermling Raider", [], [] ],
-//	[ "Vermling Scout", [], [] ],
-//	[ "Zealot", [], [] ],
 ];
 
 const enemy_types = ["_Normal", "_Elite"];
@@ -601,10 +512,10 @@ function makeEnemyScoreCard(enemyName, score, move, attack01, attack02, shield, 
 	}
 	var cardSrc = "./Images/JoTL/Enemies/Initiatives/" + enemyName.replaceAll(" ","") + "_" + score + image + ".png";
 	var array = [];
-	for (i=0; i<jotl_enemy_cards.length; i++ ) {
-		if (jotl_enemy_cards[i][0] === enemyName) {
+	for (i=0; i<enemy_cards.length; i++ ) {
+		if (enemy_cards[i][0] === enemyName) {
 			array.push(enemyName, score, move, attack01, attack02, shield, heal, cardSrc, img, true);
-			jotl_enemy_cards[i][1].push(array);
+			enemy_cards[i][1].push(array);
 		}
 	}
 }
@@ -652,10 +563,10 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("Chaos Demon", 76, 0, 0, 0, 0, 0, "");
 
 	//Name, Active Array, Card, [1] is Score
-//	console.log(jotl_enemy_cards[0][1][0]);
-//	console.log(jotl_enemy_cards[0][1][0][1]);
-//	console.log(jotl_enemy_cards[0][1][7]);
-//	console.log(jotl_enemy_cards[0][1][7][1]);
+//	console.log(enemy_cards[0][1][0]);
+//	console.log(enemy_cards[0][1][0][1]);
+//	console.log(enemy_cards[0][1][7]);
+//	console.log(enemy_cards[0][1][7][1]);
 }
 
 function enemyAction(ID) {
@@ -676,12 +587,12 @@ function enemyAction(ID) {
 function flipEnemy(element) {
 	//Flip Enemy Score Card
 	var scoreArray = [];
-	for (i=0; i<jotl_enemy_cards.length; i++ ) {
-		if (jotl_enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
+	for (i=0; i<enemy_cards.length; i++ ) {
+		if (enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
 			//Make Array of Enemy Scores
-			for (j=0; j<jotl_enemy_cards[i][1].length; j++) {
-				if (jotl_enemy_cards[i][1][j][9] === true) {
-					var card = jotl_enemy_cards[i][1][j][1] + jotl_enemy_cards[i][1][j][8];
+			for (j=0; j<enemy_cards[i][1].length; j++) {
+				if (enemy_cards[i][1][j][9] === true) {
+					var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][8];
 					scoreArray.push(card);
 				}
 			}
@@ -697,17 +608,17 @@ function flipEnemy(element) {
 			var score = scoreArray[number];
 
 			//Get/Combine Attack Value(s)
-			for (j=0; j<jotl_enemy_cards[i][1].length; j++) {
-				var card = jotl_enemy_cards[i][1][j][1] + jotl_enemy_cards[i][1][j][8];
+			for (j=0; j<enemy_cards[i][1].length; j++) {
+				var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][8];
 				if (card === score) {
-					jotl_enemy_cards[i][1][j][9] = false;
-					var attack = jotl_enemy_cards[i][1][j][3] + jotl_enemy_cards[i][1][j][4];
+					enemy_cards[i][1][j][9] = false;
+					var attack = enemy_cards[i][1][j][3] + enemy_cards[i][1][j][4];
 					break;
 				}
 			}
 
 			//Add New Attack Value to Displayed Enemy Attack Value
-			var enemyName = jotl_enemy_cards[i][0].replace(" ","");
+			var enemyName = enemy_cards[i][0].replace(" ","");
 			for (index=0; index<enemy_types.length; index++) {
 				var enemyAttack = document.getElementById(enemyName + "_Attack" + enemy_types[index]);
 				enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
@@ -716,18 +627,18 @@ function flipEnemy(element) {
 
 			//Update Displayed Card
 			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
-			enemyScoreImage.src = jotl_enemy_cards[i][1][j][7];
+			enemyScoreImage.src = enemy_cards[i][1][j][7];
 		}
 	}
 }
 
 function shuffleScores(element) {
-	for (i=0; i<jotl_enemy_cards.length; i++ ) {
-		if (jotl_enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
-			for (j=0; j<jotl_enemy_cards[i][1].length; j++) {
-				jotl_enemy_cards[i][1][j][9] = true
+	for (i=0; i<enemy_cards.length; i++ ) {
+		if (enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
+			for (j=0; j<enemy_cards[i][1].length; j++) {
+				enemy_cards[i][1][j][9] = true
 			}
-			var enemyName = jotl_enemy_cards[i][0].replace(" ","");
+			var enemyName = enemy_cards[i][0].replace(" ","");
 			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
 			enemyScoreImage.src = "./Images/JoTL/Enemies/Initiatives/Monster_Back.jpg";
 			break;
@@ -737,9 +648,9 @@ function shuffleScores(element) {
 
 function flipEnemyAll() {
 	var index = 0;
-	while (index < jotl_enemy_cards.length ) {
-		if (document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") ) {
-			flipEnemy( document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") );
+	while (index < enemy_cards.length ) {
+		if (document.getElementById(enemy_cards[index][0].replace(" ","") + "_Card") ) {
+			flipEnemy( document.getElementById(enemy_cards[index][0].replace(" ","") + "_Card") );
 		}
 		index++;
 	}
@@ -747,9 +658,9 @@ function flipEnemyAll() {
 
 function shuffleEnemyAll() {
 	var index = 0;
-	while (index < jotl_enemy_cards.length ) {
-		if (document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") ) {
-			shuffleScores( document.getElementById(jotl_enemy_cards[index][0].replace(" ","") + "_Card") );
+	while (index < enemy_cards.length ) {
+		if (document.getElementById(enemy_cards[index][0].replace(" ","") + "_Card") ) {
+			shuffleScores( document.getElementById(enemy_cards[index][0].replace(" ","") + "_Card") );
 		}
 		index++;
 	}
@@ -863,7 +774,7 @@ document.addEventListener('click', function(event) {
 		var attackValue = Number(actionArray[2]);
 
 		//See if enemy has Negative Conditions
-		const negBox = document.getElementById(ID.id + "_Conditions");
+		const negBox = document.getElementById(ID.id + "_All_Conditions");
 		if (negBox.querySelector('[id*="Poison"]') !== null) {
 			attackValue++;
 		}
@@ -948,7 +859,7 @@ document.addEventListener('click', function(event) {
 	}
 	
 	//Remove Player Condition is Clicked
-	else if ( (conditions[0][1].includes(clickedElement.id.split("_")[0]) || conditions[1][1].includes(clickedElement.id.split("_")[0]) ) && jotl_characters[0].includes(clickedElement.id.split("_")[1]) ) {
+	else if ( (conditions[0][1].includes(clickedElement.id.split("_")[0]) || conditions[1][1].includes(clickedElement.id.split("_")[0]) ) && clickedElement.id.split("_")[1] ) {
 		clickedElement.remove();
 	}
 	else {
@@ -992,7 +903,6 @@ function getRandomIntExclusive(min, max) {
 function removeElement(ID) {
 	const element = document.getElementById(ID.id);
 }
-
 
 
 

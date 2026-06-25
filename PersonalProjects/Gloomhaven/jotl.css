@@ -14,7 +14,7 @@ body {
 
 .page-container {
 	width:100%;
-	min-height:100vh;
+	height:100vh;
 	display:flex;
 	flex-direction:column;
 	justify-content:center;
@@ -48,6 +48,20 @@ body {
 	text-align:center;
 }
 
+.character-flipper {
+	background: none;
+	outline: none;
+	color: white;
+	border: none;
+	font-size:18px;
+	display:flex;
+
+	position:absolute;
+	width:344px;
+	height:416px;
+	cursor:pointer;
+}
+
 .character-level-selector {
 	font-size:16px;
 	font-family:PirataOne;
@@ -70,10 +84,10 @@ body {
 	position:absolute;
 	border-radius:50%;
 	cursor:pointer;
-	width:59px;
-	height:59px;
-	left:519px;
-	top:332px;
+	width:53px;
+	height:53px;
+	left:312px;
+	top:535px;
 }
 
 .character-selector-label {
@@ -83,6 +97,8 @@ body {
 	text-indent:3px;
 	color:#e1e0df;
 
+	background-image:url("./Images/Level_Background.png");
+	background-repeat:repeat;
 	outline:none;
 	border:none;
 	display:flex;
@@ -90,8 +106,9 @@ body {
 	position:absolute;
 	width:50px;
 	height:14px;
-	left:531px;
-	top:371px;
+	left:312px;
+	top:500px;
+	padding-left:7px;
 }
 
 /*////////////////////

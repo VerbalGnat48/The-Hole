@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gloomhaven Character and Enemy Tracker</title>
+	<link rel="stylesheet" href="gloom.css">
+</head>
+<body>
+	<div class="page-container" style="row-gap:25px;">
+		<!--Characters-->
+		<div class="box-container">
+			<h1 style="font-family:PirataOne;">Characters</h1>
+		</div>
+		<!--Base Characters-->
+		<div class="box-container" style="column-gap:25px; row-gap:25px;">
+			<!--Bruiser-->
+			<div class="box-tall" id="Bruiser_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Bruiser_Card.jpeg" id="Bruiser_Card" width="600" height="400">
+				<button class="character-level-selector" id="Bruiser_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Bruiser_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Bruiser_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Bruiser_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Bruiser_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Bruiser_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Bruiser_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Bruiser_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Bruiser_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Bruiser_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Bruiser_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Cragheart-->
+			<div class="box-tall" id="Cragheart_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Cragheart_Card.jpeg" id="Cragheart_Card" width="600" height="400">
+				<button class="character-level-selector" id="Cragheart_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Cragheart_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Cragheart_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Cragheart_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Cragheart_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Cragheart_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Cragheart_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Cragheart_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Cragheart_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Cragheart_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Cragheart_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Mindthief-->
+			<div class="box-tall" id="Mindthief_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Mindthief_Card.jpeg" id="Mindthief_Card" width="600" height="400">
+				<button class="character-level-selector" id="Mindthief_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Mindthief_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Mindthief_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Mindthief_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Mindthief_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Mindthief_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Mindthief_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Mindthief_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Mindthief_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Mindthief_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Mindthief_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--SilentKnife-->
+			<div class="box-tall" id="SilentKnife_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/SilentKnife_Card.jpeg" id="SilentKnife_Card" width="600" height="400">
+				<button class="character-level-selector" id="SilentKnife_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="SilentKnife_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="SilentKnife_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="SilentKnife_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="SilentKnife_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="SilentKnife_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="SilentKnife_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="SilentKnife_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="SilentKnife_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="SilentKnife_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="SilentKnife_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Spellweaver-->
+			<div class="box-tall" id="Spellweaver_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Spellweaver_Card.jpeg" id="Spellweaver_Card" width="600" height="400">
+				<button class="character-level-selector" id="Spellweaver_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Spellweaver_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Spellweaver_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Spellweaver_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Spellweaver_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Spellweaver_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Spellweaver_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Spellweaver_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Spellweaver_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Spellweaver_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Spellweaver_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Tinkerer-->
+			<div class="box-tall" id="Tinkerer_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Tinkerer_Card.jpeg" id="Tinkerer_Card" width="600" height="400">
+				<button class="character-level-selector" id="Tinkerer_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Tinkerer_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Tinkerer_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Tinkerer_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Tinkerer_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Tinkerer_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Tinkerer_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Tinkerer_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Tinkerer_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Tinkerer_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Tinkerer_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+		</div>
+
+		<!--Begin Button-->
+		<div class="box-container">
+			<button class="box" onclick="startGame()">Start</button>
+		</div>
+		<br>
+
+		<!--New Characters 01-->
+		<div class="box-container" style="column-gap:25px; row-gap:25px;">
+			<!--Berserker-->
+			<div class="box-tall" id="Berserker_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Berserker_Card.jpeg" id="Berserker_Card" width="600" height="400">
+				<button class="character-level-selector" id="Berserker_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Berserker_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Berserker_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Berserker_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Berserker_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Berserker_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Berserker_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Berserker_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Berserker_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Berserker_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Berserker_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Bladeswarm-->
+			<div class="box-tall" id="Bladeswarm_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Bladeswarm_Card.jpeg" id="Bladeswarm_Card" width="600" height="400">
+				<button class="character-level-selector" id="Bladeswarm_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Bladeswarm_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Bladeswarm_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Bladeswarm_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Doomstalker-->
+			<div class="box-tall" id="Doomstalker_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Doomstalker_Card.jpeg" id="Doomstalker_Card" width="600" height="400">
+				<button class="character-level-selector" id="Doomstalker_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Doomstalker_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Doomstalker_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Doomstalker_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Doomstalker_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Doomstalker_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Doomstalker_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Doomstalker_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Doomstalker_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Doomstalker_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Doomstalker_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Elementalist-->
+			<div class="box-tall" id="Elementalist_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Elementalist_Card.jpeg" id="Elementalist_Card" width="600" height="400">
+				<button class="character-level-selector" id="Elementalist_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Elementalist_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Elementalist_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Elementalist_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Elementalist_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Elementalist_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Elementalist_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Elementalist_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Elementalist_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Elementalist_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Elementalist_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Nightshroud-->
+			<div class="box-tall" id="Nightshroud_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Nightshroud_Card.jpeg" id="Nightshroud_Card" width="600" height="400">
+				<button class="character-level-selector" id="Nightshroud_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Nightshroud_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Nightshroud_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Nightshroud_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Nightshroud_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Nightshroud_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Nightshroud_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Nightshroud_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Nightshroud_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Nightshroud_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Nightshroud_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Plagueherald-->
+			<div class="box-tall" id="Plagueherald_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Plagueherald_Card.jpeg" id="Plagueherald_Card" width="600" height="400">
+				<button class="character-level-selector" id="Plagueherald_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Plagueherald_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Plagueherald_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Plagueherald_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Plagueherald_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Plagueherald_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Plagueherald_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Plagueherald_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Plagueherald_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Plagueherald_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Plagueherald_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+		</div>
+
+		<!--Begin Button-->
+		<div class="box-container">
+			<button class="box" onclick="startGame()">Start</button>
+		</div>
+		<br>
+
+		<!--New Characters 02-->
+		<div class="box-container" style="column-gap:25px; row-gap:25px;">
+			<!--Quartermaster-->
+			<div class="box-tall" id="Quartermaster_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Quartermaster_Card.jpeg" id="Quartermaster_Card" width="600" height="400">
+				<button class="character-level-selector" id="Quartermaster_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Quartermaster_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Quartermaster_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Quartermaster_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Quartermaster_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Quartermaster_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Quartermaster_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Quartermaster_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Quartermaster_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Quartermaster_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Quartermaster_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Sawbones-->
+			<div class="box-tall" id="Sawbones_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Sawbones_Card.jpeg" id="Sawbones_Card" width="600" height="400">
+				<button class="character-level-selector" id="Sawbones_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Sawbones_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Sawbones_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Sawbones_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Sawbones_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Sawbones_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Sawbones_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Sawbones_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Sawbones_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Sawbones_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Sawbones_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Sunkeeper-->
+			<div class="box-tall" id="Sunkeeper_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Sunkeeper_Card.jpeg" id="Sunkeeper_Card" width="600" height="400">
+				<button class="character-level-selector" id="Sunkeeper_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Sunkeeper_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Sunkeeper_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Sunkeeper_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Soothsinger-->
+			<div class="box-tall" id="Soothsinger_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Soothsinger_Card.jpeg" id="Soothsinger_Card" width="600" height="400">
+				<button class="character-level-selector" id="Soothsinger_Level_1" onclick="selectCharacterLevel(this.id)" style="left:280px; top:332px;">1</button>
+				<button class="character-level-selector" id="Soothsinger_Level_2" onclick="selectCharacterLevel(this.id)" style="left:305px; top:332px;">2</button>
+				<button class="character-level-selector" id="Soothsinger_Level_3" onclick="selectCharacterLevel(this.id)" style="left:331px; top:332px;">3</button>
+				<button class="character-level-selector" id="Soothsinger_Level_4" onclick="selectCharacterLevel(this.id)" style="left:356px; top:332px;">4</button>
+				<button class="character-level-selector" id="Soothsinger_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:332px;">5</button>
+				<button class="character-level-selector" id="Soothsinger_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:332px;">6</button>
+				<button class="character-level-selector" id="Soothsinger_Level_7" onclick="selectCharacterLevel(this.id)" style="left:433px; top:332px;">7</button>
+				<button class="character-level-selector" id="Soothsinger_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:332px;">8</button>
+				<button class="character-level-selector" id="Soothsinger_Level_9" onclick="selectCharacterLevel(this.id)" style="left:484px; top:332px;">9</button>
+				<p class="character-selector-label" id="Soothsinger_Select">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Soothsinger_Selector" onclick="selectCharacterStatus(this.id)">
+			</div>
+
+			<!--Soultether-->
+			<div class="box-tall" id="Soultether_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Soultether_Card.jpeg" id="Soultether_Card" width="600" height="400">
+				<button class="character-level-selector" id="Soultether_Level_1" onclick="selectCharacterLevel(this.id)" style="left:282px; top:324px;">1</button>
+				<button class="character-level-selector" id="Soultether_Level_2" onclick="selectCharacterLevel(this.id)" style="left:307px; top:324px;">2</button>
+				<button class="character-level-selector" id="Soultether_Level_3" onclick="selectCharacterLevel(this.id)" style="left:332px; top:323px;">3</button>
+				<button class="character-level-selector" id="Soultether_Level_4" onclick="selectCharacterLevel(this.id)" style="left:357px; top:323px;">4</button>
+				<button class="character-level-selector" id="Soultether_Level_5" onclick="selectCharacterLevel(this.id)" style="left:382px; top:322px;">5</button>
+				<button class="character-level-selector" id="Soultether_Level_6" onclick="selectCharacterLevel(this.id)" style="left:407px; top:321px;">6</button>
+				<button class="character-level-selector" id="Soultether_Level_7" onclick="selectCharacterLevel(this.id)" style="left:432px; top:321px;">7</button>
+				<button class="character-level-selector" id="Soultether_Level_8" onclick="selectCharacterLevel(this.id)" style="left:458px; top:320px;">8</button>
+				<button class="character-level-selector" id="Soultether_Level_9" onclick="selectCharacterLevel(this.id)" style="left:483px; top:319px;">9</button>
+				<p class="character-selector-label" id="Soultether_Select" style="left:531px; top:361px;">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Soultether_Selector" onclick="selectCharacterStatus(this.id)" style="left:519px; top:318px;">
+			</div>
+
+			<!--Wildfury-->
+			<div class="box-tall" id="Wildfury_Box" data-selected="false" data-level="1" style="position:relative;">
+				<img src="./Images/Gloomhaven_2e/Cards/Wildfury_Card.jpeg" id="Wildfury_Card" width="600" height="400">
+				<button class="character-level-selector" id="Wildfury_Level_1" onclick="selectCharacterLevel(this.id)" style="left:276px; top:302px;">1</button>
+				<button class="character-level-selector" id="Wildfury_Level_2" onclick="selectCharacterLevel(this.id)" style="left:302px; top:302px;">2</button>
+				<button class="character-level-selector" id="Wildfury_Level_3" onclick="selectCharacterLevel(this.id)" style="left:327px; top:302px;">3</button>
+				<button class="character-level-selector" id="Wildfury_Level_4" onclick="selectCharacterLevel(this.id)" style="left:353px; top:302px;">4</button>
+				<button class="character-level-selector" id="Wildfury_Level_5" onclick="selectCharacterLevel(this.id)" style="left:378px; top:302px;">5</button>
+				<button class="character-level-selector" id="Wildfury_Level_6" onclick="selectCharacterLevel(this.id)" style="left:404px; top:302px;">6</button>
+				<button class="character-level-selector" id="Wildfury_Level_7" onclick="selectCharacterLevel(this.id)" style="left:429px; top:302px;">7</button>
+				<button class="character-level-selector" id="Wildfury_Level_8" onclick="selectCharacterLevel(this.id)" style="left:455px; top:302px;">8</button>
+				<button class="character-level-selector" id="Wildfury_Level_9" onclick="selectCharacterLevel(this.id)" style="left:480px; top:302px;">9</button>
+				<p class="character-selector-label" id="Wildfury_Select" style="left:525px; top:367px;">Select</p>
+				<img src="./Images/Icons/Null.png" class="character-selector" id="Wildfury_Selector" onclick="selectCharacterStatus(this.id)" style="left:513px; top:300px;">
+			</div>
+		</div>
+
+	</div>
+	<script src="./gloom.js"></script>
+</body>
+</html>

@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>JoTL Stat Tracker</title>
-	<link rel="stylesheet" href="jotl.css">
+	<title>Gloomhaven Character and Enemy Tracker</title>
+	<link rel="stylesheet" href="gloom.css">
 </head>
 <style>
 	table, th, td {
 		border:1px solid white;
 	}
 </style>
-<body onload="getCharacters()">
-	<div class="page-container" style="flex-direction:row; column-gap:10px; justify-content: space-evenly;">
+<body onload="makeSelectedCharacters()">
+	<div class="page-container" style="flex-direction:row; column-gap:10px; justify-content:space-evenly; min-width:100%;">
 		<!--Characters-->
 		<div class="box-long" style="column-gap:10px;">
-			<div class="box-tall" id="Conditions" style="row-gap:25px; flex-direction:column; height:75vh; border:1px solid white;">
+			<div class="box-tall" id="Conditions" style="row-gap:25px; flex-direction:column; min-height:75vh; border:1px solid white;">
 				<img src="./Images/Conditions/Wound.png" id="Wound" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Poison.png" id="Poison" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Strengthen.png" id="Strengthen" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Muddle.png" id="Muddle" class="element" ondragstart="dragstartHandler(event)">
 			</div>
-			<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; height:100vh;"></div>
+			<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; min-height:100vh;"></div>
 		</div>
 
 		<!--Elements-->
@@ -51,12 +51,11 @@
 		<!--Enemies-->
 		<div class="box-long" style="column-gap:20px;">
 			<div class="box-tall">
-				<!img src="./Images/Icons/Attack.png" class="enemy-selector" id="Attack_Player">
 				<div class="box-long" style="column-gap:20px;">
 					<p onclick="shuffleEnemyAll()" style="margin-top:50px; cursor:pointer;">Shuffle All</p>
 					<p onclick="flipEnemyAll()" style="margin-top:50px; cursor:pointer;">Flip All</p>
 				</div>
-				<div class="box-tall" id="Enemy_Stat_Box" style="height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
+				<div class="box-tall" id="Enemy_Stat_Box" style="min-height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
 			</div>
 			<div class="box-tall" id="Enemy_Container" style="height:100vh; justify-content:flex-start;">
 				<div class="box-long" style="column-gap:10px;">
@@ -80,6 +79,6 @@
 		</div>
 
 	</div>
-	<script src="./jotl.js"></script>
+	<script src="./gloom.js"></script>
 </body>
 </html>
