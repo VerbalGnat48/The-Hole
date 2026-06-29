@@ -172,7 +172,7 @@ function makeSelectedCharacters() {
 	}
 
 	makeEnemyList();
-	makeEnemyScoreCards();
+//	makeEnemyScoreCards();
 }
 
 function characterAction(ID) {
@@ -267,31 +267,34 @@ function moveElementFrom(from, to) {
 // Enemies
 //
 var enemyTotal = 0;
-const enemies = [
-	//Name, Health/Elite Health, Attack/Elite Attack, Move/Elite Move
-	[ "Black Imp",	[3,4,5,5,7,9,10,13,4,6,8,8,11,14,15,19], [1,1,1,2,2,2,3,3,2,2,2,3,3,3,4,4], [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] ],
-	[ "Black Sludge", [4,5,7,8,9,10,12,16,8,9,11,11,13,15,16,18], [2,2,2,3,3,3,4,4,2,2,3,3,4,4,4,5], [1,1,1,1,2,2,2,2,1,1,1,2,2,3,3,3] ],
-	[ "Blood Imp", [3,4,5,5,7,8,9,12,4,6,7,10,11,13,17,21], [1,1,1,2,2,2,3,3,2,2,2,2,3,3,3,4], [2,2,3,3,3,4,4,4,2,2,3,3,3,4,4,4] ],
-	[ "Chaos Demon", [7,8,11,12,15,16,20,22,10,12,14,18,21,26,30,35], [2,3,3,4,4,5,5,6,3,4,5,5,6,6,7,8], [3,3,3,3,4,4,4,4,4,4,4,5,5,5,5,5] ],
-];
-
-const enemy_extras = [
-	//Name, Shield/Elite Shield, Effects
-	[ "Black Imp", [], [0, "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison", "Poison"] ],
-	[ "Black Sludge", [0,1,1,1,1,1,1,1,0,1,1,1,1,1,2,2], [] ],
-	[ "Blood Imp", [], [0, "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle"] ],
-	[ "Chaos Demon", [], ["Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle", "Muddle"] ],
-];
-
 var enemy_stat_cards = [];
+
+// Poison = P, Muddle = M, Disadvantage = DV, Wound = W, Pierce = PC, Retaliate = R, Curse = C, Immobilize = IM, Disarm = DA
+// Poison = 1, Muddle = 2, Disadvantage = 3, Wound = 4, Pierce = 5, Retaliate = 6, Curse = 7, Immobilize = 8, Disarm = 9
+const normal_enemies = [
+//	Name,					Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
+	["AncientArtillery",	[4,6,7,8,9,11,14,16],		[],					[2,2,2,3,4,4,4,4],	[4,4,5,5,5,6,6,7],	[],					[],					[] ],
+	["BanditArcher",		[4,5,6,6,8,10,10,13],		[2,2,3,3,3,3,3,3],	[2,2,2,3,3,3,4,4],	[3,4,4,4,4,5,5,5],	[],					[0,0,0,0,1,1,1,1],	[] ],
+	["BanditCommanderBoss",	[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[],					[],					[],					[] ],
+	["BanditGuard",			[5,6,6,9,10,11,14,16],		[2,3,3,3,4,4,4,5],	[2,2,3,3,3,4,4,4],	[],					[],					[],					[] ],
+	["BlackImp",			[3,4,5,5,7,9,10,12],		[1,1,1,1,1,1,1,1],	[1,1,1,2,2,2,3,3],	[3,3,4,4,4,4,4,4],	[],					[],					[] ],
+//	["CaptainoftheGuard",	[], [], [], [], [], [], [] ],
+//	["CaveBear",			[], [], [], [], [], [], [] ],
+//	["CityArcher",			[], [], [], [], [], [], [] ],
+//	["CityGuard",			[], [], [], [], [], [], [] ],
+//	["Cultist",				[], [], [], [], [], [], [] ],
+//	["DarkRider",			[], [], [], [], [], [], [] ],
+//	["DeepTerror",			[], [], [], [], [], [], [] ],
+//	["",[],[],[],[],[],[],[] ]
+];
 
 function makeEnemyList() {
 	//Make Enemy Selection List
 	var father = document.getElementById("Enemy_Selector");
-	for (i=0; i<enemies.length; i++) {
+	for (i=0; i<normal_enemies.length; i++) {
 		const option = document.createElement("option");
 		option.value = i;
-		option.text = enemies[i][0];
+		option.text = normal_enemies[i][0];
 		father.appendChild(option);
 	}
 
@@ -305,17 +308,9 @@ function makeEnemyList() {
 	}
 }
 
-function addEnemy(selectorID) {
+function addNormalEnemy(selectorID) {
 	//Get Values set
 	const box = document.getElementById("Enemy_Box");
-	var start = 0;
-	var end = 8;
-	var color = "3px solid white";
-	if (selectorID.includes("Elite") ) {
-		start += 8;
-		end += 8;
-		color = "3px solid gold"
-	}
 	enemyTotal++;
 
 	//Make Enemy Container(s)
@@ -323,51 +318,30 @@ function addEnemy(selectorID) {
 	const enemyBoxContainer = document.createElement("box-container");
 	box.appendChild(enemyBoxContainer);
 
-	const enemySrc = "./Images/JoTL/Enemies/" + enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
-	const level = document.getElementById("Enemy_Selector_Levels");
-	var total = Number(start) + Number(level.value);
-	var enemyName = enemies[enemySelection.value][0].replace(/\s+/g,"");
+	const enemySrc = "./Images/Gloomhaven_2e/Enemies/" + normal_enemies[enemySelection.value][0] + ".avif";
+	const level = Number(document.getElementById("Enemy_Selector_Levels").value);
+	var enemyName = normal_enemies[enemySelection.value][0].replace(/\s+/g,"");
 	var health = 0;
 	var move = 0;
 	var attack = 0;
 	var shield = 0;
-	var condition;
-
-	var NM = 0;
-	var NA = 0;
-	var NS = 0;
-	var NC;
-	var EM = 0;
-	var EA = 0;
-	var ES = 0;
-	var EC;
+	var range = 0;
 
 	//Get Enemy Name Index
 	var index = 0;
-	for (i=0; i<enemies.length; i++) {
-		if (enemies[i][0].includes(enemies[enemySelection.value][0]) ) {
-			health = enemies[i][1][total];
-			move = enemies[i][3][total];
-			attack = enemies[i][2][total];
+	for (i=0; i<normal_enemies.length; i++) {
+		if (normal_enemies[i][0].includes(normal_enemies[enemySelection.value][0]) ) {
+			health = normal_enemies[i][1][level];
+			if (normal_enemies[i][0].includes("Boss") ) {
+				health = normal_enemies[i][1][level] * selected_characters.length;
+			}
+			move = normal_enemies[i][2][level];
+			attack = normal_enemies[i][3][level];
+			range = normal_enemies[i][4][level];
+
 			//Shield
-			if (enemy_extras[i][1].length > 0) {
-				shield = enemy_extras[i][1][total];
-				if (total < 8) { NS = enemy_extras[i][1][total]; ES = enemy_extras[i][1][total + 8]; }
-				else if (total >= 8) { NS = enemy_extras[i][1][total - 8]; ES = enemy_extras[i][1][total]; }
-			}
-			//Condition
-			if (enemy_extras[i][2].length > 0) {
-				condition = enemy_extras[i][2][total];
-				if (total < 8) { NC = enemy_extras[i][2][total]; EC = enemy_extras[i][2][total + 8]; }
-				else if (total >= 8) { NC = enemy_extras[i][2][total - 8]; EC = enemy_extras[i][2][total]; }
-			}
-			if (total < 8) {
-				NM = enemies[i][1][total]; NA = enemies[i][2][total];
-				EM = enemies[i][1][total + 8]; EA = enemies[i][2][total + 8];
-			}
-			else if (total >= 8) {
-				NM = enemies[i][1][total - 8]; NA = enemies[i][2][total - 8];
-				EM = enemies[i][1][total]; EA = enemies[i][2][total];
+			if (normal_enemies[i][5].length > 0) {
+				shield = enemy_extras[i][5][level];
 			}
 		}
 	}
@@ -376,7 +350,7 @@ function addEnemy(selectorID) {
 	enemyBoxContainer.innerHTML = `
 	<div class="box-long" style="column-gap:5px;">
 		<div class="box-tall" id="${enemy}" style="position:relative">
-			<img src="${enemySrc}" class="enemy-image" style="border:${color}">
+			<img src="${enemySrc}" class="enemy-image" style="border:3px solid white;">
 			<img class="enemy-delete" onclick="removeEnemy(${enemy})">
 			<input type="number" class="enemy-ID">
 			<div class="box-long" style="column-gap:5px;">
@@ -396,10 +370,17 @@ function addEnemy(selectorID) {
 				</div>
 			</div>
 		</div>
-		<div class="box-tall" id="${enemy + '_All_Conditions'}" style="border:${color}; min-width:35px;max-width:60px;height:160px;"
+		<div class="box-tall" id="${enemy + '_All_Conditions'}" style="border:3px solid white; min-width:35px;max-width:60px;height:160px;"
 			ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"></div>
 	</div>
 	`;
+
+//	makeEnemyStatCards();
+}
+/*
+function makeEnemyStatCards() {
+	//Get Values set
+	const box = document.getElementById("Enemy_Box");
 
 	//Track different types of enemies on screen
 	for (let child of box.children) {
@@ -410,7 +391,7 @@ function addEnemy(selectorID) {
 
 			//Adding Enemy Type Stat Card
 			const statBox = document.getElementById("Enemy_Stat_Box");
-			const enemyStatSrc = "./Images/JoTL/Enemies/Cards/" + enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+			const enemyStatSrc = "./Images/JoTL/Enemies/Cards/" + normal_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
 			const enemyStatContainer = document.createElement("box-container");
 			statBox.appendChild(enemyStatContainer);
 			
@@ -458,30 +439,10 @@ function addEnemy(selectorID) {
 				</div>
 			</div>
 			`;
-
-			//Show Enemy Applied Conditions
-			if (NC) {
-				var conBox = document.getElementById(enemyName + "_Normal");
-				var image = document.createElement("img");
-				image.id = enemyName + "_Neg_" + NC;
-				image.src = "./Images/Conditions/" + NC + ".png";
-				image.style.height = "25px";
-				image.style.width = "auto";
-				conBox.appendChild(image);
-			}
-			if (EC) {
-				var conBox = document.getElementById(enemyName + "_Elite");
-				var image = document.createElement("img");
-				image.id = enemyName + "_Neg_" + EC;
-				image.src = "./Images/Conditions/" + EC + ".png";
-				image.style.height = "25px";
-				image.style.width = "auto";
-				conBox.appendChild(image);
-			}
 		}
 	}
-
 }
+*/
 
 function removeEnemy(selectorID) {
 	const selection = document.getElementById(selectorID.id);
@@ -496,10 +457,6 @@ function removeEnemy(selectorID) {
 //
 const enemy_cards = [
 	//Name, Usabel Score Cards, Unusable Score Cards
-	[ "Black Imp", [] ],
-	[ "Black Sludge", [] ],
-	[ "Blood Imp", [] ],
-	[ "Chaos Demon", [] ],
 ];
 
 const enemy_types = ["_Normal", "_Elite"];
@@ -521,52 +478,6 @@ function makeEnemyScoreCard(enemyName, score, move, attack01, attack02, shield, 
 }
 
 function makeEnemyScoreCards() {
-	//Black Imp
-	makeEnemyScoreCard("Black Imp", 5, 0, 0, 0, 5, 1, "");
-	makeEnemyScoreCard("Black Imp", 37, 0, 0, 0, 0, 0, "A");
-	makeEnemyScoreCard("Black Imp", 37, 0, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Black Imp", 42, 1, 0, 0, 0, 0, "_1");
-	makeEnemyScoreCard("Black Imp", 42, 0, -1, 0, 0, 0, "_2");
-	makeEnemyScoreCard("Black Imp", 76, -1, 1, 0, 0, 0, "");
-	makeEnemyScoreCard("Black Imp", 42, 0, -1, 0, 0, 0, "_3");
-	makeEnemyScoreCard("Black Imp", 24, 0, 0, 0, 0, 0, "");
-
-	//Black Sludge
-	makeEnemyScoreCard("Black Sludge", 36, 1, -1, 0, 0, 0, "");
-	makeEnemyScoreCard("Black Sludge", 57, 0, 0, 0, 0, 0,"_1");
-	makeEnemyScoreCard("Black Sludge", 57, 0, 0, 0, 0, 0, "_2");
-	makeEnemyScoreCard("Black Sludge", 66, -1, 1, 0, 0, 0, "_1");
-	makeEnemyScoreCard("Black Sludge", 66, 0, 0, 0, 0, 2, "_2");
-	makeEnemyScoreCard("Black Sludge", 85, 0, 1, 0, 0, 0, "_1");
-	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 1, "_2"); //1+L/2
-	makeEnemyScoreCard("Black Sludge", 85, 0, 0, 0, 0, 1, "_3"); //1+L/2
-
-	//Blood Imp
-	makeEnemyScoreCard("Blood Imp", 5, 0, 0, 0, 5, 1, "");
-	makeEnemyScoreCard("Blood Imp", 37, 0, 0, 0, 0, 0, "A");
-	makeEnemyScoreCard("Blood Imp", 37, 0, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Blood Imp", 42, 1, 0, 0, 0, 0, "_1");
-	makeEnemyScoreCard("Blood Imp", 42, 0, -1, 0, 0, 0, "_2");
-	makeEnemyScoreCard("Blood Imp", 76, -1, 1, 0, 0, 0, "");
-	makeEnemyScoreCard("Blood Imp", 42, 0, -1, 0, 0, 0, "_3");
-	makeEnemyScoreCard("Blood Imp", 24, 0, 0, 0, 0, 0, "");
-
-	//Chaos Demon
-	makeEnemyScoreCard("Chaos Demon", 13, -1, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 1, 1, -1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 67, -2, 1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 20, 0, -1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 41, 0, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 52, -1, 1, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 76, 0, 0, 0, 0, 0, "");
-	makeEnemyScoreCard("Chaos Demon", 98, -1, -1, 0, 0, 0, "A");
-	makeEnemyScoreCard("Chaos Demon", 76, 0, 0, 0, 0, 0, "");
-
-	//Name, Active Array, Card, [1] is Score
-//	console.log(enemy_cards[0][1][0]);
-//	console.log(enemy_cards[0][1][0][1]);
-//	console.log(enemy_cards[0][1][7]);
-//	console.log(enemy_cards[0][1][7][1]);
 }
 
 function enemyAction(ID) {
