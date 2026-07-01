@@ -172,7 +172,7 @@ function makeSelectedCharacters() {
 	}
 
 	makeEnemyList();
-//	makeEnemyScoreCards();
+	makeEnemyScoreCards();
 }
 
 function characterAction(ID) {
@@ -210,8 +210,8 @@ var roundNumber = 1;
 
 const elements = ["Fire", "Ice", "Grass", "Wind", "Dark", "Light"];
 const conditions = [
-	["Positive", ["Strengthen"] ],
-	["Negative", ["Wound", "Poison", "Muddle"] ],
+	["Positive", ["Safeguard", "Ward", "Invisible", "Strengthen"] ],
+	["Negative", ["Wound", "Poison", "Immobilize", "Disarm", "Stun", "Muddle"] ],
 ];
 function dragstartHandler(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
@@ -269,23 +269,61 @@ function moveElementFrom(from, to) {
 var enemyTotal = 0;
 var enemy_stat_cards = [];
 
-// Poison = P, Muddle = M, Disadvantage = DV, Wound = W, Pierce = PC, Retaliate = R, Curse = C, Immobilize = IM, Disarm = DA
-// Poison = 1, Muddle = 2, Disadvantage = 3, Wound = 4, Pierce = 5, Retaliate = 6, Curse = 7, Immobilize = 8, Disarm = 9
 const normal_enemies = [
-//	Name,					Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
-	["AncientArtillery",	[4,6,7,8,9,11,14,16],		[],					[2,2,2,3,4,4,4,4],	[4,4,5,5,5,6,6,7],	[],					[],					[] ],
-	["BanditArcher",		[4,5,6,6,8,10,10,13],		[2,2,3,3,3,3,3,3],	[2,2,2,3,3,3,4,4],	[3,4,4,4,4,5,5,5],	[],					[0,0,0,0,1,1,1,1],	[] ],
-	["BanditCommanderBoss",	[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[],					[],					[],					[] ],
-	["BanditGuard",			[5,6,6,9,10,11,14,16],		[2,3,3,3,4,4,4,5],	[2,2,3,3,3,4,4,4],	[],					[],					[],					[] ],
-	["BlackImp",			[3,4,5,5,7,9,10,12],		[1,1,1,1,1,1,1,1],	[1,1,1,2,2,2,3,3],	[3,3,4,4,4,4,4,4],	[],					[],					[] ],
-//	["CaptainoftheGuard",	[], [], [], [], [], [], [] ],
-//	["CaveBear",			[], [], [], [], [], [], [] ],
-//	["CityArcher",			[], [], [], [], [], [], [] ],
-//	["CityGuard",			[], [], [], [], [], [], [] ],
-//	["Cultist",				[], [], [], [], [], [], [] ],
-//	["DarkRider",			[], [], [], [], [], [], [] ],
-//	["DeepTerror",			[], [], [], [], [], [], [] ],
-//	["",[],[],[],[],[],[],[] ]
+//	Wound = 1, Poison = 2, Immobilize = 3, Disarm = 4, Stun = 5, Muddle = 6, Pierce = 7, Retaliate = 8
+//	Name,						Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
+	["AncientArtillery",		[4,6,7,8,9,11,14,16],		[0,0,0,0,0,0,0,0],	[2,2,2,3,4,4,4,4],	[4,4,5,5,5,6,6,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditArcher",			[4,5,6,6,8,10,10,13],		[2,2,3,3,3,3,3,3],	[2,2,2,3,3,3,4,4],	[3,4,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditCommanderBossC",	[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditGuard",				[5,6,6,9,10,11,14,16],		[2,3,3,3,4,4,4,5],	[2,2,3,3,3,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BlackImp",				[3,4,5,5,7,9,10,12],		[1,1,1,1,1,1,1,1],	[1,1,1,2,2,2,3,3],	[3,3,4,4,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,2,2,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["CaptainoftheGuardBossC",	[7,9,11,14,16,20,21,25],	[2,2,2,2,2,2,2,2],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CaveBear",				[7,9,11,13,16,17,19,22],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,4,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,4,4,4],	[0,0,0,0,0,0,0,0] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+];
+
+const elite_enemies = [
+//	Wound = 1, Poison = 2, Immobilize = 3, Disarm = 4, Stun = 5, Muddle = 6, Pierce = 7, Retaliate = 8
+//	Name,						Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
+	["AncientArtillery",		[7,9,11,13,13,15,16,20],	[0,0,0,0,0,0,0,0],	[3,3,3,4,4,4,5,5],	[5,5,6,6,6,7,7,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditArcher",			[6,7,9,10,10,12,13,17],		[3,3,3,4,4,4,5,5],	[3,5,5,5,6,6,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["BanditCommanderBossC",	[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditGuard",				[9,9,10,10,11,12,14,14],	[2,2,2,3,3,3,3,3],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,1,1,2,2,2,2,3],	[0,0,0,0,6,6,6,6],	[0,0,0,0,0,0,0,0] ],
+	["BlackImp",				[4,6,8,8,11,12,14,17],		[1,1,1,1,1,1,1,1],	[2,2,2,3,3,3,4,4],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[2,2,2,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["CaptainoftheGuardBossC",	[7,9,11,14,16,20,21,25],	[2,2,2,2,2,2,2,2],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CaveBear",				[11,14,17,20,21,24,28,33],	[3,3,4,4,5,5,5,5],	[4,4,4,5,5,6,7,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,4,4,4,4],	[0,0,0,0,0,0,0,0] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	["",	[],	[],	[],	[],	[],	[],	[] ],
 ];
 
 function makeEnemyList() {
@@ -308,7 +346,9 @@ function makeEnemyList() {
 	}
 }
 
-function addNormalEnemy(selectorID) {
+
+
+function addEnemy(array_type) {
 	//Get Values set
 	const box = document.getElementById("Enemy_Box");
 	enemyTotal++;
@@ -318,30 +358,53 @@ function addNormalEnemy(selectorID) {
 	const enemyBoxContainer = document.createElement("box-container");
 	box.appendChild(enemyBoxContainer);
 
-	const enemySrc = "./Images/Gloomhaven_2e/Enemies/" + normal_enemies[enemySelection.value][0] + ".avif";
+	//Set Type
+	if (array_type.includes("normal") ) {
+		enemies = normal_enemies;
+		color = "3px solid white";
+	}
+	else if (array_type.includes("elite") ) {
+		enemies = elite_enemies;
+		color = "3px solid gold";
+	}
+
+	//Set Values
+	var enemySrc;
+	if (enemies[enemySelection.value][0].includes("BossC") ) {
+		enemySrc = "./Images/Gloomhaven_2e/Enemies/" + enemies[enemySelection.value][0].slice(0,-1) + ".avif";
+	} else {
+		enemySrc = "./Images/Gloomhaven_2e/Enemies/" + enemies[enemySelection.value][0] + ".avif";
+	}
 	const level = Number(document.getElementById("Enemy_Selector_Levels").value);
-	var enemyName = normal_enemies[enemySelection.value][0].replace(/\s+/g,"");
+	var enemyName = enemies[enemySelection.value][0].replace(/\s+/g,"");
 	var health = 0;
 	var move = 0;
 	var attack = 0;
-	var shield = 0;
 	var range = 0;
+	var shield = 0;
+	var enemies;
+	var color;
 
-	//Get Enemy Name Index
-	var index = 0;
-	for (i=0; i<normal_enemies.length; i++) {
-		if (normal_enemies[i][0].includes(normal_enemies[enemySelection.value][0]) ) {
-			health = normal_enemies[i][1][level];
-			if (normal_enemies[i][0].includes("Boss") ) {
-				health = normal_enemies[i][1][level] * selected_characters.length;
+	//Get Enemy Values
+	for (i=0; i<enemies.length; i++) {
+		if (enemies[i][0].includes(enemies[enemySelection.value][0]) ) {
+			//Health
+			health = enemies[i][1][level];
+			if (enemies[i][0].includes("BossC") ) {
+				health = enemies[i][1][level] * selected_characters.length;
 			}
-			move = normal_enemies[i][2][level];
-			attack = normal_enemies[i][3][level];
-			range = normal_enemies[i][4][level];
-
+			//Move
+			move = enemies[i][2][level];
+			//Attack
+			attack = enemies[i][3][level];
+			if (enemies[i][0].includes("Bossc") ) {
+				attack = enemies[i][3][level] + selected_characters.length;
+			}
+			//Range
+			range = enemies[i][4][level];
 			//Shield
-			if (normal_enemies[i][5].length > 0) {
-				shield = enemy_extras[i][5][level];
+			if (enemies[i][5].length > 0) {
+				shield = enemies[i][5][level];
 			}
 		}
 	}
@@ -350,7 +413,7 @@ function addNormalEnemy(selectorID) {
 	enemyBoxContainer.innerHTML = `
 	<div class="box-long" style="column-gap:5px;">
 		<div class="box-tall" id="${enemy}" style="position:relative">
-			<img src="${enemySrc}" class="enemy-image" style="border:3px solid white;">
+			<img src="${enemySrc}" class="enemy-image" style="border:${color};">
 			<img class="enemy-delete" onclick="removeEnemy(${enemy})">
 			<input type="number" class="enemy-ID">
 			<div class="box-long" style="column-gap:5px;">
@@ -370,79 +433,145 @@ function addNormalEnemy(selectorID) {
 				</div>
 			</div>
 		</div>
-		<div class="box-tall" id="${enemy + '_All_Conditions'}" style="border:3px solid white; min-width:35px;max-width:60px;height:160px;"
+		<div class="box-tall" id="${enemy + '_All_Conditions'}" style="border:${color}; min-width:35px;max-width:60px;height:160px;"
 			ondrop="dropConditionHandler(event)" ondragover="dragoverHandler(event)"></div>
 	</div>
 	`;
 
-//	makeEnemyStatCards();
-}
-/*
-function makeEnemyStatCards() {
-	//Get Values set
-	const box = document.getElementById("Enemy_Box");
-
 	//Track different types of enemies on screen
+	var NH = 0; var EH = 0;
+	var NM = 0;	var EM = 0;
+	var NA = 0; var EA = 0;
+	var NR = 0; var ER = 0;
+	var NS = 0; var ES = 0;
+	var NC = 0; var EC = 0;
+	var NC2 = 0; var EC2 = 0;
+
+	//Get Enemy Values
+	for (i=0; i<normal_enemies.length; i++) {
+		if (normal_enemies[i][0].includes(normal_enemies[enemySelection.value][0]) ) {
+			//Health
+			NH = normal_enemies[i][1][level];	EH = elite_enemies[i][1][level];
+			if (normal_enemies[i][0].includes("BossC") ) {
+				NH = normal_enemies[i][1][level] * selected_characters.length;	EH = elite_enemies[i][1][level] * selected_characters.length;
+			}
+			//Move
+			NM = normal_enemies[i][2][level];	EM = elite_enemies[i][2][level];
+			//Attack
+			NA = normal_enemies[i][3][level];	EA = elite_enemies[i][3][level];
+			if (normal_enemies[i][0].includes("Bossc") ) {
+				NA = normal_enemies[i][3][level] + selected_characters.length;	EA = elite_enemies[i][3][level] + selected_characters.length;
+			}
+			//Range
+			NR = normal_enemies[i][4][level];	ER = elite_enemies[i][4][level];
+			//Shield
+			NS = normal_enemies[i][5][level];	ES = elite_enemies[i][5][level];
+			//Condition(s)
+			NC = normal_enemies[i][6][level];	EC = elite_enemies[i][6][level];
+			NC2 = normal_enemies[i][7][level];	EC2 = elite_enemies[i][7][level];
+		}
+	}
+
 	for (let child of box.children) {
 		var guy = child.children[0].children[0].id;
-		var name = guy.split("_")[0];
-		if (!enemy_stat_cards.includes(name) ) {
-			enemy_stat_cards.push(name);
+			var name = guy.split("_")[0];
+			if (!enemy_stat_cards.includes(name) ) {
+				enemy_stat_cards.push(name);
 
-			//Adding Enemy Type Stat Card
-			const statBox = document.getElementById("Enemy_Stat_Box");
-			const enemyStatSrc = "./Images/JoTL/Enemies/Cards/" + normal_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
-			const enemyStatContainer = document.createElement("box-container");
-			statBox.appendChild(enemyStatContainer);
-			
-			enemyStatContainer.innerHTML = `
-			<div class="box-long" style="position:relative; column-gap:10px;">
-				<div class="box-tall" id="${enemyName + "_Stat"}" style="position:relative">
-					<img src="${enemyStatSrc}" class="enemy-stat-image">
-					<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_Stat"})">
-					<div class="box-long">
-						<div class="box-tall" id="${enemyName + "_Normal"}">
-							<p style="margin:5px; color:white; font-size:20px;">M:${NM}</p>
-							<p style="margin:5px; color:green; font-size:20px;">A:${NA}</p>
-							<p style="margin:5px; color:blue; font-size:20px;">M:${NS}</p>
-						</div>
-						<div class="box-tall" id="${enemyName + "_Elite"}">
-							<p style="margin:5px; color:gold; font-size:20px;">M:${EM}</p>
-							<p style="margin:5px; color:lawngreen; font-size:20px;">A:${EA}</p>
-							<p style="margin:5px; color:cyan; font-size:20px;">A:${ES}</p>
-						</div>
-					</div>
-					<div class="box-long" id="${enemyName + "_Conditions"}"></div>
-				</div>
-				<div class="box-tall" id="${enemyName + "_Card"}" style="position:relative">
-					<div class="box-long" style="column-gap:10px;">
+				//Adding Enemy Type Stat Card
+				const statBox = document.getElementById("Enemy_Stat_Box");
+				var enemyStatSrc = "./Images/Gloomhaven_2e/Enemies/Cards/" + normal_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+				if (enemies[enemySelection.value][0].includes("BossC") ) {
+					enemyStatSrc = "./Images/Gloomhaven_2e/Enemies/Cards/" + normal_enemies[enemySelection.value][0].slice(0,-1) + ".png";
+				} else {
+					enemyStatSrc = "./Images/Gloomhaven_2e/Enemies/Cards/" + normal_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+				}
+				const enemyStatContainer = document.createElement("box-container");
+				statBox.appendChild(enemyStatContainer);
+				
+				enemyStatContainer.innerHTML = `
+				<div class="box-long" style="position:relative; column-gap:10px;">
+					<div class="box-tall" id="${enemyName + "_Stat"}" style="position:relative">
+						<img src="${enemyStatSrc}" class="enemy-stat-image">
+						<img class="enemy-delete" onclick="removeEnemy(${enemyName + "_Stat"})">
 						<div class="box-long">
-							<img src="./Images/Icons/Attack.png" id="${enemyName + '_Normal_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
-							<p id="${enemyName + '_Attack_Normal'}" class="attribute-input" style="font-size:20px;" data-base-Attack="${NA}" data-extra-Attack="${NA}" >${NA}</p>
-							<div class="box-tall">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack_Normal'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack_Normal'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+							<div class="box-tall" id="${enemyName + "_Normal"}">
+								<p style="margin:5px; color:white; font-size:20px;">M:${NM}</p>
+								<p style="margin:5px; color:green; font-size:20px;" id="${enemyName + "_Normal_A"}">A:${NA}</p>
+								<p style="margin:5px; color:crimson; font-size:20px;">R:${NR}</p>
+								<p style="margin:5px; color:blue; font-size:20px;">S:${NS}</p>
+							</div>
+							<div class="box-tall" id="${enemyName + "_Elite"}">
+								<p style="margin:5px; color:gold; font-size:20px;">M:${EM}</p>
+								<p style="margin:5px; color:lawngreen; font-size:20px;" id="${enemyName + "_Elite_A"}">A:${EA}</p>
+								<p style="margin:5px; color:red; font-size:20px;">R:${ER}</p>
+								<p style="margin:5px; color:cyan; font-size:20px;">S:${ES}</p>
 							</div>
 						</div>
-						<div class="box-long">
-							<img src="./Images/Icons/Attack_Elite.png" id="${enemyName + '_Elite_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
-							<p id="${enemyName + '_Attack_Elite'}" class="attribute-input" style="font-size:20px; color:gold; border-color:gold" data-base-Attack="${EA}" data-extra-Attack="${EA}" >${EA}</p>
-							<div class="box-tall">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack_Elite'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack_Elite'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
-							</div>
-						</div>
-						<img src="./Images/Icons/Shuffle.png" onclick="shuffleScores(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
-						<img src="./Images/Icons/Flip.png" onclick="flipEnemy(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
+						<div class="box-long" id="${enemyName + "_Conditions"}"></div>
 					</div>
-					<img src="./Images/JoTL/Enemies/Initiatives/Monster_Back.jpg" id="${enemyName + '_Score_Img'}" style="height:auto;width:300px;">
+					<div class="box-tall" id="${enemyName + "_Card"}" style="position:relative">
+						<div class="box-long" style="column-gap:10px;">
+							<div class="box-long">
+								<img src="./Images/Icons/Attack.png" id="${enemyName + '_Normal_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+								<p id="${enemyName + '_Attack_Normal'}" class="attribute-input" style="font-size:20px;" data-base-Attack="${NA}" data-extra-Attack="${NA}" >${NA}</p>
+								<div class="box-tall">
+									<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack_Normal'})" style="width:10px;height:10px; cursor:pointer;">
+									<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack_Normal'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+								</div>
+							</div>
+							<div class="box-long">
+								<img src="./Images/Icons/Attack_Elite.png" id="${enemyName + '_Elite_Attack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+								<p id="${enemyName + '_Attack_Elite'}" class="attribute-input" style="font-size:20px; color:gold; border-color:gold" data-base-Attack="${EA}" data-extra-Attack="${EA}" >${EA}</p>
+								<div class="box-tall">
+									<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${enemyName + '_Attack_Elite'})" style="width:10px;height:10px; cursor:pointer;">
+									<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${enemyName + '_Attack_Elite'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+								</div>
+							</div>
+							<img src="./Images/Icons/Shuffle.png" onclick="shuffleScores(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
+							<img src="./Images/Icons/Flip.png" onclick="flipEnemy(${enemyName + '_Card'})" class="action-Btn" style="height:25px;">
+						</div>
+						<img src="./Images/JoTL/Enemies/Initiatives/Monster_Back.jpg" id="${enemyName + '_Score_Img'}" style="height:auto;width:300px;">
+					</div>
 				</div>
-			</div>
 			`;
+
+			//Getting Coniditions
+			switch (NC) {
+				case 1: NC = "Wound"; break; case 2: NC = "Poison"; break; case 3: NC = "Immobilize"; break; case 4: NC = "Disarm"; break;
+				case 5: NC = "Stun"; break; case 6: NC = "Muddle"; break; case 7: NC = "Pierce"; break; case 8: NC = "Retaliate"; break;
+			}
+			switch (EC) {
+				case 1: EC = "Wound"; break; case 2: EC = "Poison"; break; case 3: EC = "Immobilize"; break; case 4: EC = "Disarm"; break;
+				case 5: EC = "Stun"; break; case 6: EC = "Muddle"; break; case 7: EC = "Pierce"; break; case 8: EC = "Retaliate"; break;
+			}
+			switch (NC2) {
+				case 1: NC2 = "Wound"; break; case 2: NC2 = "Poison"; break; case 3: NC2 = "Immobilize"; break; case 4: NC2 = "Disarm"; break;
+				case 5: NC2 = "Stun"; break; case 6: NC2 = "Muddle"; break; case 7: NC2 = "Pierce"; break; case 8: NC2 = "Retaliate"; break;
+			}
+			switch (EC2) {
+				case 1: EC2 = "Wound"; break; case 2: EC2 = "Poison"; break; case 3: EC2 = "Immobilize"; break; case 4: EC2 = "Disarm"; break;
+				case 5: EC2 = "Stun"; break; case 6: EC2 = "Muddle"; break; case 7: EC2 = "Pierce"; break; case 8: EC2 = "Retaliate"; break;
+			}
+
+			//Applying Conditions
+			if (NC) { applyCondition(enemyName, "_Normal", NC); }
+			if (EC) { applyCondition(enemyName, "_Elite", EC); }
+			if (NC2) { applyCondition(enemyName, "_Normal", NC2); }
+			if (EC2) { applyCondition(enemyName, "_Elite", EC2); }
 		}
 	}
 }
-*/
+
+function applyCondition(enemyName, suffix, value) {
+	var conBox = document.getElementById(enemyName + suffix);
+	var image = document.createElement("img");
+	image.id = enemyName + "_Neg_" + value;
+	image.src = "./Images/Conditions/" + value + ".png";
+	image.style.height = "25px";
+	image.style.width = "auto";
+	conBox.appendChild(image);
+}
 
 function removeEnemy(selectorID) {
 	const selection = document.getElementById(selectorID.id);
@@ -457,27 +586,64 @@ function removeEnemy(selectorID) {
 //
 const enemy_cards = [
 	//Name, Usabel Score Cards, Unusable Score Cards
+	[ "AncientArtillery", [] ],
+	[ "BanditArcher", [] ],
 ];
 
 const enemy_types = ["_Normal", "_Elite"];
 
-function makeEnemyScoreCard(enemyName, score, move, attack01, attack02, shield, heal, img) {
-	//Have an array that has [ [enemyName], [score values/these cards] ] that these cards ar added to
+function makeEnemyScoreCard(enemyName, score, actions, img) {
+	//Seperate all actions
+	var all_actions = [];
+	var seperate_actions = actions.split("|");
+	for (i=0; i<seperate_actions.length; i++) {
+		if (seperate_actions[i].includes("/") ) {
+			var sep_acts_2 = seperate_actions[i].split("/");
+			for (j=0; j<sep_acts_2; j++) {
+				all_actions.push(sep_acts_2[j].trim() );
+			}
+		} else {
+			all_actions.push(seperate_actions[i].trim() );
+		}
+	}
+
+	//Make all cards temporarily unique
 	var image = img;
 	if (img === "A") {
 		image = img.replace("A","");
 	}
-	var cardSrc = "./Images/JoTL/Enemies/Initiatives/" + enemyName.replaceAll(" ","") + "_" + score + image + ".png";
+	var cardSrc = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + enemyName + "_" + score + image + ".png";
+
+	//Make Array of Enemy Initiative Cards
 	var array = [];
 	for (i=0; i<enemy_cards.length; i++ ) {
 		if (enemy_cards[i][0] === enemyName) {
-			array.push(enemyName, score, move, attack01, attack02, shield, heal, cardSrc, img, true);
+			array.push(enemyName, score, all_actions, cardSrc, img, true);
 			enemy_cards[i][1].push(array);
 		}
 	}
 }
 
 function makeEnemyScoreCards() {
+	//Ancient Artillery
+	makeEnemyScoreCard("AncientArtillery", 46, "Attack -1", "_1");
+	makeEnemyScoreCard("AncientArtillery", 71, "", "");
+	makeEnemyScoreCard("AncientArtillery", 71, "", "A");
+	makeEnemyScoreCard("AncientArtillery", 37, "Attack -1", "");
+	makeEnemyScoreCard("AncientArtillery", 37, "Attack -1", "A");
+	makeEnemyScoreCard("AncientArtillery", 95, "Attack 1", "");
+	makeEnemyScoreCard("AncientArtillery", 17, "Shield 2 | Attack -2", "");
+	makeEnemyScoreCard("AncientArtillery", 46, "Attack -1", "_2");
+
+	//Bandit Archer
+	makeEnemyScoreCard("BanditArcher", 16, "Attack -1", "");
+	makeEnemyScoreCard("BanditArcher", 31, "", "");
+	makeEnemyScoreCard("BanditArcher", 32, "Attack 1", "");
+	makeEnemyScoreCard("BanditArcher", 44, "Attack 1", "");
+	makeEnemyScoreCard("BanditArcher", 56, "Attack -1", "");
+	makeEnemyScoreCard("BanditArcher", 68, "Attack 1", "");
+	makeEnemyScoreCard("BanditArcher", 14, "Attack -1", "");
+	makeEnemyScoreCard("BanditArcher", 29, "Attack -1 / IM", "");
 }
 
 function enemyAction(ID) {
@@ -499,11 +665,11 @@ function flipEnemy(element) {
 	//Flip Enemy Score Card
 	var scoreArray = [];
 	for (i=0; i<enemy_cards.length; i++ ) {
-		if (enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
+		if (enemy_cards[i][0] === element.id.split("_")[0]) {
 			//Make Array of Enemy Scores
 			for (j=0; j<enemy_cards[i][1].length; j++) {
-				if (enemy_cards[i][1][j][9] === true) {
-					var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][8];
+				if (enemy_cards[i][1][j][5] === true) {
+					var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][4];
 					scoreArray.push(card);
 				}
 			}
@@ -520,38 +686,44 @@ function flipEnemy(element) {
 
 			//Get/Combine Attack Value(s)
 			for (j=0; j<enemy_cards[i][1].length; j++) {
-				var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][8];
+				var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][4];
 				if (card === score) {
-					enemy_cards[i][1][j][9] = false;
-					var attack = enemy_cards[i][1][j][3] + enemy_cards[i][1][j][4];
+					enemy_cards[i][1][j][5] = false;
+					for ( k=0; k<enemy_cards[i][1][j][2].length; k++) {
+						var attack = 0;
+						if (enemy_cards[i][1][j][2][k].includes("Attack") ) {
+							attack = Number(enemy_cards[i][1][j][2][k].replace("Attack ", "") );
+						}
+					}
 					break;
 				}
 			}
 
 			//Add New Attack Value to Displayed Enemy Attack Value
-			var enemyName = enemy_cards[i][0].replace(" ","");
 			for (index=0; index<enemy_types.length; index++) {
-				var enemyAttack = document.getElementById(enemyName + "_Attack" + enemy_types[index]);
+				var enemyAttack = document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[index]);
 				enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
 				enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
 			}
 
 			//Update Displayed Card
-			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
-			enemyScoreImage.src = enemy_cards[i][1][j][7];
+			var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Score_Img");
+			enemyScoreImage.src = enemy_cards[i][1][j][3];
 		}
 	}
 }
 
 function shuffleScores(element) {
+	//Reset Score Card to base info
 	for (i=0; i<enemy_cards.length; i++ ) {
-		if (enemy_cards[i][0].replace(" ","") === element.id.split("_")[0]) {
+		if (enemy_cards[i][0] === element.id.split("_")[0]) {
 			for (j=0; j<enemy_cards[i][1].length; j++) {
-				enemy_cards[i][1][j][9] = true
+				enemy_cards[i][1][j][5] = true;
 			}
-			var enemyName = enemy_cards[i][0].replace(" ","");
-			var enemyScoreImage = document.getElementById(enemyName + "_Score_Img");
-			enemyScoreImage.src = "./Images/JoTL/Enemies/Initiatives/Monster_Back.jpg";
+			var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Score_Img");
+			enemyScoreImage.src = "./Images/Monster_Back.jpg";
+			document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[0]).textContent = document.getElementById(enemy_cards[i][0] + "_Normal_A").textContent.replace("A:","");
+			document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[1]).textContent = document.getElementById(enemy_cards[i][0] + "_Elite_A").textContent.replace("A:","");
 			break;
 		}
 	}

@@ -14,9 +14,15 @@
 		<!--Characters-->
 		<div class="box-long" style="column-gap:10px;">
 			<div class="box-tall" id="Conditions" style="row-gap:25px; flex-direction:column; min-height:75vh; border:1px solid white;">
+				<img src="./Images/Conditions/Safeguard.png" id="Safeguard" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Ward.png" id="Ward" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Invisible.png" id="Inivisible" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Strengthen.png" id="Strengthen" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Wound.png" id="Wound" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Poison.png" id="Poison" class="element" ondragstart="dragstartHandler(event)">
-				<img src="./Images/Conditions/Strengthen.png" id="Strengthen" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Immobilize.png" id="Immobilize" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Disarm.png" id="Disarm" class="element" ondragstart="dragstartHandler(event)">
+				<img src="./Images/Conditions/Stun.png" id="Stun" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Muddle.png" id="Muddle" class="element" ondragstart="dragstartHandler(event)">
 			</div>
 			<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; min-height:100vh;"></div>
@@ -55,14 +61,14 @@
 					<p onclick="shuffleEnemyAll()" style="margin-top:50px; cursor:pointer;">Shuffle All</p>
 					<p onclick="flipEnemyAll()" style="margin-top:50px; cursor:pointer;">Flip All</p>
 				</div>
-				<div class="box-tall" id="Enemy_Stat_Box" style="min-height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
+				<div class="box-tall" id="Enemy_Stat_Box" style="height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
 			</div>
 			<div class="box-tall" id="Enemy_Container" style="height:100vh; justify-content:flex-start;">
 				<div class="box-long" style="column-gap:10px;">
 					<select name="enemies" id="Enemy_Selector"></select>
 					<select name="levels" id="Enemy_Selector_Levels"></select>
-					<img src="./Images/Icons/Normal.png" class="enemy-selector" id="Add_Enemy" onclick="addNormalEnemy(this.id)">
-					<img src="./Images/Icons/Elite.png" class="enemy-selector" id="Add_Enemy_Elite" onclick="addEnemy(this.id)">
+					<img src="./Images/Icons/Normal.png" class="enemy-selector" id="Add_Enemy" onclick="addEnemy('normal')">
+					<img src="./Images/Icons/Elite.png" class="enemy-selector" id="Add_Enemy_Elite" onclick="addEnemy('elite')">
 				</div>
 				<div class="box-long" style="column-gap:10px;">
 					<div class="box-tall" style="row-gap:10px;">
