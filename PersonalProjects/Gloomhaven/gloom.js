@@ -136,6 +136,7 @@ function makeSelectedCharacters() {
 					<img src="${charSrc}" class="Player" height="172" width="136">
 					<div class="box-long" style="column-gap:10px">
 						<p style="margin:5px; color:white;">L: ${selected_characters[i][1]}</p>
+						<input type="number" id="${charName + '_Score'}" class="attribute-input">
 					</div>
 				</div>
 				<div class="box-tall" style="row-gap:15px;">
@@ -154,7 +155,7 @@ function makeSelectedCharacters() {
 							<p class="attribute-input">${'/ ' + selected_characters[i][2]}</p>
 							<div class="box-tall">
 								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Health'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${charName + '_health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${charName + '_Health'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
 							</div>
 						</div>
 					</div>
@@ -209,10 +210,6 @@ var roundNumber = 1;
 //
 
 const elements = ["Fire", "Ice", "Grass", "Wind", "Dark", "Light"];
-const conditions = [
-	["Positive", ["Safeguard", "Ward", "Invisible", "Strengthen"] ],
-	["Negative", ["Wound", "Poison", "Immobilize", "Disarm", "Stun", "Muddle"] ],
-];
 function dragstartHandler(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
 }
@@ -268,41 +265,59 @@ function moveElementFrom(from, to) {
 //
 var enemyTotal = 0;
 var enemy_stat_cards = [];
+var enemyInflicts;
 
 const normal_enemies = [
 //	Wound = 1, Poison = 2, Immobilize = 3, Disarm = 4, Stun = 5, Muddle = 6, Pierce = 7, Retaliate = 8
 //	Name,						Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
 	["AncientArtillery",		[4,6,7,8,9,11,14,16],		[0,0,0,0,0,0,0,0],	[2,2,2,3,4,4,4,4],	[4,4,5,5,5,6,6,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 	["BanditArcher",			[4,5,6,6,8,10,10,13],		[2,2,3,3,3,3,3,3],	[2,2,2,3,3,3,4,4],	[3,4,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
-	["BanditCommanderBossC",	[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditCommanderBoss",		[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 	["BanditGuard",				[5,6,6,9,10,11,14,16],		[2,3,3,3,4,4,4,5],	[2,2,3,3,3,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 	["BlackImp",				[3,4,5,5,7,9,10,12],		[1,1,1,1,1,1,1,1],	[1,1,1,2,2,2,3,3],	[3,3,4,4,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,2,2,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
-	["CaptainoftheGuardBossC",	[7,9,11,14,16,20,21,25],	[2,2,2,2,2,2,2,2],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
-	["CaveBear",				[7,9,11,13,16,17,19,22],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,4,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,4,4,4],	[0,0,0,0,0,0,0,0] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
+	["CaptainoftheGuardBoss",	[7,9,11,14,16,20,21,25],	[2,2,2,2,2,2,2,2],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CaveBear",				[7,9,11,13,16,17,19,22],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,4,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,1,1,1],	[0,0,0,0,0,0,0,0] ],
+	["CityArcher",				[4,4,6,6,8,9,9,10],			[1,1,1,2,2,2,3,3],	[2,2,3,3,3,4,4,4],	[3,4,4,4,5,5,5,6],	[0,0,0,1,1,1,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CityGuard",				[5,5,7,8,9,10,11,13],		[2,2,2,2,3,3,3,3],	[2,2,2,3,3,3,4,4],	[0,0,0,0,0,0,0,0],	[0,1,1,1,1,2,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["Cultist",					[4,5,7,9,10,11,14,15],		[2,2,2,3,3,3,3,3],	[1,1,1,1,2,2,2,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["DarkRiderBoss",			[9,10,12,13,15,16,16,18],	[2,3,3,3,3,3,4,4],	[3,3,3,4,4,5,5,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["DeepTerror",				[3,4,4,5,6,7,8,9],			[0,0,0,0,0,0,0,0],	[2,2,3,3,4,4,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[81,81,81,82,82,83,83,84],[0,0,0,0,0,0,0,0] ],
+	["EarthDemon",				[7,9,12,13,15,17,20,22],	[1,1,1,2,2,2,2,3],	[3,3,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,3,3,3],	[0,0,0,0,0,0,0,0] ],
+	["ElderDrakeBoss",			[11,12,15,16,20,22,27,29],	[0,0,0,0,0,0,0,0],	[3,4,4,5,5,6,6,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["FlameDemon",				[2,2,3,3,3,4,4,5],			[3,3,3,3,4,4,4,4],	[2,2,3,3,3,3,4,4],	[3,3,3,4,4,4,4,5],	[2,3,3,3,3,4,4,4],	[0,0,0,83,83,84,84],[0,0,0,0,0,0,0,0] ],
+	["ForestImp",				[1,2,2,3,3,4,4,6],			[3,3,3,4,4,4,4,4],	[1,1,2,2,2,2,3,3],	[3,3,3,4,4,4,4,4],	[1,1,1,1,2,2,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["FrostDemon",				[5,6,7,8,10,11,12,14],		[2,2,3,3,3,3,3,3],	[3,3,3,4,4,4,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,81,82,82,82,83,83,83],[0,0,0,0,0,0,0,0] ],
+	["GiantViper",				[2,3,4,4,6,7,8,10],			[2,2,3,3,3,3,4,4],	[1,1,1,2,2,3,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[2,2,2,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["HarrowerInfester",		[6,7,8,10,12,12,15,17],		[2,2,2,2,3,3,3,3],	[2,2,2,3,3,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,81,82,82,82,83,83,84],[0,0,0,0,0,0,0,0] ],
+	["Hound",					[4,4,6,8,8,9,11,15],		[3,4,4,4,4,4,5,5],	[2,2,2,2,3,3,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,81,81,81,81,82,82,82],[0,0,0,0,0,0,0,0] ],
+	["InoxArcher",				[5,6,8,9,10,12,12,15],		[2,2,2,2,3,3,3,3],	[2,2,2,3,3,3,4,4],	[2,3,3,3,3,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,1,1],	[0,0,0,0,0,0,0,0] ],
+	["InoxBodyGuardBossC",		[6,7,9,10,11,13,15,17],		[2,2,2,3,3,3,4,4],	[0,1,1,2,2,3,3,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["InoxGuard",				[5,8,9,12,12,13,16,19],		[2,2,2,3,3,3,3,3],	[2,2,3,3,3,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,81,81,81,84],[0,0,0,0,0,0,0,0] ],
+	["InoxShaman",				[4,6,7,9,10,13,15,16],		[1,1,2,2,2,2,3,3],	[2,2,2,2,3,3,3,4],	[3,3,3,4,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["JekserahBoss",			[6,7,9,12,13,15,18,22],		[2,2,3,4,4,5,5,5],	[2,3,3,4,5,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["LivingBones",				[5,5,5,7,7,9,10,13],		[2,3,3,3,3,3,4,4],	[1,1,2,2,3,3,3,3],	[0,0,0,0,0,0,0,0],	[0,1,1,1,1,1,1,1],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["LivingCorpse",			[5,7,9,10,11,13,14,15],		[1,1,1,1,2,2,2,2],	[3,3,3,4,4,4,4,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,2,2],	[0,0,0,0,0,0,0,0] ],
+	["LivingSpirit",			[2,2,2,3,3,4,4,6],			[2,2,3,3,3,3,3,3],	[2,2,2,3,3,3,4,4],	[2,2,2,3,3,4,4,4],	[1,2,2,2,3,3,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["Lurker",					[5,7,9,10,10,11,12,14],		[2,2,3,3,3,3,4,4],	[2,2,2,3,3,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,1,1,1,1],	[0,71,71,72,72,72,73,73],[0,0,0,0,0,0,0,0] ],
+	["MercilessOverseerBoss",	[6,8,9,11,12,14,16,18],		[2,2,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["NightDemon",				[3,5,6,7,8,11,14,15],		[3,3,3,4,4,4,4,4],	[3,3,4,4,5,5,5,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["Ooze",					[4,5,7,8,9,10,12,14],		[1,1,1,1,2,2,2,2],	[2,2,2,3,3,3,4,4],	[2,2,3,3,3,3,3,3],	[0,1,1,1,1,1,1,1],	[0,0,0,0,0,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["PrimeDemonBoss",			[8,9,10,12,14,16,20,22],	[3,4,4,4,5,5,5,5],	[4,4,5,6,6,7,7,8],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["RendingDrake",			[5,6,7,7,9,10,11,14],		[3,3,4,4,4,4,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,1,1,1,1,1,1,1],	[0,0,0,0,0,0,0,0] ],
+	["SavvasIcestorm",			[7,10,12,12,14,16,16,17],	[2,2,3,3,3,3,3,4],	[2,2,2,3,3,4,4,4],	[3,4,4,4,5,5,5,6],	[0,0,0,1,1,1,2,2],	[73,73,73,73,73,73,73,73],[0,0,0,0,0,0,0,0] ],
+	["SavvasLavaflow",			[8,9,11,14,16,18,20,24],	[3,3,3,3,3,3,4,4],	[2,2,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,2,2,2,2,2,2,2],	[0,0,0,0,1,1,1,1] ],
+	["SpittingDrake",			[5,6,8,8,9,12,13,16],		[3,3,3,3,4,4,4,4],	[3,3,3,4,4,4,5,5],	[3,3,3,4,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,6,6,6,6,6,6],	[0,0,0,0,0,0,0,0] ],
+	["StoneGolem",				[10,10,11,11,12,13,16,16],	[1,1,1,1,2,2,2,2],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,1,1,2,2,2,2,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["SunDemon",				[5,7,9,10,11,11,12,15],		[2,2,2,2,3,3,3,3],	[2,2,2,3,3,3,4,4],	[0,0,0,0,0,0,0,0],	[1,1,1,1,1,2,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheBetrayerBoss",			[10,12,14,16,18,20,23,27],	[3,3,3,4,4,5,5,5],	[4,5,6,7,8,8,9,9],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheColorlessBoss",		[9,10,11,12,14,15,17,19],	[3,3,4,4,4,4,4,5],	[2,3,3,4,4,5,6,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheGloomBoss",			[20,25,29,35,39,46,50,56],	[2,2,2,2,3,3,3,3],	[5,5,6,6,7,7,8,9],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheSightlessEyeBoss",		[7,8,10,11,14,15,18,20],	[0,0,0,0,0,0,0,0],	[5,6,6,7,7,8,8,9],	[3,3,3,3,3,3,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["VermlingScout",			[2,3,3,5,6,8,9,11],			[3,3,3,3,3,3,4,4],	[1,1,2,2,3,3,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["VermlinmgShaman",			[2,2,3,3,3,4,5,7],			[2,2,2,2,3,3,3,3],	[1,1,1,2,2,3,4,4],	[3,3,4,4,4,4,4,4],	[2,3,3,3,3,3,3,3],	[0,0,0,0,6,6,6,6],	[0,0,0,0,0,0,0,0] ],
+	["WindDemon",				[3,3,4,5,7,9,10,11],		[3,3,4,4,4,4,4,4],	[2,2,2,3,3,3,3,4],	[3,3,3,3,3,4,4,4],	[1,2,2,2,2,2,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["WingedHorrorBoss",		[6,7,8,10,12,14,17,20],		[3,4,4,4,5,5,5,5],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CrystalRot",				[5,6,7,10,11,13,18,21],		[2,2,3,3,2,2,3,3],	[1,2,2,2,3,3,3,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 //	["",	[],	[],	[],	[],	[],	[],	[] ],
 ];
 
@@ -311,19 +326,61 @@ const elite_enemies = [
 //	Name,						Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
 	["AncientArtillery",		[7,9,11,13,13,15,16,20],	[0,0,0,0,0,0,0,0],	[3,3,3,4,4,4,5,5],	[5,5,6,6,6,7,7,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 	["BanditArcher",			[6,7,9,10,10,12,13,17],		[3,3,3,4,4,4,5,5],	[3,5,5,5,6,6,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
-	["BanditCommanderBossC",	[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["BanditCommanderBoss",		[8,10,12,13,15,16,19,23],	[3,3,4,4,4,5,5,5],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 	["BanditGuard",				[9,9,10,10,11,12,14,14],	[2,2,2,3,3,3,3,3],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,1,1,2,2,2,2,3],	[0,0,0,0,6,6,6,6],	[0,0,0,0,0,0,0,0] ],
 	["BlackImp",				[4,6,8,8,11,12,14,17],		[1,1,1,1,1,1,1,1],	[2,2,2,3,3,3,4,4],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[2,2,2,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
-	["CaptainoftheGuardBossC",	[7,9,11,14,16,20,21,25],	[2,2,2,2,2,2,2,2],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
-	["CaveBear",				[11,14,17,20,21,24,28,33],	[3,3,4,4,5,5,5,5],	[4,4,4,5,5,6,7,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,4,4,4,4],	[0,0,0,0,0,0,0,0] ],
+	["CaptainoftheGuardBoss",	[7,9,11,14,16,20,21,25],	[2,2,2,2,2,2,2,2],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CaveBear",				[11,14,17,20,21,24,28,33],	[3,3,4,4,5,5,5,5],	[4,4,4,5,5,6,7,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,1,1,1,],	[0,0,0,0,0,0,0,0] ],
+	["CityArcher",				[6,6,7,8,10,11,12,13],		[1,1,1,2,2,2,3,3],	[3,3,4,4,4,5,6,6],	[4,5,5,5,6,6,6,7],	[0,1,1,2,2,2,2,3],	[0,71,72,72,72,73,73,73], [0,0,0,0,0,0,0,0] ],
+	["CityGuard",				[6,6,9,9,10,12,13,14],		[2,2,2,2,3,3,3,3],	[3,3,3,4,4,4,5,6],	[0,0,0,0,0,0,0,0],	[1,2,2,2,2,3,3,3],	[0,0,0,81,82,83,83],[0,0,0,0,0,0,0,0] ],
+	["Cultist",					[7,9,12,13,15,18,22,25],	[2,2,2,3,3,3,3,3],	[2,2,2,2,3,3,3,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["DarkRiderBoss",			[9,10,12,13,15,16,16,18],	[2,3,3,3,3,3,4,4],	[3,3,3,4,4,5,5,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["DeepTerror",				[5,6,7,8,9,11,13,15],		[0,0,0,0,0,0,0,0],	[3,3,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[81,81,81,82,82,83,83,84],[0,0,0,0,0,0,0,0] ],
+	["EarthDemon",				[10,13,18,20,21,25,27,32],	[2,2,2,2,3,3,3,3],	[4,4,4,4,5,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,3,3,3,3],	[0,0,0,0,0,0,0,0] ],
+	["ElderDrakeBoss",			[11,12,15,16,20,22,27,29],	[0,0,0,0,0,0,0,0],	[3,4,4,5,5,6,6,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["FlameDemon",				[3,3,4,5,5,6,7,8],			[3,3,3,3,4,4,4,4],	[2,2,3,3,3,3,4,4],	[3,3,3,4,4,4,4,5],	[2,3,3,3,3,4,4,4],	[0,0,0,82,83,83,84,84],[0,0,0,0,0,0,0,0] ],
+	["ForestImp",				[4,5,6,7,7,8,9,11],			[3,3,3,4,4,4,4,4],	[1,1,2,2,2,2,3,3],	[3,3,3,4,4,4,4,4],	[1,1,1,1,2,2,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["FrostDemon",				[10,10,12,14,18,20,22,25],	[3,3,4,4,4,4,4,4],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,82,82,83,83,83,84,84],[0,0,0,0,0,0,0,0] ],
+	["GiantViper",				[3,5,7,8,11,13,14,17],		[2,2,3,3,3,4,4,4],	[2,2,2,3,3,3,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[2,2,2,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["HarrowerInfester",		[12,12,14,17,19,21,22,26],	[2,3,3,3,3,3,4,4],	[2,2,3,3,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,82,82,83,83,83,84,84],[0,0,0,0,0,0,0,0] ],
+	["Hound",					[6,6,7,8,11,12,15,15],		[5,5,5,5,5,5,6,6],	[2,2,3,4,4,4,4,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,82,82,82,82,83,83,84],[0,0,0,0,0,0,0,0] ],
+	["InoxArcher",				[7,8,11,13,14,17,19,23],	[2,2,2,2,3,3,3,3],	[3,3,3,4,4,4,5,5],	[3,4,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,1,1,1,1],	[0,0,0,0,0,0,0,0] ],
+	["InoxBodyGuardBossC",		[6,7,9,10,11,13,15,17],		[2,2,2,3,3,3,4,4],	[0,1,1,2,2,3,3,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["InoxGuard",				[9,10,12,15,17,19,21,23],	[1,2,2,2,2,2,3,3],	[3,3,4,4,5,5,5,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[81,82,82,83,83,84,84,84],[0,0,0,0,0,0,0,0] ],
+	["InoxShaman",				[6,9,11,14,16,20,24,27],	[2,2,3,3,3,3,4,4],	[3,3,3,3,4,4,4,5],	[3,3,3,4,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["JekserahBoss",			[6,7,9,12,13,15,18,22],		[2,2,3,4,4,5,5,5],	[2,3,3,4,5,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["LivingBones",				[6,6,7,10,11,11,11,14],		[4,4,4,4,4,4,6,6],	[2,2,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,1,1,1,1,2,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["LivingCorpse",			[10,10,13,13,15,17,21,25],	[1,1,1,2,2,2,2,2],	[3,4,4,5,5,6,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["LivingSpirit",			[3,3,3,4,4,6,7,9],			[3,3,4,4,4,4,4,4],	[3,3,3,4,4,4,5,5],	[3,3,3,4,4,4,5,5],	[2,3,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["Lurker",					[7,9,12,14,14,15,16,18],	[2,2,3,3,3,3,4,4],	[3,3,3,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[1,1,1,1,2,2,2,2],	[0,71,72,72,73,73,74,74],[0,0,0,0,0,0,0,0] ],
+	["MercilessOverseerBoss",	[6,8,9,11,12,14,16,18],		[2,2,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["NightDemon",				[5,8,11,13,15,17,21,21],	[4,4,4,4,5,5,5,5],	[4,4,4,5,5,6,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["Ooze",					[8,9,11,11,13,15,16,18],	[1,1,1,2,2,3,3,3],	[2,2,3,3,4,4,4,5],	[3,3,3,4,4,4,4,4],	[0,1,1,1,1,1,2,2],	[0,0,0,2,2,2,2,2],	[0,0,0,0,0,0,0,0] ],
+	["PrimeDemonBoss",			[8,9,10,12,14,16,20,22],	[3,4,4,4,5,5,5,5],	[4,4,5,6,6,7,7,8],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["RendingDrake",			[7,7,9,10,11,14,15,18],		[4,4,5,5,6,6,6,6],	[4,5,5,6,6,6,7,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,1,1,1,1,1,1,1],	[0,0,0,0,0,0,0,0] ],
+	["SavvasIcestorm",			[12,12,15,18,19,21,23,24],	[2,2,3,3,4,4,4,4],	[3,3,3,4,4,5,6,6],	[4,5,5,6,6,6,6,6],	[0,1,1,1,2,2,2,3],	[73,73,73,73,73,73,73,73],[0,0,0,0,0,0,0,0] ],
+	["SavvasLavaflow",			[13,15,18,21,24,27,30,35],	[3,3,3,3,4,4,4,4],	[3,3,3,4,4,5,6,6],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,1,2,2,2,2,2,2],	[0,0,1,1,1,1,1,1] ],
+	["SpittingDrake",			[8,9,10,12,14,16,19,21],	[3,3,3,3,4,4,4,4],	[4,4,5,5,5,6,6,7],	[4,4,4,5,5,5,5,5],	[0,0,0,0,0,0,0,0],	[0,6,6,6,6,6,6,6],	[0,0,0,0,0,0,0,0] ],
+	["StoneGolem",				[10,11,14,15,17,19,20,21],	[2,2,2,2,2,3,3,3],	[4,4,5,5,6,6,7,7],	[0,0,0,0,0,0,0,0],	[1,2,2,3,3,3,3,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["SunDemon",				[9,12,13,15,16,16,18,22],	[2,2,2,3,3,3,4,4],	[3,3,4,4,5,5,5,5],	[0,0,0,0,0,0,0,0],	[1,1,1,1,1,2,2,2],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheBetrayerBoss",			[10,12,14,16,18,20,23,27],	[3,3,3,4,4,5,5,5],	[4,5,6,7,8,8,9,9],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheColorlessBoss",		[9,10,11,12,14,15,17,19],	[3,3,4,4,4,4,4,5],	[2,3,3,4,4,5,6,7],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheGloomBoss",			[20,25,29,35,39,46,50,56],	[2,2,2,2,3,3,3,3],	[5,5,6,6,7,7,8,9],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["TheSightlessEyeBoss",		[7,8,10,11,14,15,18,20],	[0,0,0,0,0,0,0,0],	[5,6,6,7,7,8,8,9],	[3,3,3,3,3,3,3,3],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["VermlingScout",			[4,5,5,7,8,11,12,15],		[3,3,4,4,4,4,5,5],	[2,2,3,3,4,4,4,4],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["VermlingShaman",			[3,3,4,5,5,6,6,8],			[3,3,3,3,3,3,3,3],	[2,2,2,3,3,4,4,4],	[3,3,4,4,4,4,4,4],	[2,3,3,3,4,4,5,5],	[0,0,0,0,6,6,6,6],	[0,0,0,0,0,0,0,0] ],
+	["WindDemon",				[5,5,7,8,8,11,12,13],		[4,4,5,5,5,5,5,5],	[3,3,3,4,4,4,4,5],	[4,4,4,4,4,4,4,4],	[1,2,2,2,2,2,3,3],	[0,0,0,0,4,4,4,4],	[0,0,0,0,0,0,0,0] ],
+	["WingedHorrorBoss",		[6,7,8,10,12,14,17,20],		[3,4,4,4,5,5,5,5],	[3,3,4,4,4,5,5,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
+	["CystalRot",				[8,9,11,16,18,21,29,33],	[2,2,3,3,2,2,3,3],	[2,3,3,3,4,4,4,5],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0],	[0,0,0,0,0,0,0,0] ],
 //	["",	[],	[],	[],	[],	[],	[],	[] ],
 //	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
-//	["",	[],	[],	[],	[],	[],	[],	[] ],
+//	Name,						Health,						Move,				Attack,				Range,				Shield,				Effect 01,			Effect 02
+//	Wound = 1, Poison = 2, Immobilize = 3, Disarm = 4, Stun = 5, Muddle = 6, Pierce = 7, Retaliate = 8
+];
+
+const conditions = [
+	["Positive", ["Safeguard", "Ward", "Invisible", "Strengthen"] ],
+	["Negative", ["Wound", "Poison", "Immobilize", "Disarm", "Stun", "Muddle"] ],
 ];
 
 function makeEnemyList() {
@@ -390,14 +447,14 @@ function addEnemy(array_type) {
 		if (enemies[i][0].includes(enemies[enemySelection.value][0]) ) {
 			//Health
 			health = enemies[i][1][level];
-			if (enemies[i][0].includes("BossC") ) {
+			if (enemies[i][0].includes("Boss") ) {
 				health = enemies[i][1][level] * selected_characters.length;
 			}
 			//Move
 			move = enemies[i][2][level];
 			//Attack
 			attack = enemies[i][3][level];
-			if (enemies[i][0].includes("Bossc") ) {
+			if (enemies[i][0].includes("BossC") ) {
 				attack = enemies[i][3][level] + selected_characters.length;
 			}
 			//Range
@@ -452,14 +509,14 @@ function addEnemy(array_type) {
 		if (normal_enemies[i][0].includes(normal_enemies[enemySelection.value][0]) ) {
 			//Health
 			NH = normal_enemies[i][1][level];	EH = elite_enemies[i][1][level];
-			if (normal_enemies[i][0].includes("BossC") ) {
+			if (normal_enemies[i][0].includes("Boss") ) {
 				NH = normal_enemies[i][1][level] * selected_characters.length;	EH = elite_enemies[i][1][level] * selected_characters.length;
 			}
 			//Move
 			NM = normal_enemies[i][2][level];	EM = elite_enemies[i][2][level];
 			//Attack
 			NA = normal_enemies[i][3][level];	EA = elite_enemies[i][3][level];
-			if (normal_enemies[i][0].includes("Bossc") ) {
+			if (normal_enemies[i][0].includes("BossC") ) {
 				NA = normal_enemies[i][3][level] + selected_characters.length;	EA = elite_enemies[i][3][level] + selected_characters.length;
 			}
 			//Range
@@ -573,8 +630,14 @@ function applyCondition(enemyName, suffix, value) {
 	conBox.appendChild(image);
 }
 
-function removeEnemy(selectorID) {
-	const selection = document.getElementById(selectorID.id);
+function removeEnemy(ID) {
+	if (ID.id.includes("Stat") ) {
+		const index = enemy_stat_cards.indexOf(ID.id.split("_")[0]);
+		if (index > -1) {
+			enemy_stat_cards.splice(index,1);
+		}
+	}
+	const selection = document.getElementById(ID.id);
 	selection.parentElement.remove();
 }
 
@@ -586,20 +649,66 @@ function removeEnemy(selectorID) {
 //
 const enemy_cards = [
 	//Name, Usabel Score Cards, Unusable Score Cards
-	[ "AncientArtillery", [] ],
-	[ "BanditArcher", [] ],
+	["AncientArtillery",		[], [] ],
+	["BanditArcher",			[], [] ],
+	["BanditCommanderBoss", 	[], [] ],
+	["BanditGuard",				[], [] ],
+	["BlackImp",				[], [] ],
+	["CaptainoftheGuardBoss",	[], [] ],
+	["CaveBear",				[], [] ],
+	["CityArcher",				[], [] ],
+	["CityGuard",				[], [] ],
+	["Cultist",					[], [] ],
+	["DarkRiderBoss",			[], [] ],
+	["DeepTerror",				[], [] ],
+	["EarthDemon",				[], [] ],
+	["ElderDrakeBoss",			[], [] ],
+	["FlameDemon",				[], [] ],
+	["ForestImp",				[], [] ],
+	["FrostDemon",				[], [] ],
+	["GiantViper",				[], [] ],
+	["HarrowerInfester",		[], [] ],
+	["Hound",					[], [] ],
+	["InoxArcher",				[], [] ],
+	["InoxBodyGuardBossC",		[], [] ],
+	["InoxGuard",				[], [] ],
+	["InoxShaman",				[], [] ],
+	["JekserahBoss",			[], [] ],
+	["LivingBones",				[], [] ],
+	["LivingCorpse",			[], [] ],
+	["LivingSpirit",			[], [] ],
+	["Lurker",					[], [] ],
+	["MercilessOverseerBoss",	[], [] ],
+	["NightDemon",				[], [] ],
+	["Ooze",					[], [] ],
+	["PrimeDemonBoss",			[], [] ],
+	["RendingDrake",			[], [] ],
+	["SavvasIcestorm",			[], [] ],
+	["SavvasLavaflow",			[], [] ],
+	["SpittingDrake",			[], [] ],
+	["StoneGolem",				[], [] ],
+	["SunDemon",				[], [] ],
+	["TheBetrayerBoss",			[], [] ],
+	["TheColorlessBoss",		[], [] ],
+	["TheGloomBoss",			[], [] ],
+	["TheSightlessEyeBoss",		[], [] ],
+	["VermlingScout",			[], [] ],
+	["VermlinmgShaman",			[], [] ],
+	["WindDemon",				[], [] ],
+	["WingedHorrorBoss",		[], [] ],
+	["CrystalRot",				[], [] ],
 ];
 
 const enemy_types = ["_Normal", "_Elite"];
 
-function makeEnemyScoreCard(enemyName, score, actions, img) {
+function makeEnemyScoreCard(enemyName, score, actions, enemyType, img) {
 	//Seperate all actions
 	var all_actions = [];
 	var seperate_actions = actions.split("|");
 	for (i=0; i<seperate_actions.length; i++) {
 		if (seperate_actions[i].includes("/") ) {
 			var sep_acts_2 = seperate_actions[i].split("/");
-			for (j=0; j<sep_acts_2; j++) {
+			for (j=0; j<sep_acts_2.length; j++) {
 				all_actions.push(sep_acts_2[j].trim() );
 			}
 		} else {
@@ -612,13 +721,28 @@ function makeEnemyScoreCard(enemyName, score, actions, img) {
 	if (img === "A") {
 		image = img.replace("A","");
 	}
+
+	//Get Image(s)
 	var cardSrc = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + enemyName + "_" + score + image + ".png";
+	var cardSrc02 = cardSrc;
+	if (enemyType.includes("Archer") ) {
+		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Archer_" + score + image + ".png";
+	}
+	else if (enemyType.includes("Guard") ) {
+		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Guard_" + score + image + ".png";
+	}
+	if (enemyType.includes("Shaman") ) {
+		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Shaman_" + score + image + ".png";
+	}
+	if (enemyType.includes("Boss") ) {
+		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Boss_" + score + image + ".png";
+	}
 
 	//Make Array of Enemy Initiative Cards
 	var array = [];
 	for (i=0; i<enemy_cards.length; i++ ) {
 		if (enemy_cards[i][0] === enemyName) {
-			array.push(enemyName, score, all_actions, cardSrc, img, true);
+			array.push(enemyName, score, all_actions, cardSrc, cardSrc02, img, true);
 			enemy_cards[i][1].push(array);
 		}
 	}
@@ -626,24 +750,34 @@ function makeEnemyScoreCard(enemyName, score, actions, img) {
 
 function makeEnemyScoreCards() {
 	//Ancient Artillery
-	makeEnemyScoreCard("AncientArtillery", 46, "Attack -1", "_1");
-	makeEnemyScoreCard("AncientArtillery", 71, "", "");
-	makeEnemyScoreCard("AncientArtillery", 71, "", "A");
-	makeEnemyScoreCard("AncientArtillery", 37, "Attack -1", "");
-	makeEnemyScoreCard("AncientArtillery", 37, "Attack -1", "A");
-	makeEnemyScoreCard("AncientArtillery", 95, "Attack 1", "");
-	makeEnemyScoreCard("AncientArtillery", 17, "Shield 2 | Attack -2", "");
-	makeEnemyScoreCard("AncientArtillery", 46, "Attack -1", "_2");
+	makeEnemyScoreCard("AncientArtillery", 46, "Attack -1", "", "_1");
+	makeEnemyScoreCard("AncientArtillery", 71, "", "", "");
+	makeEnemyScoreCard("AncientArtillery", 71, "", "", "A");
+	makeEnemyScoreCard("AncientArtillery", 37, "Attack -1", "", "");
+	makeEnemyScoreCard("AncientArtillery", 37, "Attack -1", "", "A");
+	makeEnemyScoreCard("AncientArtillery", 95, "Attack 1", "", "");
+	makeEnemyScoreCard("AncientArtillery", 17, "Shield 2 | Attack -2", "", "");
+	makeEnemyScoreCard("AncientArtillery", 46, "Attack -1", "", "_2");
 
 	//Bandit Archer
-	makeEnemyScoreCard("BanditArcher", 16, "Attack -1", "");
-	makeEnemyScoreCard("BanditArcher", 31, "", "");
-	makeEnemyScoreCard("BanditArcher", 32, "Attack 1", "");
-	makeEnemyScoreCard("BanditArcher", 44, "Attack 1", "");
-	makeEnemyScoreCard("BanditArcher", 56, "Attack -1", "");
-	makeEnemyScoreCard("BanditArcher", 68, "Attack 1", "");
-	makeEnemyScoreCard("BanditArcher", 14, "Attack -1", "");
-	makeEnemyScoreCard("BanditArcher", 29, "Attack -1 / IM", "");
+	makeEnemyScoreCard("BanditArcher", 16, "Attack -1", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 31, "", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 32, "Attack 1", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 44, "Attack 1", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 56, "Attack -1", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 68, "Attack 1", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 14, "Attack -1", "Archer", "");
+	makeEnemyScoreCard("BanditArcher", 29, "Attack -1 / Immobilize", "Archer", "");
+
+	//Bandit Commander
+	makeEnemyScoreCard("BanditCommanderBoss", 11, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 14, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 17, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 85, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 79, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 73, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 36, "", "Boss", "");
+	makeEnemyScoreCard("BanditCommanderBoss", 52, "", "Boss", "");
 }
 
 function enemyAction(ID) {
@@ -668,8 +802,8 @@ function flipEnemy(element) {
 		if (enemy_cards[i][0] === element.id.split("_")[0]) {
 			//Make Array of Enemy Scores
 			for (j=0; j<enemy_cards[i][1].length; j++) {
-				if (enemy_cards[i][1][j][5] === true) {
-					var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][4];
+				if (enemy_cards[i][1][j][6] === true) {
+					var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][5];
 					scoreArray.push(card);
 				}
 			}
@@ -683,16 +817,21 @@ function flipEnemy(element) {
 			//Randomly select a Number/Score
 			var number = getRandomIntExclusive(0,scoreArray.length);
 			var score = scoreArray[number];
+			enemy_cards[i][2] = score;
 
 			//Get/Combine Attack Value(s)
 			for (j=0; j<enemy_cards[i][1].length; j++) {
-				var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][4];
+				var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][5];
 				if (card === score) {
-					enemy_cards[i][1][j][5] = false;
+					enemy_cards[i][1][j][6] = false;
 					for ( k=0; k<enemy_cards[i][1][j][2].length; k++) {
 						var attack = 0;
 						if (enemy_cards[i][1][j][2][k].includes("Attack") ) {
 							attack = Number(enemy_cards[i][1][j][2][k].replace("Attack ", "") );
+							//Get Condition that goes with attack (if applicable)
+							if (enemy_cards[i][1][j][2][k+1] && (conditions[1][1].includes(enemy_cards[i][1][j][2][k+1]) || conditions[0][1].includes(enemy_cards[i][1][j][2][k+1]))) {
+								enemyInflicts = enemy_cards[i][1][j][2][k+1];
+							}
 						}
 					}
 					break;
@@ -708,7 +847,7 @@ function flipEnemy(element) {
 
 			//Update Displayed Card
 			var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Score_Img");
-			enemyScoreImage.src = enemy_cards[i][1][j][3];
+			enemyScoreImage.src = enemy_cards[i][1][j][4];
 		}
 	}
 }
@@ -718,7 +857,7 @@ function shuffleScores(element) {
 	for (i=0; i<enemy_cards.length; i++ ) {
 		if (enemy_cards[i][0] === element.id.split("_")[0]) {
 			for (j=0; j<enemy_cards[i][1].length; j++) {
-				enemy_cards[i][1][j][5] = true;
+				enemy_cards[i][1][j][6] = true;
 			}
 			var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Score_Img");
 			enemyScoreImage.src = "./Images/Monster_Back.jpg";
@@ -903,14 +1042,13 @@ document.addEventListener('click', function(event) {
 			conArray.push(document.getElementById(ID.id + "_Negatives").children[p].id.split("_")[0] );
 		}
 
-		//Apply Negative Condition is Applicable
+		//Apply Negative Condition from Enemy Stat card if Applicable
 		var enemyConditions = document.getElementById(actionArray[1] + "_" + actionArray[3]);
 		for (p=0; p<enemyConditions.children.length; p++) {
 			let child = enemyConditions.children[p];
 			if (child.id.includes("Neg") && !conArray.includes(child.id.split("_")[2]) ) {
 				const clonedCondition = child.cloneNode(true);
-				clonedCondition.id = child.id.split("_")[2] +"_"+ ID.id;
-				clonedCondition.style.height = "50px";
+				clonedCondition.id = child.id.split("_")[2] +"_"+ ID.id; clonedCondition.style.height = "50px"; clonedCondition.style.cursor = "pointer";
 				document.getElementById(ID.id + "_Negatives").appendChild(clonedCondition);
 			}
 		}
@@ -936,6 +1074,20 @@ document.addEventListener('click', function(event) {
 			}
 			health.textContent = newHealth;
 		}
+
+		//Aplly Condition from Score Card if Applicable
+		if (enemyInflicts) {
+			const negConBox = document.getElementById(ID.id + "_Negatives");
+			const ncbArray = Array.from(negConBox.children).map(child => child.id);
+			//If Player does not have effect, apply it
+			if (!ncbArray.includes(enemyInflicts + "_" + ID.id) ) {
+				const element = document.getElementById(enemyInflicts);
+				const clonedCondition = element.cloneNode(true);
+				clonedCondition.id = element.id +"_"+ ID.id; clonedCondition.style.height = "50px"; clonedCondition.style.cursor = "pointer";
+				document.getElementById(ID.id + "_Negatives").appendChild(clonedCondition);
+			}
+		}
+
 		//Clear Array/Cursor
 		actionArray.length = 0;
 		document.documentElement.style.cursor = "default";
@@ -987,7 +1139,14 @@ function removeElement(ID) {
 	const element = document.getElementById(ID.id);
 }
 
-
+scoreArray = [];
+function getScores() {
+	for (i=0; i<enemy_cards.length; i++) {
+		if (enemy_cards[i][2] != 0) {
+			scoreArray.push(enemy_cards[i][2]);
+		}
+	}
+}
 
 
 
