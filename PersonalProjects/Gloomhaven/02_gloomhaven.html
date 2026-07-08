@@ -25,7 +25,12 @@
 				<img src="./Images/Conditions/Stun.png" id="Stun" class="element" ondragstart="dragstartHandler(event)">
 				<img src="./Images/Conditions/Muddle.png" id="Muddle" class="element" ondragstart="dragstartHandler(event)">
 			</div>
-			<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; min-height:100vh;"></div>
+			<div class="box-container" id="Character_Box_Container" style="column-gap:25px; row-gap:25px; flex-direction:column; min-height:100vh;">
+				<div class="box-long" style="column-gap:20px;">
+					<p onclick="nextRound()" style="margin-top:50px; cursor:pointer;">Next Round</p>
+					<p onclick="highlightPlay()" style="margin-top:50px; cursor:pointer;">Next Turn</p>
+				</div>
+			</div>
 		</div>
 
 		<!--Elements-->
@@ -34,14 +39,14 @@
 				<!--Strong-->
 				<div class="element-box" id="Strong" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
 				<div class="box-long" style="height:50px;width:250px;">
-					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Waning', 'Strong')" style="width:50px;height:50px; cursor:pointer;">
-					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Strong', 'Waning')" style="width:50px;height:50px; cursor:pointer; rotate:180deg;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementsFrom('Waning', 'Strong')" style="width:50px;height:50px; cursor:pointer;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementsFrom('Strong', 'Waning')" style="width:50px;height:50px; cursor:pointer; rotate:180deg;">
 				</div>
 				<!--Waning-->
 				<div class="element-box" id="Waning" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)"></div>
 				<div class="box-long" style="height:50px;width:250px;">
-					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Inert', 'Waning')" style="width:50px;height:50px; cursor:pointer;">
-					<img src="./Images/Icons/Arrow.png" onclick="moveElementFrom('Waning', 'Inert')" style="width:50px;height:50px; cursor:pointer; rotate:180deg;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementsFrom('Inert', 'Waning')" style="width:50px;height:50px; cursor:pointer;">
+					<img src="./Images/Icons/Arrow.png" onclick="moveElementsFrom('Waning', 'Inert')" style="width:50px;height:50px; cursor:pointer; rotate:180deg;">
 				</div>
 				<!--Inert-->
 				<div class="element-box" id="Inert" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
@@ -60,7 +65,6 @@
 				<div class="box-long" style="column-gap:20px;">
 					<p onclick="shuffleEnemyAll()" style="margin-top:50px; cursor:pointer;">Shuffle All</p>
 					<p onclick="flipEnemyAll()" style="margin-top:50px; cursor:pointer;">Flip All</p>
-					<p onclick="getScores()" style="margin-top:50px; cursor:pointer;">Get Scores</p>
 				</div>
 				<div class="box-tall" id="Enemy_Stat_Box" style="height:100vh;min-width:500px;max-width:2000; row-gap:15px;column-gap:25px; border-right:3px solid white;"></div>
 			</div>
@@ -78,8 +82,8 @@
 						<img src="./Images/Icons/Bless.png" class="action-Btn" style="height:35px" onclick="modifyEnemyModifierDeck('Bless')">
 						<img src="./Images/Icons/Curse.png" class="action-Btn" style="height:35px" onclick="modifyEnemyModifierDeck('Curse')">
 					</div>
-					<img id="EnemyModDeck" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px;">
-					<img id="EnemyModDeckOld" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px;">
+					<img id="EnemyModDeck" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px; border:3px solid chartreuse;" data-add="0">
+					<img id="EnemyModDeckOld" src="./Images/AttackModifiers/Back.png" style="height:auto;width:200px;" data-add="0">
 				</div>
 				<div class="box-enemy" id="Enemy_Box" style="position:relative;"></div>
 			</div>
