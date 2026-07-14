@@ -121,7 +121,7 @@ function makeSelectedCharacters() {
 		const charBoxContainer = document.createElement("box-container");
 		box.appendChild(charBoxContainer);
 		const charName = selected_characters[i][0];
-		const charSrc = "./Images/Gloomhaven_2e/" + charName + ".png";
+		const charSrc = "./Images/Gloomhaven_1e/" + charName + ".png";
 
 		//Make Characters
 		charBoxContainer.innerHTML = `
@@ -433,7 +433,7 @@ function addEnemy(array_type) {
 	}
 
 	//Set Values
-	const enemySrc = "./Images/Gloomhaven_2e/Enemies/" + enemies[enemySelection.value][0] + ".avif";
+	const enemySrc = "./Images/Gloomhaven_1e/Enemies/" + enemies[enemySelection.value][0] + ".avif";
 	const level = Number(document.getElementById("Enemy_Selector_Levels").value);
 	var enemyName = enemies[enemySelection.value][0].replace(/\s+/g,"");
 	var health = 0;
@@ -539,7 +539,7 @@ function addEnemy(array_type) {
 
 				//Adding Enemy Type Stat Card
 				const statBox = document.getElementById("Enemy_Stat_Box");
-				var enemyStatSrc = "./Images/Gloomhaven_2e/Enemies/Cards/" + normal_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
+				var enemyStatSrc = "./Images/Gloomhaven_1e/Enemies/Cards/" + normal_enemies[enemySelection.value][0].replace(/\s+/g,"") + ".png";
 				const enemyStatContainer = document.createElement("box-container");
 				statBox.appendChild(enemyStatContainer);
 				
@@ -752,19 +752,19 @@ function makeEnemyScoreCard(enemyName, score, actions, enemyType, img) {
 	}
 
 	//Get Image(s)
-	var cardSrc = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + enemyName + "_" + score + image + ".png";
+	var cardSrc = "./Images/Gloomhaven_1e/Enemies/Initiatives/" + enemyName + "_" + score + image + ".png";
 	var cardSrc02 = cardSrc;
 	if (enemyType.includes("Archer") ) {
-		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Archer_" + score + image + ".png";
+		cardSrc02 = "./Images/Gloomhaven_1e/Enemies/Initiatives/" + "Archer_" + score + image + ".png";
 	}
 	else if (enemyType.includes("Guard") ) {
-		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Guard_" + score + image + ".png";
+		cardSrc02 = "./Images/Gloomhaven_1e/Enemies/Initiatives/" + "Guard_" + score + image + ".png";
 	}
 	else if (enemyType.includes("Shaman") ) {
-		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Shaman_" + score + image + ".png";
+		cardSrc02 = "./Images/Gloomhaven_1e/Enemies/Initiatives/" + "Shaman_" + score + image + ".png";
 	}
 	else if (enemyType.includes("Boss") ) {
-		cardSrc02 = "./Images/Gloomhaven_2e/Enemies/Initiatives/" + "Boss_" + score + image + ".png";
+		cardSrc02 = "./Images/Gloomhaven_1e/Enemies/Initiatives/" + "Boss_" + score + image + ".png";
 	}
 
 	//Make Array of Enemy Initiative Cards
@@ -866,8 +866,8 @@ function makeEnemyScoreCards() {
 	//Cultist
 	makeEnemyScoreCard("Cultist", 10, "Attack -1", "", ""); makeEnemyScoreCard("Cultist", 10, "Attack -1", "", "A");
 	makeEnemyScoreCard("Cultist", 27, "", "", ""); makeEnemyScoreCard("Cultist", 27, "", "", "A");
-	makeEnemyScoreCard("Cultist", 39, "Attack | Heal 1", "", "");
-	makeEnemyScoreCard("Cultist", 63, "Suffer 2", "", ""); makeEnemyScoreCard("Cultist", 63, "Suffer 2", "", "A");
+	makeEnemyScoreCard("Cultist", 39, "Attack 0 | Heal 1", "", "");
+	makeEnemyScoreCard("Cultist", 63, "wait| Suffer 2", "", ""); makeEnemyScoreCard("Cultist", 63, "wait| Suffer 2", "", "A");
 	makeEnemyScoreCard("Cultist", 31, "", "", "");
 
 	//Dark Rider
@@ -897,7 +897,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("EarthDemon", 83, "Attack 1 | Infuse:Grass", "", "");
 	makeEnemyScoreCard("EarthDemon", 93, "Attack -1", "", "");
 	makeEnemyScoreCard("EarthDemon", 79, "Attack 0 / Consume:Wind:Attack -2", "", "");
-	makeEnemyScoreCard("EarthDemon", 87, "Attack -1 | consume:Any:Grass", "", "");
+	makeEnemyScoreCard("EarthDemon", 87, "Attack -1 | Consume:Any:Grass", "", "");
 
 	//Elder Drake
 	makeEnemyScoreCard("ElderDrakeBoss", 11, "", "Boss", "");
@@ -913,11 +913,11 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("FlameDemon", 3, "Attack -1 | Infuse:Fire", "", "");
 	makeEnemyScoreCard("FlameDemon", 24, "Attack 0 | Infuse:Fire", "", "");
 	makeEnemyScoreCard("FlameDemon", 46, "", "", "");
-	makeEnemyScoreCard("FlameDemon", 49, "Attack 0 / Consume:Fire:Attack 1 > Wound", "", "");
+	makeEnemyScoreCard("FlameDemon", 49, "Attack 0 / Consume:Fire:Attack 1 / Wound", "", "");
 	makeEnemyScoreCard("FlameDemon", 67, "Attack 1 | Infuse:Fire", "", "");
-	makeEnemyScoreCard("FlameDemon", 77, "Attack 0 | consume:Ice:Suffer 1", "", "");
+	makeEnemyScoreCard("FlameDemon", 77, "Attack 0 | Consume:Ice:Suffer 1", "", "");
 	makeEnemyScoreCard("FlameDemon", 30, "Attack -2 / Wound", "", "");
-	makeEnemyScoreCard("FlameDemon", 8, "consume:Any:Fire", "", "");
+	makeEnemyScoreCard("FlameDemon", 8, "wait| Consume:Any:Fire", "", "");
 
 	//Forest Imp
 	makeEnemyScoreCard("ForestImp", 5, "Shield 5 | Heal 1", "", "");
@@ -929,16 +929,16 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("ForestImp", 24, "", "", "");
 
 	//Frost Demon
-	makeEnemyScoreCard("FrostDemon", 18, "consume:Ice:Heal 3", "", "_1");
+	makeEnemyScoreCard("FrostDemon", 18, "wait| Consume:Ice:Heal 3", "", "_1");
 	makeEnemyScoreCard("FrostDemon", 38, "Attack -1", "", "");
 	makeEnemyScoreCard("FrostDemon", 58, "", "", "_1"); makeEnemyScoreCard("FrostDemon", 58, "Attack 0 / Consume:Ice:Attack 2", "", "_2");
 	makeEnemyScoreCard("FrostDemon", 78, "Attack 0 | Infuse:Ice", "", ""); makeEnemyScoreCard("FrostDemon", 78, "Attack 0 | Infuse:Ice", "", "A");
-	makeEnemyScoreCard("FrostDemon", 58, "Attack -1 / Pierce 3 | consume:Any:Ice", "", "_3");
-	makeEnemyScoreCard("FrostDemon", 18, "Shield 2 | consume:Fire:Suffer 1", "", "_2");
+	makeEnemyScoreCard("FrostDemon", 58, "Attack -1 / Pierce 3 | Consume:Any:Ice", "", "_3");
+	makeEnemyScoreCard("FrostDemon", 18, "Shield 2 | Consume:Fire:Suffer 1", "", "_2");
 
 	//Giant Viper
 	makeEnemyScoreCard("GiantViper", 32, "", "", ""); makeEnemyScoreCard("GiantViper", 32, "", "", "A");
-	makeEnemyScoreCard("GiantViper", 11, "Shiled 1 | Attack -1", "", "");
+	makeEnemyScoreCard("GiantViper", 11, "Shield 1 | Attack -1", "", "");
 	makeEnemyScoreCard("GiantViper", 43, "Attack -1", "", "_1");
 	makeEnemyScoreCard("GiantViper", 58, "Attack 1", "", "_1");
 	makeEnemyScoreCard("GiantViper", 58, "Attack -1", "", "_2");
@@ -952,7 +952,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("HarrowerInfester", 16, "Attack 2 / Immobilize", "", "_2");
 	makeEnemyScoreCard("HarrowerInfester", 2, "Shield 2", "", "");
 	makeEnemyScoreCard("HarrowerInfester", 30, "", "", "");
-	makeEnemyScoreCard("HarrowerInfester", 38, "Attack -1 / Consume:Dark:Attack 2 > Disarm", "", "_2");
+	makeEnemyScoreCard("HarrowerInfester", 38, "Attack -1 / Consume:Dark:Attack 2 / Disarm", "", "_2");
 	makeEnemyScoreCard("HarrowerInfester", 7, "Attack -1 / Muddle | Heal 4", "", "_2");
 
 	//Hound
@@ -998,7 +998,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("InoxShaman", 23, "", "Shaman", ""); makeEnemyScoreCard("InoxShaman", 23, "", "Shaman", "A");
 	makeEnemyScoreCard("InoxShaman", 62, "", "Shaman", "");
 	makeEnemyScoreCard("InoxShaman", 74, "Attack 1", "Shaman", "");
-	makeEnemyScoreCard("InoxShaman", 89, "", "Shaman", "");
+	makeEnemyScoreCard("InoxShaman", 89, "wait| Bless Self", "Shaman", "");
 	makeEnemyScoreCard("InoxShaman", 9, "Attack -1", "Shaman", "");
 
 	//Jekserah
@@ -1025,7 +1025,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("LivingCorpse", 47, "Attack -1", "", "");
 	makeEnemyScoreCard("LivingCorpse", 66, "", "", ""); makeEnemyScoreCard("LivingCorpse", 66, "", "", "A");
 	makeEnemyScoreCard("LivingCorpse", 82, "Attack 1", "", "");
-	makeEnemyScoreCard("LivingCorpse", 91, "Suffer 1", "", "");
+	makeEnemyScoreCard("LivingCorpse", 91, "wait| Suffer 1", "", "");
 	makeEnemyScoreCard("LivingCorpse", 71, "Attack 1 / Poison", "", "");
 	makeEnemyScoreCard("LivingCorpse", 32, "Attack 2 | Suffer 1", "", "");
 
@@ -1035,7 +1035,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("LivingSpirit", 48, "", "", ""); makeEnemyScoreCard("LivingSpirit", 48, "", "", "A");
 	makeEnemyScoreCard("LivingSpirit", 61, "", "", "");
 	makeEnemyScoreCard("LivingSpirit", 75, "Attack 1 | Heal 1", "", "");
-	makeEnemyScoreCard("LivingSpirit", 55, "Infuse:Ice", "", "");
+	makeEnemyScoreCard("LivingSpirit", 55, "wait| Infuse:Ice", "", "");
 	makeEnemyScoreCard("LivingSpirit", 67, "Attack 1 / Consume:Ice:Stun", "", "");
 
 	//Lurker
@@ -1044,7 +1044,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("Lurker", 38, "", "", "_1"); makeEnemyScoreCard("Lurker", 38, "", "", "_2");
 	makeEnemyScoreCard("Lurker", 61, "Attack 1", "", "");
 	makeEnemyScoreCard("Lurker", 64, "Attack 1", "", "");
-	makeEnemyScoreCard("Lurker", 41, "consume:Ice:Strengthen | Attack -1 > Wound", "", "");
+	makeEnemyScoreCard("Lurker", 41, "wait| Consume:Ice:Strengthen Self | Attack -1 / Wound", "", "");
 	makeEnemyScoreCard("Lurker", 23, "Shield 1 | Attack -1 | Infuse:Ice", "", "");
 
 	//Merciless Oversser
@@ -1059,20 +1059,20 @@ function makeEnemyScoreCards() {
 
 	//Night Demon
 	makeEnemyScoreCard("NightDemon", 4, "Attack -1 | Infuse:Dark", "", "");
-	makeEnemyScoreCard("NightDemon", 7, "Attack -1 | consume:Dark:Invisible Self", "", "");
-	makeEnemyScoreCard("NightDemon", 22, "Infuse:Dark", "", "");
+	makeEnemyScoreCard("NightDemon", 7, "Attack -1 | Consume:Dark:Invisible Self", "", "");
+	makeEnemyScoreCard("NightDemon", 22, "wait| Infuse:Dark", "", "");
 	makeEnemyScoreCard("NightDemon", 26, "Attack -2 / Consume:Dark:Muddle", "", "");
-	makeEnemyScoreCard("NightDemon", 46, "Attack 1 / Consume:Dark:Attack 2", "", "");
+	makeEnemyScoreCard("NightDemon", 46, "Attack 1 / Consume:Dark:Attack 1", "", "");
 	makeEnemyScoreCard("NightDemon", 41, "Attack 1 | Infuse:Dark", "", "");
-	makeEnemyScoreCard("NightDemon", 35, "Attack -1 | Attack -1 / Pierce 2 | consume:Light:Curse Self", "", "");
-	makeEnemyScoreCard("NightDemon", 15, "Attack -1 | consume:Any:Dark", "", "");
+	makeEnemyScoreCard("NightDemon", 35, "Attack -1 | Attack -1 / Pierce 2 | Consume:Light:Curse Self", "", "");
+	makeEnemyScoreCard("NightDemon", 15, "Attack -1 | Consume:Any:Dark", "", "");
 
 	//Ooze
 	makeEnemyScoreCard("Ooze", 36, "Attack -1", "", "");
 	makeEnemyScoreCard("Ooze", 57, "", "", "");
 	makeEnemyScoreCard("Ooze", 59, "Attack 0 / Poison", "", "");
 	makeEnemyScoreCard("Ooze", 66, "Attack 1", "", "_1");
-	makeEnemyScoreCard("Ooze", 94, "Suffer 2", "", ""); makeEnemyScoreCard("Ooze", 94, "Suffer 2", "", "A");
+	makeEnemyScoreCard("Ooze", 94, "wait| Suffer 2", "", ""); makeEnemyScoreCard("Ooze", 94, "wait| Suffer 2", "", "A");
 	makeEnemyScoreCard("Ooze", 66, "Heal 2", "", "_2");
 	makeEnemyScoreCard("Ooze", 85, "Attack 1", "", "");
 
@@ -1098,7 +1098,7 @@ function makeEnemyScoreCards() {
 
 	//Savvas Icestorm
 	makeEnemyScoreCard("SavvasIcestorm", 70, "Attack 1", "", "");
-	makeEnemyScoreCard("SavvasIcestorm", 98, "Infuse:Wind", "", "_1"); makeEnemyScoreCard("SavvasIcestorm", 98, "Infuse:Ice", "", "_2");
+	makeEnemyScoreCard("SavvasIcestorm", 98, "wait| Infuse:Wind", "", "_1"); makeEnemyScoreCard("SavvasIcestorm", 98, "wait| Infuse:Ice", "", "_2");
 	makeEnemyScoreCard("SavvasIcestorm", 19, "Attack -1 | Infuse:Ice", "", "");
 	makeEnemyScoreCard("SavvasIcestorm", 14, "", "", "_1");
 	makeEnemyScoreCard("SavvasIcestorm", 14, "Shield 4", "", "_2");
@@ -1106,10 +1106,10 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("SavvasIcestorm", 35, "Attack -1 | Infuse:Ice", "", "");
 
 	//Savvas Lavafloww
-	makeEnemyScoreCard("SavvasLavaflow", 97, "Infuse:Fire", "", "_1"); makeEnemyScoreCard("SavvasLavaflow", 97, "Infuse:Grass", "", "_2");
+	makeEnemyScoreCard("SavvasLavaflow", 97, "wait| Infuse:Fire", "", "_1"); makeEnemyScoreCard("SavvasLavaflow", 97, "wait| Infuse:Grass", "", "_2");
 	makeEnemyScoreCard("SavvasLavaflow", 22, "Attack -1", "", "");
 	makeEnemyScoreCard("SavvasLavaflow", 68, "Attack 1 | Infuse:Grass", "", "_1");
-	makeEnemyScoreCard("SavvasLavaflow", 41, "Attack -1 / Consume:Grass:Attack 2 > Immobilize", "", "");
+	makeEnemyScoreCard("SavvasLavaflow", 41, "Attack -1 / Consume:Grass:Attack 2 / Immobilize", "", "");
 	makeEnemyScoreCard("SavvasLavaflow", 51, "", "", "");
 	makeEnemyScoreCard("SavvasLavaflow", 31, "", "", "");
 	makeEnemyScoreCard("SavvasLavaflow", 68, "Attack -1 | Infuse:Fire", "", "_2");
@@ -1136,12 +1136,12 @@ function makeEnemyScoreCards() {
 
 	//Sun Demon
 	makeEnemyScoreCard("SunDemon", 17, "", "", "");
-	makeEnemyScoreCard("SunDemon", 36, "Infuse:Light", "", ""); makeEnemyScoreCard("SunDemon", 36, "Infuse:Light", "", "A");
+	makeEnemyScoreCard("SunDemon", 36, "wait| Infuse:Light", "", ""); makeEnemyScoreCard("SunDemon", 36, "wait| Infuse:Light", "", "A");
 	makeEnemyScoreCard("SunDemon", 68, "Attack 1 | Infuse:Light", "", "");
-	makeEnemyScoreCard("SunDemon", 73, "Attack 1 | consume:Light:Heal 3", "", "");
+	makeEnemyScoreCard("SunDemon", 73, "Attack 1 | Consume:Light:Heal 3", "", "");
 	makeEnemyScoreCard("SunDemon", 95, "", "", "");
-	makeEnemyScoreCard("SunDemon", 88, "Attack -1 | consume:Dark:Muddle Self", "", "");
-	makeEnemyScoreCard("SunDemon", 50, "Attack 0 | consume:Any:Light", "", "");
+	makeEnemyScoreCard("SunDemon", 88, "Attack -1 | Consume:Dark:Muddle Self", "", "");
+	makeEnemyScoreCard("SunDemon", 50, "Attack 0 | Consume:Any:Light", "", "");
 
 	//The Betrayer
 	makeEnemyScoreCard("TheBetrayerBoss", 11, "", "Boss", "");
@@ -1199,17 +1199,17 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("VermlingShaman", 23, "", "Shaman", ""); makeEnemyScoreCard("VermlingShaman", 23, "", "Shaman", "A");
 	makeEnemyScoreCard("VermlingShaman", 62, "", "Shaman", "");
 	makeEnemyScoreCard("VermlingShaman", 74, "Attack 1", "Shaman", "");
-	makeEnemyScoreCard("VermlingShaman", 89, "Bless Self", "Shaman", "");
+	makeEnemyScoreCard("VermlingShaman", 89, "wait| Bless Self", "Shaman", "");
 	makeEnemyScoreCard("VermlingShaman", 9, "Attack -1", "Shaman", "");
 
 	//Wind Demon
-	makeEnemyScoreCard("WindDemon", 9, "Attack -1 | Heal 1 | consume:Wind:Invisible Self", "", "");
-	makeEnemyScoreCard("WindDemon", 21, "Infuse:Wind", "", ""); makeEnemyScoreCard("WindDemon", 21, "Infuse:Wind", "", "A");
+	makeEnemyScoreCard("WindDemon", 9, "Attack -1 | Heal 1 | Consume:Wind:Invisible Self", "", "");
+	makeEnemyScoreCard("WindDemon", 21, "wait| Infuse:Wind", "", ""); makeEnemyScoreCard("WindDemon", 21, "wait| Infuse:Wind", "", "A");
 	makeEnemyScoreCard("WindDemon", 29, "Attack -1", "", "");
 	makeEnemyScoreCard("WindDemon", 37, "Attack 0 / Consume:Wind:Attack 1", "", "");
 	makeEnemyScoreCard("WindDemon", 43, "Attack 1", "", "_1");
 	makeEnemyScoreCard("WindDemon", 43, "", "", "_2");
-	makeEnemyScoreCard("WindDemon", 2, "Shield 1 | Attack -1 | consume:Any:Wind", "", "");
+	makeEnemyScoreCard("WindDemon", 2, "Shield 1 | Attack -1 | Consume:Any:Wind", "", "");
 
 	//Winged Horror
 	makeEnemyScoreCard("WingedHorrorBoss", 11, "", "Boss", "");
@@ -1260,6 +1260,17 @@ function flipEnemy(element) {
 			scoreArray.push(card);
 		}
 	}
+
+	//Reset Attack Values
+	for (index=0; index<enemy_types.length; index++) {
+		var enemyAttack = document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[index]);
+		enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack);
+		enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
+	}
+
+	//Make Next Action Button clickable again
+	document.getElementById(enemy_cards[i][0] + "_Normal_Attack_Btn").style.pointerEvents = "auto";
+	document.getElementById(enemy_cards[i][0] + "_Elite_Attack_Btn").style.pointerEvents = "auto";
 
 	//Shuffle Cards if hand is empty
 	if (scoreArray.length === 0) {
@@ -1314,67 +1325,40 @@ function nextAction(ID) {
 	for (i=0; i<enemy_cards.length; i++) {
 		//If Action exists
 		if (enemy_cards[i][3][start] && enemy_cards[i][0] === ID.id.split("_")[0]) {
-			//+1 Action Counter
-			const actionCount = document.getElementById(ID.id.split("_")[0] + "_Action" );
-			actionCount.textContent = Number(actionCount.textContent) + 1;
-
-			//Checking if next action exists
-			var consumeFlag = false; var consumeFlag02 = false;
-			if (enemy_cards[i][3][start+1]) {
-				if (enemy_cards[i][3][start+1].includes("Consume") ) { consumeFlag = true; } if (enemy_cards[i][3][start+1].includes("consume") ) { consumeFlag02 = true; }
+			if(document.getElementById(enemy_cards[i][0] + "_Normal_Attack_Btn").style.pointerEvents === "none") {
+				break;
 			}
+			else {
+				//+1 Action Counter
+				const actionCount = document.getElementById(ID.id.split("_")[0] + "_Action" );
+				actionCount.textContent = Number(actionCount.textContent) + 1;
 
-			//If Attack and no Consume
-			var act = enemy_cards[i][3][start];
+				var act = enemy_cards[i][3][start];
+				var nextFlag = false;
+				if (enemy_cards[i][3][start+1]) { nextFlag = true; }
 
-			console.log(consumeFlag +", "+ act +", "+ enemy_cards[i][3][start+1]);
-
-			if (act.includes("Attack") && !consumeFlag && consumeFlag02) {
-				console.log("Atk");
-				var attack = Number(enemy_cards[i][3][0].replace("Attack ", "") );
-				//If Attack and Pierce
-				inflictsPierce = 0;
-				if (enemy_cards[i][3][start+1] && enemy_cards[i][3][start+1].includes("Pierce") ) {
-					inflictsPierce = enemy_cards[i][3][start+1].split(" ")[1];
+				//If no next action then make clicker temporarily unclickable
+				if (!enemy_cards[i][3][start+1]) {
+					document.getElementById(enemy_cards[i][0] + "_Normal_Attack_Btn").style.pointerEvents = "none";
+					document.getElementById(enemy_cards[i][0] + "_Elite_Attack_Btn").style.pointerEvents = "none";
 				}
 
-				//If Attack and Neg Condition
-				else if (conditions[1][1].includes(enemy_cards[i][3][start+1]) ) {
-					ID.dataset.infliction = enemy_cards[i][3][start+1].replace(" ","");
-					//Remove It
-					enemy_cards[i][3].splice(start+1,1);
-				}
-
-				//Add New Attack Value to Displayed Enemy Attack Value
-				for (index=0; index<enemy_types.length; index++) {
-					var enemyAttack = document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[index]);
-					enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
-					enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
-				}
-			}
-
-			//If Attack And Consume to Attack
-			else if (act.includes("Attack") && consumeFlag && enemy_cards[i][3][start+1].includes("Attack") && !enemy_cards[i][3][start+1].includes("Any") ) {
-				console.log("Atk Con Atk");
-				//Get Element
-				const element = document.getElementById(enemy_cards[i][3][start+1].split(":")[1]);
-				const hasElement = document.getElementById("Inert").querySelector(`:scope > [id*="${element.id}"]`) !== null;
-				//If Inert Box does not have Element then Consume it and do thing
-				if (!hasElement) {
-					//Chanage Attack Value
-					var attack = 0;
-					//If No Attack Effect
-					if (!enemy_cards[i][3][start+1].includes(">") ) {
-						attack = Number(enemy_cards[i][3][start+1].split(":")[2].replace("Attack ", "") );
+				//If Attack and no Consume
+				if (act.includes("Attack") && !enemy_cards[i][3][start].includes("Consume") ) {
+					var attack = Number(act.replace("Attack ", "") );
+					//If Attack and Pierce
+					inflictsPierce = 0;
+					if (nextFlag && enemy_cards[i][3][start+1].includes("Pierce") ) {
+						inflictsPierce = enemy_cards[i][3][start+1].split(" ")[1];
+						//Remove It
+						enemy_cards[i][3].splice(start+1,1);
 					}
-					//If Attack Effect(Neg)
-					else if (enemy_cards[i][3][start+1].includes(">") ) {
-						attack = Number(enemy_cards[i][3][start+1].split(":")[2].replace("Attack ", "").split(">")[0] );
 
-						//If Attack and Neg Condition
-						if (conditions[1][1].includes(enemy_cards[i][3][start+1]) ) {
-							ID.dataset.infliction = enemy_cards[i][3][start+1].split(">")[1].replace(" ", "");
-						}
+					//If Attack and Neg Condition
+					else if (conditions[1][1].includes(enemy_cards[i][3][start+1]) && !enemy_cards[i][3][start+1].includes("Consume") ) {
+						ID.dataset.infliction = enemy_cards[i][3][start+1].replace(" ","");
+						//Remove It
+						enemy_cards[i][3].splice(start+1,1);
 					}
 
 					//Add New Attack Value to Displayed Enemy Attack Value
@@ -1383,136 +1367,220 @@ function nextAction(ID) {
 						enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
 						enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
 					}
-
-					//Remove It
-					moveElementTo(element.id, "Inert");
-					enemy_cards[i][3].splice(start+1,1);
 				}
-			}
 
-			//If Attack And Consume to Condition
-			else if (act.includes("Attack") && consumeFlag && !enemy_cards[i][3][start+1].includes("Any") && conditions[1][1].includes(enemy_cards[i][3][start+1].split(":")[2]) ) {
-				console.log("Atk Con Con");
-			}
-
-			//If Consume to Attack
-			else if (consumeFlag && act.includes("Attack") && !enemy_cards[i][3][start+1].includes("Any") ) {
-				console.log("Con Atk");
-				//Get Element
-				const element = document.getElementById(act.split(":")[1]);
-				console.log(element);
-				const hasElement = document.getElementById("Inert").querySelector(`:scope > [id*="${element.id}"]`) !== null;
-				//If Inert Box does not have Element then Consume it and do thing
-				if (!hasElement) {
-					//Chanage Attack Value
-					var attack = 0;
-					//If No Attack Effect
-					if (!act.includes(">") ) {
-						attack = Number(act.split(":")[2].replace("Attack ", "") );
-					}
-					//If Attack Effect(Neg)
-					else if (act.includes(">") ) {
-						attack = Number(act.split(":")[2].replace("Attack ", "").split(">")[0] );
-
-						//If Attack and Neg Condition
-						if (conditions[1][1].includes(act) ) {
-							ID.dataset.infliction = act.split(">")[1].replace(" ", "");
-						}
-					}
-
-					//Add New Attack Value to Displayed Enemy Attack Value
-					for (index=0; index<enemy_types.length; index++) {
-						var enemyAttack = document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[index]);
-						enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
-						enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
-					}
-
-					//Remove It
-					moveElementTo(element.id, "Inert");
-				}
-			}
-
-			//If Consume to anything else
-			else if (act.includes("consume") ) {
-				//Consume Any to X
-				if (act.includes("Any") && (document.getElementById("Strong").children.length > 0 || document.getElementById("Waning").children.length > 0) ) {
+				//If Consume to Attack
+				else if (act.includes("Consume") && act.includes("Attack") && !act.includes("Any") ) {
 					//Get Element
-					const element = document.getElementById(act.split(":")[2]);
+					const element = document.getElementById(act.split(":")[1]);
+					const hasElement = document.getElementById("Inert").querySelector(`:scope > [id*="${element.id}"]`) !== null;
 
-					//Randomly Choose an active Element to Consume
-					var newElement = false;
-					var random;
-					do {
-						random = getRandomIntExclusive(0, 5);
-						if (!elements[random].includes(element.id) && (document.getElementById("Waning").querySelector(`:scope > [id*="${elements[random]}"]`) !== null || document.getElementById("Strong").querySelector(`:scope > [id*="${elements[random]}"]`) !== null) ) {
-							newElement = true;
+					//If Inert Box does not have Element then Consume it and do thing
+					if (!hasElement) {
+						//Chanage Attack Value
+						var attack = 0;
+						attack = Number(act.split(":")[2].replace("Attack ", "") );
+
+						//If Attack Effect(Neg)
+						if (nextFlag && conditions[1][1].includes(enemy_cards[i][3][start+1]) ) {
+							ID.dataset.infliction = enemy_cards[i][3][start+1].replace(" ","");
+							//Remove It
+							enemy_cards[i][3].splice(start+1,1);
 						}
-					} while (!newElement);
-					moveElementTo(elements[random], "Inert");
 
-					//Check if Inert has Infused Element and move it if so
-					var hasElement = document.getElementById("Inert").querySelector(`:scope > [id*="${element.id}"]`) !== null;
-					if (hasElement) { moveElementTo(element.id, "Strong"); }
+						//Add New Attack Value to Displayed Enemy Attack Value
+						for (index=0; index<enemy_types.length; index++) {
+							var enemyAttack = document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[index]);
+							enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack) + attack;
+							enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
+						}
 
-					//If not check Waning and repeat
-					else {
-						hasElement = document.getElementById("Waning").querySelector(`:scope > [id*="${element.id}"]`) !== null;
+						//Consume It
+						moveElementTo(element.id, "Inert");
+					}
+				}
+
+				//If Consume to anything else
+				else if (act.includes("Consume") ) {
+					//Get Element
+					const element = document.getElementById(act.split(":")[1]);
+
+					//Consume X to X
+					if (elements.includes(act.split(":")[1]) && elements.includes(act.split(":")[2]) ) {
+						const element02 = document.getElementById(act.split(":")[2]);
+						moveElementTo(element.id, "Inert");
+						moveElementTo(element02.id, "Strong");
+					}
+
+					//Consume Any to X
+					if (act.includes("Any") && (document.getElementById("Strong").children.length > 0 || document.getElementById("Waning").children.length > 0) ) {
+						//Randomly Choose an active Element to Consume
+						var newElement = false;
+						var random; var stoper = 0;
+						do {
+							random = getRandomIntExclusive(0, 5);
+							if (!elements[random].includes(element.id) && (document.getElementById("Waning").querySelector(`:scope > [id*="${elements[random]}"]`) !== null || document.getElementById("Strong").querySelector(`:scope > [id*="${elements[random]}"]`) !== null) ) {
+								newElement = true;
+							}
+							if (stoper > 6 ) { break; }
+							stoper++;
+						} while (!newElement);
+						moveElementTo(elements[random], "Inert");
+
+						//Check if Inert has Infused Element and move it if so
+						var hasElement = document.getElementById("Inert").querySelector(`:scope > [id*="${element.id}"]`) !== null;
 						if (hasElement) { moveElementTo(element.id, "Strong"); }
-					}
-				}
-				console.log(act);
-			}
 
-			//If Shield
-			else if (act.includes("Shield") ) {
-				const enemyBox = document.getElementById("Enemy_Box");
-				for (let child of enemyBox.children) {
-					if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
-						var enemy = document.getElementById(child.children[0].children[0].id + "_Shield");
-						enemy.textContent = Number(enemy.textContent) + Number(act.replace("Shield ", "") );
+						//If not check Waning and repeat
+						else {
+							hasElement = document.getElementById("Waning").querySelector(`:scope > [id*="${element.id}"]`) !== null;
+							if (hasElement) { moveElementTo(element.id, "Strong"); }
+						}
 					}
-				}
-			}
 
-			//If Heal
-			else if (act.includes("Heal") ) {
-				const enemyBox = document.getElementById("Enemy_Box");
-				for (let child of enemyBox.children) {
-					if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
-						var enemy = document.getElementById(child.children[0].children[0].id + "_Health");
-						//Only do if End product is below starting max health
-						if (Number(enemy.textContent) + Number(act.replace("Heal ", "") ) <= enemy.dataset.health) {
-							enemy.textContent = Number(enemy.textContent) + Number(act.replace("Heal ", "") );
+					//Consume to Suffer
+					if (act.includes("Suffer")) {
+						const enemyBox = document.getElementById("Enemy_Box");
+						for (let child of enemyBox.children) {
+							if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+								var enemy = document.getElementById(child.children[0].children[0].id + "_Health");
+								if (Number(enemy.textContent) - 1 >= 0) { enemy.textContent = Number(enemy.textContent) - 1; }
+							}
+						}
+					}
+
+					//Consume to Heal
+					if (act.includes("Heal")) {
+						const enemyBox = document.getElementById("Enemy_Box");
+						for (let child of enemyBox.children) {
+							if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+								var enemy = document.getElementById(child.children[0].children[0].id + "_Health");
+								for (p=0; p<Number(act.split(":")[2].replace("Heal ","")); p++) {
+									if (Number(enemy.textContent) + 1 <= enemy.dataset.health) {
+										enemy.textContent = Number(enemy.textContent) + 1;
+									}
+								}
+							}
+						}
+					}
+
+					//Consume to Shield
+					if (act.includes("Shield")) {
+						const enemyBox = document.getElementById("Enemy_Box");
+						for (let child of enemyBox.children) {
+							if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+								var enemy = document.getElementById(child.children[0].children[0].id + "_Shield");
+								enemy.textContent = Number(enemy.textContent) + 1;
+							}
+						}
+					}
+
+					//Consume to Apply Condition to Self
+					if (act.includes("Self")) {
+						var condition = act.split(":")[2].split(" ")[0].trim();
+						if (curses < 10 && condition === "Curse" ) {
+							enemyModifiers[0].push(condition);
+							enemyModifiers[1].push(true);
+							curses++;
+						}
+						//Other Conditions
+						else {
+							const enemyBox = document.getElementById("Enemy_Box");
+							for (let child of enemyBox.children) {
+								if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+									var enemyConBox = document.getElementById(child.children[0].children[0].id + "_All_Conditions");
+									var hasCon = enemyConBox.querySelector(`:scope > [id*="${condition}"]`) !== null;
+									if (!hasCon) {
+										var conElement = document.getElementById(condition);
+										var clonedCondition = conElement.cloneNode(true);
+										clonedCondition.id = condition +"_"+ child.children[0].children[0].id.split("_")[0];
+										clonedCondition.style.height = "30px"; clonedCondition.style.cursor = "pointer";
+										enemyConBox.appendChild(clonedCondition);
+									}
+								}
+							}
+						}
+					}
+
+					//Consume Element
+					moveElementTo(element.id, "Inert");
+				}
+
+				//If Shield
+				else if (act.includes("Shield") ) {
+					const enemyBox = document.getElementById("Enemy_Box");
+					for (let child of enemyBox.children) {
+						if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+							var enemy = document.getElementById(child.children[0].children[0].id + "_Shield");
+							enemy.textContent = Number(enemy.textContent) + Number(act.replace("Shield ", "") );
 						}
 					}
 				}
-			}
 
-			//If Pos Effect
-			else if (conditions[0][1].includes(act) ) {
-				const condition = document.getElementById(act);
-				const enemyBox = document.getElementById("Enemy_Box");
-				for (let child of enemyBox.children) {
-					if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
-						var enemyConBox = document.getElementById(child.children[0].children[0].id + "_All_Conditions");
-						var hasCon = enemyConBox.querySelector(`:scope > [id*="${enemy_cards[i][3][0]}"]`) !== null;
-						if (!hasCon) {
-							const clonedCondition = document.getElementById(act).cloneNode(true);
-							clonedCondition.id = act +"_"+ ID.id; clonedCondition.style.height = "30px"; clonedCondition.style.cursor = "pointer";
-							enemyConBox.appendChild(clonedCondition);
+				//If Heal
+				else if (act.includes("Heal") ) {
+					const enemyBox = document.getElementById("Enemy_Box");
+					for (let child of enemyBox.children) {
+						if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+							var enemy = document.getElementById(child.children[0].children[0].id + "_Health");
+							//Only do if End product is below starting max health
+							for (p=0; p<Number(act.split(":")[2].replace("Heal ","")); p++) {
+								if (Number(enemy.textContent) + 1 <= enemy.dataset.health) {
+									enemy.textContent = Number(enemy.textContent) + 1;
+								}
+							}
 						}
 					}
 				}
-			}
 
-			//If Infuse
-			else if (act.includes("Infuse") ) {
-				const element = document.getElementById(act.split(":")[1]);
-				moveElementTo(element.id, "Strong");
-			}
+				//If Pos Effect
+				else if (conditions[0][1].includes(act) ) {
+					const condition = document.getElementById(act);
+					const enemyBox = document.getElementById("Enemy_Box");
+					for (let child of enemyBox.children) {
+						if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+							var enemyConBox = document.getElementById(child.children[0].children[0].id + "_All_Conditions");
+							var hasCon = enemyConBox.querySelector(`:scope > [id*="${enemy_cards[i][3][0]}"]`) !== null;
+							if (!hasCon) {
+								const clonedCondition = document.getElementById(act).cloneNode(true);
+								clonedCondition.id = act +"_"+ ID.id; clonedCondition.style.height = "30px"; clonedCondition.style.cursor = "pointer";
+								enemyConBox.appendChild(clonedCondition);
+							}
+						}
+					}
+				}
 
-			//Remove Current first Action
-			enemy_cards[i][3].splice(start,1);
+				//If Infuse
+				else if (act.includes("Infuse") ) {
+					const element = document.getElementById(act.split(":")[1]);
+					moveElementTo(element.id, "Strong");
+				}
+
+				//If Suffer
+				else if (act.includes("Suffer")) {
+					const enemyBox = document.getElementById("Enemy_Box");
+					for (let child of enemyBox.children) {
+						if (child.children[0].children[0].id.split("_")[0] === ID.id.split("_")[0]) {
+							var enemy = document.getElementById(child.children[0].children[0].id + "_Health");
+							if (Number(enemy.textContent) - 1 > 0) { enemy.textContent = Number(enemy.textContent) - 1; }
+						}
+					}
+				}
+
+				//Consume to Apply Condition to Self
+				if (act.includes("Self")) {
+					var condition = act.split(" ")[0].trim();
+					console.log(condition);
+					if (condition === "Bless" ) {
+						enemyModifiers[0].push(condition);
+						enemyModifiers[1].push(true);
+					}
+				}
+				
+
+				//Remove Current first Action
+				enemy_cards[i][3].splice(start,1);
+			}
 		}
 	}
 	//Add New Attack Value to Displayed Enemy Attack Value(s)
@@ -1526,6 +1594,8 @@ function shuffleScores(element) {
 			for (j=0; j<enemy_cards[i][1].length; j++) {
 				enemy_cards[i][1][j][6] = true;
 			}
+
+			//Reset Attack Value
 			var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Score_Img");
 			enemyScoreImage.src = "./Images/Monster_Back.jpg";
 			document.getElementById(enemy_cards[i][0] + "_Attack" + enemy_types[0]).textContent = document.getElementById(enemy_cards[i][0] + "_Normal_A").textContent.replace("A:","");
@@ -1814,13 +1884,13 @@ document.addEventListener('click', function(event) {
 
 function addAttackModifer(ID) {
 	//Add New Attack Value to Displayed Enemy Attack Value(s)
-	var attack = Number(document.getElementById(ID).dataset.add);
+	var attack = document.getElementById(ID).dataset.add;
 	for (i=0; i<enemy_stat_cards.length; i++) {
 		var enemyName = enemy_stat_cards[i].replace(" ","");
 		for (index=0; index<enemy_types.length; index++) {
 			var enemyAttack = document.getElementById(enemyName + "_Attack" + enemy_types[index]);
 			if (attack != "Null" && attack != "Curse" && attack != "Crit" && attack != "Bless" && enemyAttack) {
-				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + attack;
+				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + Number(attack);
 			}
 			if ( (attack === "Crit" || attack === "Bless" ) && enemyAttack) {
 				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + Number(enemyAttack.dataset.extraAttack);
@@ -1885,7 +1955,7 @@ function getScores() {
 	scoreArray.sort( (a,b) => a[1] - b[1] || a[2] - b[2] || a[3] - b[3]);
 }
 
-var scorePrev;
+var scorePrev = "blah";
 function highlightPlay() {
 	if (scoreArray.length != 0) {
 		//Get New Element
@@ -1899,7 +1969,7 @@ function highlightPlay() {
 		}
 
 		//If previous element exists set it border to none
-		if (scorePrev) {
+		if (scorePrev && !scorePrev.includes("blah") ) {
 			const elementPrev = document.getElementById(scorePrev[0]);
 			elementPrev.style.border = "none"
 		}
@@ -1908,16 +1978,24 @@ function highlightPlay() {
 		scorePrev = scoreArray.shift();
 		element.style.border = "3px solid red"
 	}
+	//Clear Player Scores
+	else {
+		//Get Player Scores
+		for (i=0; i<selected_characters.length; i++) {
+			document.getElementById(selected_characters[i][0] + "_Score").value = "";
+			document.getElementById(selected_characters[i][0] + "_Score02").value = "";
+		}
+	}
 }
 
 function nextRound() {
+	//Flip and Score
+	flipEnemyAll();
 	getScores();
 
 	//Move Elements Down
 	moveElementsFrom("Waning", "Inert");
 	moveElementsFrom("Strong", "Waning");
-
-	flipEnemyAll();
 }
 
 
