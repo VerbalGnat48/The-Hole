@@ -1,0 +1,236 @@
+/*////////////////////
+// Page 01
+*/
+
+body {
+	background-color:black;
+	color:white;
+}
+
+@font-face {
+	font-family:PirataOne;
+	src:url(./Fonts/PirataOne-Gloomhaven.ttf) format("truetype");
+}
+
+.page-container {
+	width:100%;
+	height:100vh;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	text-align:center;
+}
+
+.box-container {
+	display:flex;
+	flex-wrap:wrap;
+	justify-content:center;
+	align-items:center;
+	text-align:center;
+}
+
+.box-long {
+	display:flex;
+	flex-wrap:wrap;
+	flex-direction:row;
+	justify-content:center;
+	align-items:center;
+	text-align:center;
+}
+
+.box-tall {
+	display:flex;
+	flex-wrap:wrap;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	text-align:center;
+}
+
+.character-flipper {
+	background: none;
+	outline: none;
+	color: white;
+	border: none;
+	font-size:18px;
+	display:flex;
+
+	position:absolute;
+	width:344px;
+	height:416px;
+	cursor:pointer;
+}
+
+.character-level-selector {
+	font-size:16px;
+	font-family:PirataOne;
+	text-align:center;
+	text-indent:3px;
+	color:#e1e0df;
+
+	background-image:url("./Images/Level_Background.png");
+	outline:none;
+	border:none;
+	display:flex;
+
+	position:absolute;
+	width:24px;
+	height:22px;
+	cursor:pointer;
+}
+
+.character-selector {
+	position:absolute;
+	border-radius:50%;
+	cursor:pointer;
+	width:53px;
+	height:53px;
+	left:312px;
+	top:535px;
+}
+
+.character-selector-label {
+	font-size:14px;
+	font-family:PirataOne;
+	text-align:center;
+	text-indent:3px;
+	color:#e1e0df;
+
+	background-image:url("./Images/Level_Background.png");
+	background-repeat:repeat;
+	outline:none;
+	border:none;
+	display:flex;
+
+	position:absolute;
+	width:50px;
+	height:14px;
+	left:312px;
+	top:500px;
+	padding-left:7px;
+}
+
+/*////////////////////
+// Page 02
+*/
+
+/* chartInput */
+input {
+	width:40px;
+	text-align:center;
+}
+
+.character-sheet-selector {
+	background: none;
+	outline: none;
+	color: white;
+	border: none;
+	font-size:18px;
+	display:flex;
+
+	position:absolute;
+	border-radius:50%;
+	cursor:pointer;
+	width:100%;
+	height:172px;
+	top:0px;
+	left:0px;
+}
+
+.enemy-selector {
+	border-radius:50%;
+	cursor:pointer;
+	width:37px;
+	height:37px;
+}
+
+.box-enemy {
+	display:flex;
+	flex-wrap:wrap;
+	flex-direction:column;
+	justify-content:center;
+	align-items:flex-start;
+	text-align:center;
+
+	max-height:875px;
+	min-width:450px;
+	margin-top:auto;
+	margin-bottom:auto;
+	row-gap:10px;
+	column-gap:5px;
+/*	border:1px solid red; */
+}
+
+.enemy-image {
+	height:124px;
+	width:auto;
+}
+
+.enemy-stat-image {
+	height:85px;
+	width:auto;
+}
+
+.enemy-delete {
+	position:absolute;
+	height:25px;
+	width:25px;
+	top:3px;
+	right:3px;
+	cursor:pointer;
+	content:url("./Images/Icons/Minus_1.png");
+}
+
+.enemy-ID {
+	position:absolute;
+	width:30px;
+	top:3px;
+	left:3px;
+}
+
+.action-Btn {
+	height:50px;
+	width:auto;
+	cursor:pointer;
+}
+
+.attribute-input {
+	width:27px;
+	background:transparent;
+	color:white;
+	border:none;
+	border-bottom: 2px solid #ccc;
+	font-size:15px;
+}
+
+.element {
+	height:50px;
+	width:auto;
+	cursor:pointer;
+	draggable="true";
+}
+
+.element-box {
+	display:flex;
+	flex-wrap:wrap;
+	flex-direction:column;
+	justify-content:center;
+	align-items:center;
+	text-align:center;
+
+	border:1px solid white;
+	height:250px;
+	width:250px;
+	row-gap:20px;
+}
+
+
+
+
+
+
+
+
+
+
