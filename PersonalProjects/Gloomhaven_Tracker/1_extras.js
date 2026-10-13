@@ -72,6 +72,7 @@ function startRound() {
 function startingScores() {
 	//Reset Score Array
 	score_array = [];
+	all_people = [];
 
 	//Get Player Scores
 	for (i=0; i<selected_characters.length; i++) {
@@ -79,6 +80,7 @@ function startingScores() {
 		var pS02 = document.getElementById(selected_characters[i].name + "_Score02");
 		//Name, Score 1, Score 2, Player or Enemy, Elite or Normal, Standee Number
 		score_array.push( [selected_characters[i].name, pS01.value, pS02.value, 1, 0, 0] );
+		all_people.push(selected_characters[i]);
 	}
 
 	//Get Enemy Scores
@@ -87,6 +89,7 @@ function startingScores() {
 		var cardScore = enemy_score_cards[index][3][1];
 		//Name, Score 1, Score 2, Player or Enemy, Elite or Normal, Standee Number
 		score_array.push( [enemy_standees[i].name, cardScore, 99, 2, enemy_standees[i].type, enemy_standees[i].number] );
+		all_people.push(enemy_standees[i]);
 	}
 
 	//Sort Scores
@@ -98,18 +101,26 @@ function startingScores() {
 	if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
 
 	console.log(score_array);
+	console.log(all_people);
 }
 
 
 
 function nextAction() {
-	if (score_array.length != 0) {
-		//Check if Player Turn, if so then populate new enemies
+	if (score_array.length > 0) {
+		//
+		if (score_array[0][1] != score_array[1][1]) {
+			console.log("New Guy");
+			//
+		}
 		
 		//Unhighlight Current Card
 		unHighlight(score_array[0][0]);
 		var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
 		if (found) { unHighlight(score_array[0][0].split("_")[0] + "_Card"); }
+
+		//Reset Card Action Counter
+//		if (found) { document.getElementById(highlight(score_array[0][0].split("_")[0] + "_Action_Next") ).textContent = 0; }
 
 		//Highlight New Card
 		score_array.shift();
@@ -117,16 +128,24 @@ function nextAction() {
 		found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
 		if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
 
+		//Reset Card Action Counter
+//		if (found) { document.getElementById(highlight(score_array[0][0].split("_")[0] + "_Action_Next") ).textContent = 0; }
+
 		//Clear Attack Modifier Visual
 		if (selectedModifier) {
 			selectedModifier.style.border = "none";
-
-			//Reset Attack Values
 		}
 
-		//Reset Action Counter
+		//Reset Card Attack Values
+		for (i=0; i<enemy_stat_cards.length; i++) {
+			var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
+			var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
+			nAction.textContent = enemy_stat_cards[i].nAttack;
+			eAction.textContent = enemy_stat_cards[i].eAttack;
+		}
 		
 		//Do Wound
+		
 	}
 	else {
 		//endRound();

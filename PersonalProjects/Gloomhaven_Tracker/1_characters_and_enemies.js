@@ -9,10 +9,11 @@ var attackMode = false;
 var healMode = false;
 
 var doomCounter = 0;
-var plaugeCounter = 0;
+var plagueCounter = 0;
 
 var action_array = [];
 var score_array = [];
+var all_people = [];
 
 var follower;
 follower = document.createElement('div');

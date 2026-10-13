@@ -95,3 +95,77 @@ function makeStatCardsConditions(enemy, enemyType, conNum) {
 	}
 }
 
+function dropConditionHandler(ev) {
+	//Get Condition
+	ev.preventDefault();
+	const data = ev.dataTransfer.getData("text");
+	const condition = document.getElementById(data);
+
+	//Get Target in Score Array
+	var name = ev.target.id.replace("_Conditions", "");
+	var person = all_people.find(user => user.name === name);
+
+	//Too Many Doom
+	if (condition.id === "Doom" && doomCounter > 0) {
+		console.log("Doom to many");
+	}
+
+	//Add Doom
+	else if (condition.id === "Doom" && doomCounter < 1) {
+		doomCounter++;
+		addCondition(person.negCons, condition, ev.target);
+	}
+
+	//Too Many Plauge
+	else if (condition.id === "Plague" && plagueCounter >= 13) {
+		console.log("Plague to many");
+	}
+
+	//Other Conditions
+	else {
+		//Plauge Check
+		if (condition.id === "Plague" && plagueCounter < 12) {
+			plagueCounter++;
+			if (person.negCons.filter(item => item === "Plague").length < 3 ) {
+				addCondition(person.negCons, condition, ev.target);
+			}
+		}
+
+		//Others
+		else {
+			//Check if Positive or Negative Condition
+			if (conditions[0][1].includes(condition.id) && !person.posCons.includes(condition.id) ) {
+				//Apply Pos
+				addCondition(person.posCons, condition, ev.target);
+				console.log(person.posCons);
+			}
+			else if (conditions[1][1].includes(condition.id) && !person.negCons.includes(condition.id) ) {
+				//Apply Neg
+				addCondition(person.negCons, condition, ev.target);
+				console.log(person.negCons);
+			}
+		}
+	}
+}
+
+function addCondition(conBox, condition, target) {
+	//Add to Array
+	conBox.push(condition.id);
+	//Add to Box
+	var clonedCondition = condition.cloneNode(true);
+	clonedCondition.id = target.id.split("_")[0] + "_" + condition.id;
+	clonedCondition.style.height = "35px";
+	target.appendChild(clonedCondition);
+}
+
+
+
+
+
+
+
+
+
+
+
+
