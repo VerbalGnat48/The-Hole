@@ -134,6 +134,7 @@ function dropConditionHandler(ev) {
 		//Others
 		else {
 			//Check if Positive or Negative Condition
+		console.log(person);
 			if (conditions[0][1].includes(condition.id) && !person.posCons.includes(condition.id) ) {
 				//Apply Pos
 				addCondition(person.posCons, condition, ev.target);

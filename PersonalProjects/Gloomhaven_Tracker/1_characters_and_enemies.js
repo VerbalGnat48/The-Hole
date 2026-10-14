@@ -14,6 +14,7 @@ var plagueCounter = 0;
 var action_array = [];
 var score_array = [];
 var all_people = [];
+var AN = 0;
 
 var follower;
 follower = document.createElement('div');
@@ -177,7 +178,7 @@ function makeSelectedCharacters() {
 				</div>
 				<div class="box-tall" style="row-gap:15px;">
 					<div class="box-long">
-						<img src="./Images/Icons/Attack.png" id="${charName + '_Attack_Btn'}" onclick="characterAction(this.id)" class="action-Btn">
+						<img src="./Images/Icons/Attack.png" id="${charName + '_Attack_Btn'}" onclick="characterAttack(this.id)" class="action-Btn">
 						<p id="${charName + '_Attack'}" class="attribute-input">0</p>
 						<div class="box-tall">
 							<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">

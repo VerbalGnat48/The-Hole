@@ -24,6 +24,18 @@ function removeElement(ID) {
 	const element = document.getElementById(ID.id);
 }
 
+function removeEnemy(element) {
+	if (element.id.includes("Stat") ) {
+		var index = enemy_stat_cards.indexOf(element.id.split("_")[0]);
+		if (index > -1) { enemy_stat_cards.splice(index,1); }
+		element.parentElement.remove();
+	}
+	else {
+		 element.parentElement.remove();
+	}
+}
+
+
 //Give Standees their input number
 document.addEventListener('input', (event) => {
 	var standName = event.target.id.replace("_Standee","");
@@ -100,77 +112,113 @@ function startingScores() {
 	var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
 	if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
 
-	console.log(score_array);
-	console.log(all_people);
+	//Set Action Array
+	setActionArray(score_array[0]);
 }
 
 
 
 function nextAction() {
-	if (score_array.length > 0) {
-		//
-		if (score_array[0][1] != score_array[1][1]) {
-			console.log("New Guy");
-			//
+	if (score_array.length >= 1) {
+		//No New Action, hightlight next guy
+		if (AN == 0) {
+			//If next card has a different score
+			if (score_array[0][1] != score_array[1][1]) {
+				//
+			}
+			
+			//Unhighlight Current Card
+			unHighlight(score_array[0][0]);
+			var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
+			if (found) { unHighlight(score_array[0][0].split("_")[0] + "_Card"); }
+
+			//Reset Card Action Counter
+			if (found) { document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next").textContent = 0; }
+
+			//Highlight New Card
+			score_array.shift();
+			highlight(score_array[0][0]);
+			found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
+			if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
+
+			//Reset Card Action Counter
+			if (found) { document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next").textContent = 0; }
+
+			//Clear Attack Modifier Visual
+			if (selectedModifier) {
+				selectedModifier.style.border = "none";
+			}
+
+			//Reset Card Attack Values
+			for (i=0; i<enemy_stat_cards.length; i++) {
+				var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
+				var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
+				nAction.textContent = enemy_stat_cards[i].nAttack;
+				eAction.textContent = enemy_stat_cards[i].eAttack;
+			}
+			
+			//Do Wound
+			
+			setActionArray(score_array[0]);
 		}
 		
-		//Unhighlight Current Card
-		unHighlight(score_array[0][0]);
-		var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
-		if (found) { unHighlight(score_array[0][0].split("_")[0] + "_Card"); }
-
-		//Reset Card Action Counter
-//		if (found) { document.getElementById(highlight(score_array[0][0].split("_")[0] + "_Action_Next") ).textContent = 0; }
-
-		//Highlight New Card
-		score_array.shift();
-		highlight(score_array[0][0]);
-		found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
-		if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
-
-		//Reset Card Action Counter
-//		if (found) { document.getElementById(highlight(score_array[0][0].split("_")[0] + "_Action_Next") ).textContent = 0; }
-
-		//Clear Attack Modifier Visual
-		if (selectedModifier) {
-			selectedModifier.style.border = "none";
+		//New Action
+		else {
+			AN -= 1;
+			var card = document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next");
+			card.textContent = Number(card.textContent) + 1;
 		}
-
-		//Reset Card Attack Values
-		for (i=0; i<enemy_stat_cards.length; i++) {
-			var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
-			var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
-			nAction.textContent = enemy_stat_cards[i].nAttack;
-			eAction.textContent = enemy_stat_cards[i].eAttack;
-		}
-		
-		//Do Wound
-		
 	}
 	else {
 		//endRound();
 	}
 }
 
-
-
 function unHighlight(Id) {
 	var element = document.getElementById(Id);
 	element.style.border = "none";
-	hightlightedTarget = element;
+	highlightedTarget = element;
 }
 
 function highlight(Id) {
 	var element = document.getElementById(Id);
 	element.style.border = "3px solid chartreuse";
-	hightlightedTarget = element;
+	highlightedTarget = element;
 }
 
 
+function setActionArray(target) {
+	if (highlightedTarget.id.includes("Card")) {
+		//Get index of where name is at
+		var index = enemy_score_cards.findIndex(row => row.includes(highlightedTarget.id.split("_")[0]));
 
+		//Give Cards Actions to Action Array
+		action_array = enemy_score_cards[index][3][2];
+		AN = enemy_score_cards[index][3][2].length;
+	}
+}
 
+document.addEventListener('keydown', (event) => {
+	//Activate Once
+	if (event.repeat) return;
 
+	//Clear Pointer on Esc
+	if (event.key === 'Escape') {
+		document.documentElement.style.cursor = "default";
+		conditionMod = null;
+		follower.style.display = "none";
+		attackMode = false;
+		healMode = false;
+	}
+});
 
+//Follow cursor with attack value
+document.addEventListener('mousemove', (event) => {
+	if (attackMode || healMode) {
+		follower.style.left = (event.clientX + 50) + 'px';
+		follower.style.top = (event.clientY) + 'px';
+	}
+});
 
 
 

@@ -3,8 +3,8 @@
 //
 function characterAttack(Id) {
 	//Set Array
-	var name = ID.split("_")[0];
-	var action = ID.split("_")[1];
+	var name = Id.split("_")[0];
+	var action = Id.split("_")[1];
 	var attackValue = document.getElementById(name + "_" + action);
 
 	//Set Cursor
