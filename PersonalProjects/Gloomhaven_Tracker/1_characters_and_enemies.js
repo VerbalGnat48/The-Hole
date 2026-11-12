@@ -4,6 +4,7 @@
 var selected_characters = [];
 var levelFlag = false;
 var inRound = 0;
+var crit = false;
 
 var attackMode = false;
 var healMode = false;

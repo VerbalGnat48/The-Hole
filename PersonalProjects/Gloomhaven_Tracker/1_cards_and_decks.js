@@ -44,8 +44,6 @@ function flipScoreCard(element) {
 	enemy_score_cards[index][3] = enemy_score_cards[index][1][kndex];
 	enemy_score_cards[index][1].splice(kndex, 1);
 
-
-
 	//Reset Score Card Attack Values
 	var nAction = document.getElementById(enemy_stat_cards[index].name + "_Action_nAttack");
 	var eAction = document.getElementById(enemy_stat_cards[index].name + "_Action_eAttack");
@@ -207,6 +205,7 @@ function modifyModifierDeck(action) {
 
 function addAttackModifier(mod_card, Id) {
 	//Reset Attack Values
+	crit = false;
 	for (i=0; i<enemy_score_cards.length; i++) {
 		var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
 		var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
@@ -223,6 +222,7 @@ function addAttackModifier(mod_card, Id) {
 		else if (mod_card.effect === "Crit" || mod_card.effect === "Bless" ) {
 			nAction.textContent = Number(nAction.textContent) + Number(nAction.textContent);
 			eAction.textContent = Number(eAction.textContent) + Number(eAction.textContent);
+			crit = true;
 		}
 	}
 

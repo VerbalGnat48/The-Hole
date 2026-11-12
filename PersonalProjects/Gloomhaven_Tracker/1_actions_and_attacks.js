@@ -1,6 +1,8 @@
 ///////////////////////////////
 // Actions
 //
+var enemyAttack = false;
+
 function Attack(Id) {
 	//Set Array
 	var name = Id.split("_")[0];
@@ -11,6 +13,7 @@ function Attack(Id) {
 	if (splitCount > 2) {
 		action = Id.split("_")[2].slice(1);
 		var attackValue = document.getElementById(name + "_" + Id.split("_")[1] + "_" + Id.split("_")[2]);
+		enemyAttack = true;
 	}
 
 	//If <2 then Player
@@ -225,7 +228,80 @@ function applyCardAttackAction() {
 	}
 }
 
-//Attack Mode
+
+
+document.addEventListener('click', function(event) {
+	//Get Element under mouse that i sbeing targetted
+	const clickedElement = event.target;
+	const isCtrlOrCmd = event.ctrlKey || event.metaKey;
+
+	//If Attack Mode
+	if (attackMode) {
+		//Overalls
+		var target; var health; var healthValue; var applied_conditions = [];
+
+		//If Enemy Attacking Player
+		if (enemyAttack) {
+			//Get Player Health
+			target = document.getElementById(clickedElement.parentElement.parentElement.id);
+			health = document.getElementById(target.id + "_Health");
+			healthValue = health.textContent;
+
+			console.log(enemy_stat_cards);
+			//Get Target in enemy_stat_cards array for refernce
+			var index = 0;
+			for (i=0; i<enemy_stat_cards.length; i++) {
+				if (enemy_stat_cards[i].name == target.id) {
+					index = i; break;
+				}
+			}
+			applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon01) );
+			applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon02) );	
+		}
+
+		//If Player Attacking Enemy
+		else {
+			//Get Enemy Helath
+			target = document.getElementById(clickedElement.parentElement.id);
+			health = document.getElementById(target.id + "_Health");
+			healthValue = health.textContent;
+		}
+
+		//Everything else if not dead
+		if (target && Number(healthValue) != 0 ) {
+			//Make New Healt Refernece
+			var newHealth = Number(healthValue);
+			var attackValue = Number(follower.innerText);
+
+			//Get Target in all_peoples array for refernce
+			var index = 0;
+			for (i=0; i<all_people.length; i++) {
+				if (all_people[i].name == target.id) {
+					index = i; break;
+				}
+			}
+
+			//Negative Conditions
+			for (i=0; i<applied_conditions.length; i++) {
+				//Poison (Add +1 Attack or +2 if Crit/Bless)
+				if (applied_conditions[i] == "Poison") {
+					attackValue++;
+					if (crit) {
+						attackValue++;
+					}
+				}
+
+				//Pierce
+				if (applied_conditions[i].includes("Pierce")) {
+					console.log(applied_conditions[i]);
+				}
+			}
+		}
+		
+	}
+});
+
+
 
 //Heal Mode
 
@@ -234,7 +310,28 @@ function applyCardAttackAction() {
 
 
 
-
+//Switch Case for Conditions
+function getStatConditions(value) {
+	switch (value) {
+		case 1:
+			return "Wound";	
+		case 2:
+			return "Poison";
+		case 3:
+			return "Immobilize";
+		case 4:
+			return "Disarm";
+		case 5:
+			return "Stun";
+		case 6:
+			return "Muddle";
+		case 9:
+			return "Curse";
+		default:
+			if (value > 70 && value < 80) { return "Pierce" + String(value).split("")[1]; }
+			else { return null; }
+	}
+}
 
 
 
