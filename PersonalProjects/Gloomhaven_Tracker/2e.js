@@ -338,10 +338,11 @@ function makeEnemyScoreCards() {
 
 	//Frost Demon
 	makeEnemyScoreCard("FrostDemon", 18, "fill | Consume:Ice:Heal 3", "", "_1", false);
-	makeEnemyScoreCard("FrostDemon", 18, "fill | Shield 2 | Consume:Fire:Stun Self", "", "_2", false);
+	makeEnemyScoreCard("FrostDemon", 18, "fill | Shield 2 | Consume:Fire:Suffer 1", "", "_2", false);
 	makeEnemyScoreCard("FrostDemon", 38, "fill | Attack -1", "", "", false);
 	makeEnemyScoreCard("FrostDemon", 58, "fill | Attack 0", "", "_1", false);
 	makeEnemyScoreCard("FrostDemon", 58, "fill | Attack 0 | Consume:Ice:Attack 2", "", "_2", false);
+	makeEnemyScoreCard("FrostDemon", 58, "fill | Attack -1 / Pierce 3 | Consume:Any:Ice", "", "_3", false);
 	makeEnemyScoreCard("FrostDemon", 78, "fill | Attack 0 | Infuse:Ice", "", "", true);
 	makeEnemyScoreCard("FrostDemon", 78, "fill | Attack 0 | Infuse:Ice", "", "A", true);
 
@@ -441,7 +442,7 @@ function makeEnemyScoreCards() {
 	makeEnemyScoreCard("NightDemon", 35, "Attack -1 | Attack -1 / Pierce 2 | Consume:Light:Curse Self", "", "", false);
 	makeEnemyScoreCard("NightDemon", 41, "fill | Attack 1 | Infuse:Dark", "", "", true);
 	makeEnemyScoreCard("NightDemon", 46, "fill | Attack 1 | Consume:Dark:Attack 2", "", "", true);
-	makeEnemyScoreCard("NightDemon", 26, "Attack -2 / Consume:Dark", "", "", false);
+	makeEnemyScoreCard("NightDemon", 26, "Attack -2 | Consume:Dark:Attack -2 / Muddle", "", "", false);
 	makeEnemyScoreCard("NightDemon", 22, "fill | Attack 0 | Infuse:Dark", "", "", false);
 	makeEnemyScoreCard("NightDemon", 37, "fill | Attack -2 | Consume:Dark:Invisible Self", "", "", false);
 	makeEnemyScoreCard("NightDemon", 4, "fill | Attack -1 | Inufse:Dark", "", "", false);

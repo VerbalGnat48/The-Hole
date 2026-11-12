@@ -22,31 +22,28 @@ function flipScoreCard(element) {
 	//Check if current card says to shuffle
 	if (enemy_score_cards[index][3]) {
 		if (enemy_score_cards[index][3][7] === true) {
-			while (enemy_score_cards[index][2].length > 0) {
-				enemy_score_cards[index][1].push(enemy_score_cards[index][2].shift())
-			}
+			enemy_score_cards[index][1].push(...enemy_score_cards[index][2]);
 			enemy_score_cards[index][1].push(enemy_score_cards[index][3]);
+			enemy_score_cards[index][2] = [];
+			enemy_score_cards[index][3] = null;
 		}
 	}
 	
 	//Ranomly Choose a Useable score card to use
-	var total = enemy_score_cards[index][1].length;
-	//If non then shuffle
-	if (total === 0) {
-		while (enemy_score_cards[index][2].length > 0) {
-			enemy_score_cards[index][1].push(enemy_score_cards[index][2].shift())
-		}
-	}
-	total = enemy_score_cards[index][1].length - 1;
+	var total = enemy_score_cards[index][1].length - 1;
+
 	//Select random usable card
 	var kndex = getRandomIntInclusive(0, total)
+
 	//Move active card to used
 	if (enemy_score_cards[index][3]) {
 		enemy_score_cards[index][2].push(enemy_score_cards[index][3]);
+		enemy_score_cards[index][3] = null;
 	}
 	//Move useable card to active
 	enemy_score_cards[index][3] = enemy_score_cards[index][1][kndex];
 	enemy_score_cards[index][1].splice(kndex, 1);
+
 
 
 	//Reset Score Card Attack Values

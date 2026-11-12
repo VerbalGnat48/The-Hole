@@ -12,9 +12,9 @@ var doomCounter = 0;
 var plagueCounter = 0;
 
 var action_array = [];
+var action_conditions = [];
 var score_array = [];
 var all_people = [];
-var AN = 0;
 
 var follower;
 follower = document.createElement('div');
@@ -178,7 +178,7 @@ function makeSelectedCharacters() {
 				</div>
 				<div class="box-tall" style="row-gap:15px;">
 					<div class="box-long">
-						<img src="./Images/Icons/Attack.png" id="${charName + '_Attack_Btn'}" onclick="characterAttack(this.id)" class="action-Btn">
+						<img src="./Images/Icons/Attack.png" id="${charName + '_Attack_Btn'}" onclick="Attack(this.id)" class="action-Btn">
 						<p id="${charName + '_Attack'}" class="attribute-input">0</p>
 						<div class="box-tall">
 							<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
@@ -224,7 +224,7 @@ var enemy_score_cards = [];
 var enemy_stat_cards = [];
 var modifier_deck = [ [], [], , ];
 
-var inflictsPierce;
+var cardPierce = 0;
 var atkModCon = "none";
 var highlightedTarget;
 
@@ -377,7 +377,7 @@ function addEnemy(array_type) {
 							<p id="${eActionName + '_Next'}" class="attribute-input" style="font-size:20px;">0</p>
 						</div>
 						<div class="box-long">
-							<img src="./Images/Icons/Attack.png" id="${eActionName + '_nAttack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+							<img src="./Images/Icons/Attack.png" id="${eActionName + '_nAttack_Btn'}" onclick="Attack(this.id)" class="action-Btn" style="height:35px;">
 							<p id="${eActionName + '_nAttack'}" class="attribute-input" style="font-size:20px;">${enemy.nAttack}</p>
 							<div class="box-tall">
 								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_nAttack'})" style="width:10px;height:10px; cursor:pointer;">
@@ -385,7 +385,7 @@ function addEnemy(array_type) {
 							</div>
 						</div>
 						<div class="box-long">
-							<img src="./Images/Icons/Attack_Elite.png" id="${eActionName + '_eAttack_Btn'}" onclick="enemyAction(this.id)" class="action-Btn" style="height:35px;">
+							<img src="./Images/Icons/Attack_Elite.png" id="${eActionName + '_eAttack_Btn'}" onclick="enemyAttack(this.id)" class="action-Btn" style="height:35px;">
 							<p id="${eActionName + '_eAttack'}" class="attribute-input" style="font-size:20px; color:gold;border-color:gold">${enemy.eAttack}</p>
 							<div class="box-tall">
 								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_eAttack'})" style="width:10px;height:10px; cursor:pointer;">

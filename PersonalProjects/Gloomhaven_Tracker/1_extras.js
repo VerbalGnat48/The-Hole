@@ -119,14 +119,9 @@ function startingScores() {
 
 
 function nextAction() {
-	if (score_array.length >= 1) {
+	if (score_array.length > 0) {
 		//No New Action, hightlight next guy
-		if (AN == 0) {
-			//If next card has a different score
-			if (score_array[0][1] != score_array[1][1]) {
-				//
-			}
-			
+		if (action_array.length == 0) {
 			//Unhighlight Current Card
 			unHighlight(score_array[0][0]);
 			var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
@@ -135,66 +130,82 @@ function nextAction() {
 			//Reset Card Action Counter
 			if (found) { document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next").textContent = 0; }
 
-			//Highlight New Card
-			score_array.shift();
-			highlight(score_array[0][0]);
-			found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
-			if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
+			if (score_array.length > 1) {
+				//If next card has a different score
+				if (score_array[0][1] != score_array[1][1]) {
+					//
+				}
+				
+				//Highlight New Card
+				score_array.shift();
+				highlight(score_array[0][0]);
+				found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
+				if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }
 
-			//Reset Card Action Counter
-			if (found) { document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next").textContent = 0; }
+				//Reset Card Action Counter
+				if (found) { document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next").textContent = 0; }
 
-			//Clear Attack Modifier Visual
-			if (selectedModifier) {
-				selectedModifier.style.border = "none";
+				//Clear Attack Modifier Visual
+				if (selectedModifier) {
+					selectedModifier.style.border = "none";
+				}
+
+				//Reset Card Attack Values
+				for (i=0; i<enemy_stat_cards.length; i++) {
+					var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
+					var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
+					nAction.textContent = enemy_stat_cards[i].nAttack;
+					eAction.textContent = enemy_stat_cards[i].eAttack;
+				}
+				
+				//Do Wound
+				
+				//Set Actions
+				setActionArray(score_array[0]);
 			}
-
-			//Reset Card Attack Values
-			for (i=0; i<enemy_stat_cards.length; i++) {
-				var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
-				var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
-				nAction.textContent = enemy_stat_cards[i].nAttack;
-				eAction.textContent = enemy_stat_cards[i].eAttack;
-			}
-			
-			//Do Wound
-			
-			setActionArray(score_array[0]);
 		}
 		
 		//New Action
 		else {
-			AN -= 1;
+			action_array.shift();
+			applyCardAttackAction()
 			var card = document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next");
 			card.textContent = Number(card.textContent) + 1;
 		}
 	}
 	else {
 		//endRound();
+		var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
+		if (found) { unHighlight(score_array[0][0].split("_")[0] + "_Card"); }
+		unHighlight(score_array[0][0]);
 	}
 }
 
 function unHighlight(Id) {
 	var element = document.getElementById(Id);
 	element.style.border = "none";
-	highlightedTarget = element;
+	if (!Id.includes("Card")) {
+		highlightedTarget = null;
+	}
 }
 
 function highlight(Id) {
 	var element = document.getElementById(Id);
 	element.style.border = "3px solid chartreuse";
-	highlightedTarget = element;
+	if (!Id.includes("Card")) {
+		highlightedTarget = element;
+	}
 }
 
 
 function setActionArray(target) {
-	if (highlightedTarget.id.includes("Card")) {
+	if (highlightedTarget.id.includes("_")) {
 		//Get index of where name is at
 		var index = enemy_score_cards.findIndex(row => row.includes(highlightedTarget.id.split("_")[0]));
 
 		//Give Cards Actions to Action Array
-		action_array = enemy_score_cards[index][3][2];
-		AN = enemy_score_cards[index][3][2].length;
+		action_array = enemy_score_cards[index][3][2].slice();
+		applyCardAttackAction()
 	}
 }
 
