@@ -2,6 +2,7 @@
 // Actions
 //
 var enemyAttack = false;
+var attacker = null;
 
 function Attack(Id) {
 	//Set Array
@@ -14,12 +15,15 @@ function Attack(Id) {
 		action = Id.split("_")[2].slice(1);
 		var attackValue = document.getElementById(name + "_" + Id.split("_")[1] + "_" + Id.split("_")[2]);
 		enemyAttack = true;
+		attacker = name;
 	}
 
 	//If <2 then Player
 	else {
 		var action = Id.split("_")[1];
 		var attackValue = document.getElementById(name + "_" + action);
+		enemyAttack = false;
+		attacker = null;
 	}
 
 	//Set Cursor
@@ -95,7 +99,7 @@ function applyCardAttackAction() {
 		}
 
 		//Consume
-		if (action.includes("Consume") ) {
+		else if (action.includes("Consume") ) {
 			//Detect if Waning/Strong have Elements to Consume
 			var waningHas = document.getElementById("Waning").children.length;
 			var strongHas = document.getElementById("Strong").children.length;
@@ -225,6 +229,48 @@ function applyCardAttackAction() {
 				}
 			}
 		}
+
+		//Self
+		else if (action.includes("Self") ) {
+			//Get new condition
+			var index = enemy_score_cards.findIndex(row => row.includes(highlightedTarget.id.split("_")[0]));
+			var condition = action.replace(" Self", "");
+			var conditionElement = document.getElementById(condition);
+			var conBox = document.getElementById(highlightedTarget.id + "_Conditions");
+
+			//Curse and Bless
+			if (curses < 10 && action === "Curse") {
+				modifier_deck[0].push(new ModifierCard("Curse") );
+				curses++;
+				shuffleModifierDeck();
+			}
+			else if (action === "Bless") {
+				modifier_deck[0].push(new ModifierCard("Bless") );
+				shuffleModifierDeck();
+			}
+			//Others
+			else {
+				//Pos
+				if (!enemy_standees[index].posCons.includes(condition) ) {
+					addCondition(enemy_standees[index].posCons, conditionElement, conBox)
+				}
+				//Neg
+				else if (!enemy_standees[index].negCons.includes(condition) ) {
+					addCondition(enemy_standees[index].negCons, conditionElement, conBox)
+				}
+			}
+		}
+
+		//Suffer
+		else if (action.includes("Suffer") ) {
+			var enemy = document.getElementById(highlightedTarget.id + "_Health");
+			var total = Number(action.replace("Suffer ", "") );
+			for (t=0; t<total; t++) {
+				if (Number(enemy.textContent) - 1 >= 0 ) {
+					enemy.textContent = Number(enemy.textContent) - 1;
+				}
+			}
+		}
 	}
 }
 
@@ -236,7 +282,7 @@ document.addEventListener('click', function(event) {
 	const isCtrlOrCmd = event.ctrlKey || event.metaKey;
 
 	//If Attack Mode
-	if (attackMode) {
+	if (attackMode && !clickedElement.id.includes("Btn") ) {
 		//Overalls
 		var target; var health; var healthValue; var applied_conditions = [];
 
@@ -247,14 +293,15 @@ document.addEventListener('click', function(event) {
 			health = document.getElementById(target.id + "_Health");
 			healthValue = health.textContent;
 
-			console.log(enemy_stat_cards);
 			//Get Target in enemy_stat_cards array for refernce
 			var index = 0;
 			for (i=0; i<enemy_stat_cards.length; i++) {
-				if (enemy_stat_cards[i].name == target.id) {
+				if (attacker && enemy_stat_cards[i].name == attacker) {
 					index = i; break;
 				}
 			}
+
+			//If Enemy has status conditions to inflict grab them
 			applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon01) );
 			applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon02) );	
 		}
@@ -266,6 +313,9 @@ document.addEventListener('click', function(event) {
 			health = document.getElementById(target.id + "_Health");
 			healthValue = health.textContent;
 		}
+
+		//Get Targets Shield
+		var shield = document.getElementById(target.id + "_Shield");
 
 		//Everything else if not dead
 		if (target && Number(healthValue) != 0 ) {
@@ -281,19 +331,95 @@ document.addEventListener('click', function(event) {
 				}
 			}
 
-			//Negative Conditions
+			//Apply Posion Damage
+			if (all_people[index].negCons.includes("Posion") ) {
+				attackValue++;
+				if (crit) { attackValue++; }
+			}
+
+			//Negative Conditions from Applied Conditions
 			for (i=0; i<applied_conditions.length; i++) {
-				//Poison (Add +1 Attack or +2 if Crit/Bless)
-				if (applied_conditions[i] == "Poison") {
-					attackValue++;
-					if (crit) {
-						attackValue++;
+				//Pierce from Stat Card
+				if (applied_conditions[i] && applied_conditions[i].includes("Pierce") ) {
+					var piere = Number(applied_conditions[i].at(-1));
+					for (i=1; i<=pierce; i++) {
+						newHealth--;
+						attackValue--;
+						if (newHealth === 0 || attackValue === 0) { break; }
 					}
 				}
+			}
 
-				//Pierce
-				if (applied_conditions[i].includes("Pierce")) {
-					console.log(applied_conditions[i]);
+			//Pierce from Score Card
+			if (cardPierce > 0) {
+				for (i=1; i<=cardPierce; i++) {
+					newHealth--;
+					attackValue--;
+					if (newHealth === 0 || attackValue === 0) { break; }
+				}
+			}
+
+			//If Health > 0
+			if (newHealth !== 0) {
+				//Calculate Shield
+				if (shield !== 0) {
+					attackValue -= shield;
+					if (attackValue < 0) { attackValue = 0; }
+				}
+
+				//Calculate Ward (half incoming damage and round up is removed)
+				if (all_people[index].negCons.includes("Ward") ) {
+					attackValue = Math.floor(attackValue / 2);
+					//remove ward
+				}
+			
+				//Attack
+				for (i=1; i<=attackValue; i++) {
+					newHealth = newHealth - 1;
+					if (newHealth === 0) { break; }
+				}
+			}
+
+			//Update Health Visual
+			health.textContent = newHealth;
+
+
+			/////////////////////////////////
+			// Apply Conditions to Target
+
+			//Negative Conditions from Applied Conditions
+			for (i=0; i<applied_conditions.length; i++) {
+				//If target does not have the confition apply it
+				if (applied_conditions[i] && !all_people[index].negCons.includes(applied_conditions[i]) ) {
+					var condition = document.getElementById(applied_conditions[i]);
+					var targetBox = document.getElementById(all_people[index].name + "_Conditions");
+					addCondition(all_people[index].negCons, condition, targetBox);
+				}
+			}
+
+			//Apply Condition from Attack Modifier Deck if Applicable
+			if (enemyAttack) {
+				//Determine what card to use
+				var jndex = 0;
+				if (selectedModifier.id.includes("Old") ) { jndex = 3; }
+				else { jndex = 2; }
+
+console.log(selectedModifier);
+console.log(modifier_deck[jndex]);
+				if (modifier_deck[jndex].effect === "Heal") {
+					var standee = all_people.find(user => user.name === highlightedTarget.id);
+					var sH = Number(highlightedTarget.textContent);
+					if (sH < standee.maxHealth) {
+						highlightedTarget.textContent = sH++;
+					}
+				}
+				else {
+					//If target does not have the confition apply it
+					if (!all_people[index].negCons.includes(modifier_deck[jndex].effect) ) {
+						var condition = document.getElementById(modifier_deck[jndex].effect);
+						var targetBox = document.getElementById(all_people[index].name + "_Conditions");
+						addCondition(all_people[index].negCons, condition, targetBox);
+					}
 				}
 			}
 		}

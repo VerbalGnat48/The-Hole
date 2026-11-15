@@ -149,15 +149,32 @@ function dropConditionHandler(ev) {
 }
 
 function addCondition(conBox, condition, target) {
-	//Add to Array
-	conBox.push(condition.id);
-	//Add to Box
-	var clonedCondition = condition.cloneNode(true);
-	clonedCondition.id = target.id.split("_")[0] + "_" + condition.id;
-	clonedCondition.style.height = "35px";
-	target.appendChild(clonedCondition);
+	//Check for Safeguard
+	var name = target.id.replace("_Conditions", "");
+	var person = all_people.find(user => user.name === name);
+	if (person.posCons.includes("Safeguard") ) {
+		var safeguard = document.getElementById("Safeguard");
+		removeCondition(person.posCons, safeguard, target)
+	}
+	else {
+		//Add to Array
+		conBox.push(condition.id);
+		//Add to Box
+		var clonedCondition = condition.cloneNode(true);
+		clonedCondition.id = target.id.split("_")[0] + "_" + condition.id;
+		clonedCondition.style.height = "35px";
+		target.appendChild(clonedCondition);
+	}
 }
 
+function removeCondition(conBox, condition, target) {
+	document.getElementById(target.id.split("_")[0] + "_" + condition.id).remove();
+	for (i=0; i<conBox.length; i++) {
+		if (conBox[i] === condition.id) {
+			conBox.splice(i, 1);
+		}
+	}
+}
 
 
 
