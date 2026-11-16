@@ -220,12 +220,48 @@ document.addEventListener('keydown', (event) => {
 		follower.style.display = "none";
 		attackMode = false;
 		healMode = false;
+		conditionsMode = false;
+	}
+
+	//Enter Attack mode
+	if (event.key === 'a' || event.key === 'A') {
+		//Set Array
+		var Id = highlightedTarget.id;
+		var name = Id.split("_")[0];
+		var person = all_people.find(user => user.name === Id);
+		var splitCount = Id.split("_").length - 1;
+		var action;
+
+		//If =1 then Enemy
+		if (splitCount == 1) {
+			var type = "n";
+			if (person.type === 2) {
+				type = "e";
+			}
+			var attackValue = document.getElementById(name + "_Action_" + type + "Attack");
+			enemyAttack = true;
+			attacker = name;
+		}
+
+		//If =0 then Player
+		else {
+			var attackValue = document.getElementById(name + "_Attack");
+			enemyAttack = false;
+			attacker = null;
+		}
+
+		//Set Cursor
+		document.documentElement.style.cursor = `url("${ './Images/Icons/Cursors/Attack_Cursor.png' }"), auto`;
+		follower.innerText = attackValue.textContent;
+		follower.style.display = "block";
+
+		attackMode = true;
 	}
 });
 
 //Follow cursor with attack value
 document.addEventListener('mousemove', (event) => {
-	if (attackMode || healMode) {
+	if (attackMode || healMode || conditionsMode) {
 		follower.style.left = (event.clientX + 50) + 'px';
 		follower.style.top = (event.clientY) + 'px';
 	}

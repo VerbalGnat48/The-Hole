@@ -5,9 +5,11 @@ var selected_characters = [];
 var levelFlag = false;
 var inRound = 0;
 var crit = false;
+var conditionMod;
 
 var attackMode = false;
 var healMode = false;
+var conditionsMode = false;
 
 var doomCounter = 0;
 var plagueCounter = 0;
@@ -170,7 +172,7 @@ function makeSelectedCharacters() {
 					style="min-width:50px;max-width:150px;height:172px; border:2px solid ${temp[i][3]};">
 				</div>
 				<div class="box-tall" id="${charName + '_Container'}" style="position:relative">
-					<img src="${charSrc}" class="Player" height="172" width="136">
+					<img src="${charSrc}" id="${charName + '_Image'}" class="Player" height="172" width="136">
 					<div class="box-long" style="column-gap:10px">
 						<p style="margin:5px; color:white;">L: ${selected_characters[i].level}</p>
 						<input type="number" id="${charName + '_Score'}" class="attribute-input">
@@ -303,7 +305,7 @@ function addEnemy(array_type) {
 	enemyBoxContainer.innerHTML = `
 	<div class="box-long" style="column-gap:5px;">
 		<div class="box-tall" id="${enemy.name}" style="position:relative">
-			<img src="${enemySrc}" class="enemy-image">
+			<img src="${enemySrc}" id="${enemy.name + '_Image'}" class="enemy-image">
 			<img class="enemy-delete" onclick="removeEnemy(${enemy.name})">
 			<input type="number" class="enemy-ID" id="${enemy.name + '_Standee'}">
 			<div class="box-long" style="column-gap:5px;">

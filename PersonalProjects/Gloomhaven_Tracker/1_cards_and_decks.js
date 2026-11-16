@@ -169,16 +169,17 @@ function shuffleModifierDeck() {
 	modDeckOld.src = "./Images/AttackModifiers/Back.png";
 
 	//Reset All Cards to Useable
-	for (i=0; i<modifier_deck[1].length; i++) {
-		modifier_deck[0].push(modifier_deck[1].shift())
+	if (modifier_deck[1]) {
+		modifier_deck[0].push(...modifier_deck[1])
+		modifier_deck[1] = [];
 	}
 	if (modifier_deck[2]) {
 		modifier_deck[0].push(modifier_deck[2]);
-		modifier_deck[2] = [];
+		modifier_deck[2] = null;
 	}
 	if (modifier_deck[3]) {
 		modifier_deck[0].push(modifier_deck[3]);
-		modifier_deck[3] = [];
+		modifier_deck[3] = null;
 	}
 
 	//Reset Attack Values

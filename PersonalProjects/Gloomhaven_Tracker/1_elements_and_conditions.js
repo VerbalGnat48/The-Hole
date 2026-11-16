@@ -159,22 +159,106 @@ function addCondition(conBox, condition, target) {
 	else {
 		//Add to Array
 		conBox.push(condition.id);
-		//Add to Box
+
+		//Add to Box Viual
 		var clonedCondition = condition.cloneNode(true);
 		clonedCondition.id = target.id.split("_")[0] + "_" + condition.id;
+
+		//Check if Player or Enemy
+		var splitCount = target.id.split("_").length - 1;
+		if (splitCount > 0) {
+			clonedCondition.id = target.id.split("_")[0] + "_" + target.id.split("_")[1] + "_" + condition.id;
+		}
 		clonedCondition.style.height = "35px";
 		target.appendChild(clonedCondition);
+		
+		//Add to Box 2
+		if (conditions[0].includes(condition.id) ) {
+			person.posCons.append(condition.id);
+		}
+		else if (conditions[1].includes(condition.id) ) {
+			person.negCons.append(condition.id);
+		}
+		
 	}
 }
 
 function removeCondition(conBox, condition, target) {
-	document.getElementById(target.id.split("_")[0] + "_" + condition.id).remove();
+	//Doom
+	if (condition.id.includes("Doom") ) {
+		doomCounter--;
+	}
+	//Plague
+	if (condition.id.includes("Plague") ) {
+		plagueCounter--;
+	}
+	document.getElementById(target.id.substring(0, target.id.lastIndexOf("_") ) + "_" + condition.id).remove();
 	for (i=0; i<conBox.length; i++) {
 		if (conBox[i] === condition.id) {
 			conBox.splice(i, 1);
 		}
 	}
 }
+
+
+document.addEventListener('click', function(event) {
+	//Get Element under mouse that i sbeing targetted
+	const clickedElement = event.target;
+	const isCtrlOrCmd = event.ctrlKey || event.metaKey;
+	var name = clickedElement.id;
+	var con = name.slice(name.lastIndexOf("_") + 1);
+
+	//If conditionsMode then add condition to new clicked target
+	if (conditionsMode && (name.includes("_Conditions") || name.includes("_Image") ) ) {
+		//Get Name
+		var target = document.getElementById(name.substring(0, name.lastIndexOf("_") ) + "_Conditions" );
+		var person = all_people.find(user => user.name === target.id.replace("_Conditions", "") );
+		var condition = document.getElementById(conditionMod);
+
+		//If Pos
+		if (conditions[0][1].includes(conditionMod) ) {
+			addCondition(person.posCons, condition, target)
+		}
+		//If Neg
+		else if (conditions[1][1].includes(conditionMod) ) {
+			addCondition(person.negCons, condition, target)
+		}
+	}
+
+	else if (conditions[0][1].includes(con) || conditions[1][1].includes(con) ) {
+		//If grabbing a condition from the left side set conditionMode
+		if (clickedElement.parentElement.id == "Conditions") {
+			//Set Cursor to Condition
+			document.documentElement.style.cursor = `url("${ './Images/Icons/Cursors/' + name + '_Cursor.png' }"), auto`;
+			conditionMod = name;
+			conditionsMode = true;
+		}
+
+		//Remove condition on click if in a "Conditions" box
+		else if (clickedElement.parentElement.id.includes("_Conditions") ) {
+			//Get Name
+			var name02 = name.substring(0, name.lastIndexOf("_") );
+			var person = all_people.find(user => user.name === name02.replace("_Conditions", "") );
+			var condition = document.getElementById(con);
+
+			//If Pos
+			if (conditions[0][1].includes(con) ) {
+				removeCondition(person.posCons, condition, clickedElement)
+			}
+			//If Neg
+			else if (conditions[1][1].includes(con) ) {
+				removeCondition(person.negCons, condition, clickedElement)
+			}
+		}
+	}
+});
+
+
+
+
+
+
+
 
 
 

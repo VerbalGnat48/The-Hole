@@ -315,7 +315,7 @@ document.addEventListener('click', function(event) {
 		}
 
 		//Get Targets Shield
-		var shield = document.getElementById(target.id + "_Shield");
+		var shield = document.getElementById(target.id + "_Shield").textContent;
 
 		//Everything else if not dead
 		if (target && Number(healthValue) != 0 ) {
@@ -332,7 +332,7 @@ document.addEventListener('click', function(event) {
 			}
 
 			//Apply Posion Damage
-			if (all_people[index].negCons.includes("Posion") ) {
+			if (all_people[index].negCons.includes("Poison") ) {
 				attackValue++;
 				if (crit) { attackValue++; }
 			}
@@ -360,7 +360,7 @@ document.addEventListener('click', function(event) {
 			}
 
 			//If Health > 0
-			if (newHealth !== 0) {
+			if (newHealth > 0) {
 				//Calculate Shield
 				if (shield !== 0) {
 					attackValue -= shield;
@@ -375,7 +375,7 @@ document.addEventListener('click', function(event) {
 			
 				//Attack
 				for (i=1; i<=attackValue; i++) {
-					newHealth = newHealth - 1;
+					newHealth--;
 					if (newHealth === 0) { break; }
 				}
 			}
@@ -404,10 +404,8 @@ document.addEventListener('click', function(event) {
 				if (selectedModifier.id.includes("Old") ) { jndex = 3; }
 				else { jndex = 2; }
 
-console.log(selectedModifier);
-console.log(modifier_deck[jndex]);
-				if (modifier_deck[jndex].effect === "Heal") {
-					var standee = all_people.find(user => user.name === highlightedTarget.id);
+				if (modifier_deck[jndex].name.includes("Heal") ) {
+					var standee = all_people.find(user => user.name === attacker);
 					var sH = Number(highlightedTarget.textContent);
 					if (sH < standee.maxHealth) {
 						highlightedTarget.textContent = sH++;
