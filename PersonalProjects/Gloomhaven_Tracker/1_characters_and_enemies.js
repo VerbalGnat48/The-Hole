@@ -6,6 +6,8 @@ var levelFlag = false;
 var inRound = 0;
 var crit = false;
 var conditionMod;
+var playerPierce = false;
+var playerCrit = false;
 
 var attackMode = false;
 var healMode = false;

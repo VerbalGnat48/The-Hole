@@ -49,6 +49,20 @@ function subAttribute(element) {
 	selected.textContent = attribute;
 }
 
+function addPierce() {
+	var selected = document.getElementById("playerPierce");
+	var attribute = Number(selected.textContent);
+	attribute++;
+	selected.textContent = attribute;
+}
+
+function subPierce() {
+	var selected = document.getElementById("playerPierce");
+	var attribute = Number(selected.textContent);
+	attribute--;
+	selected.textContent = attribute;
+}
+
 function applyCardAttackAction() {
 	action_conditions = [];
 	var action = action_array[0];
@@ -351,8 +365,18 @@ document.addEventListener('click', function(event) {
 			}
 
 			//Pierce from Score Card
-			if (cardPierce > 0) {
+			if (cardPierce > 0 && newHealth > 0) {
 				for (i=1; i<=cardPierce; i++) {
+					newHealth--;
+					attackValue--;
+					if (newHealth === 0 || attackValue === 0) { break; }
+				}
+			}
+
+			//Apply Pierce from Player to Enemy if that is the attack order
+			if (playerPierce && !enemyAttack && newHealth > 0) {
+				var pierce = Number(document.getElementById("playerPierce").textContent);
+				for (i=1; i<=pierce; i++) {
 					newHealth--;
 					attackValue--;
 					if (newHealth === 0 || attackValue === 0) { break; }
@@ -431,7 +455,19 @@ document.addEventListener('click', function(event) {
 
 
 
-
+//Other
+function playerPierceToggle(ID) {
+	var button = document.getElementById(ID);
+	if (playerPierce) {
+		playerPierce = false;
+		button.style.border = "none";
+	}
+	else {
+		playerPierce = true;
+		button.style.border = "3px solid chartreuse";
+		button.style.borderRadius = "50%";
+	}
+}
 
 
 //Switch Case for Conditions
