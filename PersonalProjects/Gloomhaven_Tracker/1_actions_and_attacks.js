@@ -67,7 +67,16 @@ function applyCardAttackAction() {
 	action_conditions = [];
 	var action = action_array[0];
 	
+console.log(action);
+
 	if (action) {
+		//Reset Atack Values
+		var person = enemy_stat_cards.find(user => user.name === score_array[0][0].split("_")[0]);
+		var nAction = document.getElementById(score_array[0][0].split("_")[0] + "_Action_nAttack");
+		var eAction = document.getElementById(score_array[0][0].split("_")[0] + "_Action_eAttack");
+		nAction.textContent = Number(person.nAttack);
+		eAction.textContent = Number(person.eAttack);
+
 		//If Attack and No Consume
 		if (action.includes("Attack") && !action.includes("Consume") ) {
 			//If Attack has Pierce
@@ -161,7 +170,7 @@ function applyCardAttackAction() {
 				var infuse = document.getElementById(action.split(":")[2]);
 
 				//If Strong does not have Infusion then Infuse
-				if (!strong.querySelector(`[id*="${infuse}"]`) != null) {
+				if (!strong.querySelector(`[id*="${infuse.id}"]`)) {
 					//Randomly Choose an active Element to Consume
 					var chosen = getRandomElement();
 					moveElementTo(chosen, "Inert");
@@ -175,7 +184,7 @@ function applyCardAttackAction() {
 				var consume = document.getElementById(action.split(":")[1]);
 
 				//Check if Consumed Element is in Inert, if not then procced
-				if(!inert.querySelector(`[id*="${consume}"]`) != null) {
+				if(!inert.querySelector(`[id*="${consume.id}"]`)) {
 					var index = enemy_score_cards.findIndex(row => row.includes(highlightedTarget.id.split("_")[0]));
 					//To Suffer
 					if (action.includes("Suffer") ) {
@@ -421,14 +430,24 @@ document.addEventListener('click', function(event) {
 				}
 			}
 
+			//Negative Conditions from Action Conditions
+			for (i=0; i<action_conditions.length; i++) {
+				//If target does not have the confition apply it
+				if (action_conditions[i] && !all_people[index].negCons.includes(action_conditions[i]) ) {
+					var condition = document.getElementById(action_conditions[i]);
+					var targetBox = document.getElementById(all_people[index].name + "_Conditions");
+					addCondition(all_people[index].negCons, condition, targetBox);
+				}
+			}
+
 			//Apply Condition from Attack Modifier Deck if Applicable
 			if (enemyAttack) {
 				//Determine what card to use
 				var jndex = 0;
-				if (selectedModifier.id.includes("Old") ) { jndex = 3; }
+				if (selectedModifier && selectedModifier.id.includes("Old") ) { jndex = 3; }
 				else { jndex = 2; }
 
-				if (modifier_deck[jndex].name.includes("Heal") ) {
+				if (modifier_deck && modifier_deck[jndex].name.includes("Heal") ) {
 					var standee = all_people.find(user => user.name === attacker);
 					var sH = Number(highlightedTarget.textContent);
 					if (sH < standee.maxHealth) {

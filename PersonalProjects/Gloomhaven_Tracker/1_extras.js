@@ -77,6 +77,17 @@ function startRound() {
 	//
 	endOfRound = false;
 	inRound = true;
+
+	//Do Wound
+	var person = all_people.find(user => user.name === score_array[0][0]);
+	if (person.negCons.includes("Wound") ) {
+		var target = document.getElementById(person.name + "_Health");
+		var health = Number(target.textContent);
+		if (health > 0) {
+			health--;
+		}
+		target.textContent = health;
+	}
 }
 
 
@@ -159,6 +170,15 @@ function nextAction() {
 				}
 				
 				//Do Wound
+				var person = all_people.find(user => user.name === score_array[0][0]);
+				if (person.negCons.includes("Wound") ) {
+					var target = document.getElementById(person.name + "_Health");
+					var health = Number(target.textContent);
+					if (health > 0) {
+						health--;
+					}
+					target.textContent = health;
+				}
 				
 				//Set Actions
 				setActionArray(score_array[0]);
