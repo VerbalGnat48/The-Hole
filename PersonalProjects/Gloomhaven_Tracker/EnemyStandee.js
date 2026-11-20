@@ -17,5 +17,6 @@ class EnemyStandee {
 
 		this.summoned = summoned;
 		this.number = 0;
+		this.midRound = false;
 	}
 }

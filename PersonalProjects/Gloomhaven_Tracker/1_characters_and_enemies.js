@@ -10,6 +10,7 @@ var playerPierce = false;
 var playerCrit = false;
 
 var attackMode = false;
+var attackerType = null;
 var healMode = false;
 var conditionsMode = false;
 
@@ -20,6 +21,7 @@ var action_array = [];
 var action_conditions = [];
 var score_array = [];
 var all_people = [];
+var temp_score_array = [];
 
 var follower;
 follower = document.createElement('div');
@@ -302,6 +304,11 @@ function addEnemy(array_type) {
 			}
 			enemy_standees.push(new EnemyStandee(enemies[i], level, enemyType, enemyNumber, wasSummoned, selected_characters.length) );
 			enemy = enemy_standees.at(-1);
+
+			//If middle of round stuff
+			if (inRound) {
+				enemy_standees.at(-1).midRound = true;
+			}
 		}
 	}
 
@@ -391,7 +398,7 @@ function addEnemy(array_type) {
 							</div>
 						</div>
 						<div class="box-long">
-							<img src="./Images/Icons/Attack_Elite.png" id="${eActionName + '_eAttack_Btn'}" onclick="enemyAttack(this.id)" class="action-Btn" style="height:35px;">
+							<img src="./Images/Icons/Attack_Elite.png" id="${eActionName + '_eAttack_Btn'}" onclick="Attack(this.id)" class="action-Btn" style="height:35px;">
 							<p id="${eActionName + '_eAttack'}" class="attribute-input" style="font-size:20px; color:gold;border-color:gold">${enemy.eAttack}</p>
 							<div class="box-tall">
 								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_eAttack'})" style="width:10px;height:10px; cursor:pointer;">
@@ -415,12 +422,40 @@ function addEnemy(array_type) {
 		if (enemy.eCon02 != 0) { makeStatCardsConditions(enemy, "Elite", enemy.eCon02); }
 
 		//Flip newly added enemy card if in middle of round
-//		if (inRound) {
-//			var eCard = document.getElementById(eCardName);
-//			flipEnemy(eCard);
-//			eCard.dataset.middle = "2";
-//		}
-	
+		if (inRound) {
+			var eCard = document.getElementById(eCardName);
+			flipScoreCard(eCard);
+		}
+
 	}
 }
+
+document.addEventListener('input', (event) => {
+	if (event.target.matches('.enemy-ID')) {
+		if (inRound) {
+			//Get Enemy Scores
+			for (i=0; i<enemy_standees.length; i++) {
+				var index = enemy_score_cards.findIndex(row => row.includes(enemy_standees[i].name.split("_")[0]));
+				var cardScore = enemy_score_cards[index][3][1];
+				//Name, Score 1, Score 2, Player or Enemy, Elite or Normal, Standee Number
+				temp_score_array.push( [enemy_standees[i].name, cardScore, 99, 2, enemy_standees[i].type, enemy_standees[i].number] );
+				all_people.push(enemy_standees[i]);
+			}
+		}
+	}
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

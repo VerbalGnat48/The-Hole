@@ -92,7 +92,7 @@ function startRound() {
 
 	//Make all Summon Enemies Normal
 	for (i=0; i<enemy_standees.length; i++) {
-		enemy_standees[i].summonded = false;
+		enemy_standees[i].summoned = false;
 	}
 
 	//Update Rounnd Tracker Display
@@ -197,11 +197,25 @@ function nextAction() {
 			if (score_array.length > 1) {
 				//If next card has a different score
 				if (score_array[0][1] != score_array[1][1]) {
-					//
+					var previous_scorer = score_array[0][0];
+					score_array.shift();
+
+					score_array.push(...temp_score_array);
+					temp_score_array = [];
+
+					for (let i = score_array.length - 1; i >= 0; i--) {
+						if (score_array[i][0].split("_")[0] === previous_scorer.split("_")[0]) {
+							score_array.splice(i, 1);
+						}
+					}
+
+					score_array.sort( (a,b) => a[1] - b[1] || a[2] - b[2] || a[3] - b[3] || a[4] - b[4] || a[5] - b[5] );
+				}
+				else {
+					score_array.shift();
 				}
 				
 				//Highlight New Card
-				score_array.shift();
 				highlight(score_array[0][0]);
 				found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
 				if (found) { highlight(score_array[0][0].split("_")[0] + "_Card"); }

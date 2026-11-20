@@ -161,7 +161,7 @@ function addCondition(conBox, condition, target, plagueTime) {
 	if (person.posCons.find(con => con.name === "Safeguard") && conditions[1][1].includes(condition.id) ) {
 		removeCondition(person.posCons, "Safeguard", name)
 	}
-	else if (posNotHas === undefined && (negNotHas === undefined || plagueTime ) ) {
+	else if (posNotHas === undefined && (negNotHas === undefined || plagueTime ) && condition && !condition.id.includes("Pierce") ) {
 		//Add to Box Visual
 		var clonedCondition = condition.cloneNode(true);
 		clonedCondition.id = name + "_" + condition.id;

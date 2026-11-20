@@ -16,6 +16,11 @@ function Attack(Id) {
 		var attackValue = document.getElementById(name + "_" + Id.split("_")[1] + "_" + Id.split("_")[2]);
 		enemyAttack = true;
 		attacker = name;
+		attackerType = 1;
+		//Set attacker type to elite
+		if (Id.split("_")[2].at(0) === "e" ) {
+			attackerType = 2;
+		}
 	}
 
 	//If <2 then Player
@@ -24,6 +29,7 @@ function Attack(Id) {
 		var attackValue = document.getElementById(name + "_" + action);
 		enemyAttack = false;
 		attacker = null;
+		attackerType = null;
 	}
 
 	//Set Cursor
@@ -342,8 +348,16 @@ document.addEventListener('click', function(event) {
 			}
 
 			//If Enemy has status conditions to inflict grab them
-			applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon01) );
-			applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon02) );	
+			//Normal Enemy Attack
+			if (attackerType === 1) {
+				applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon01) );
+				applied_conditions.push(getStatConditions(enemy_stat_cards[index].nCon02) );	
+			}
+			//Elite Enemy Attack
+			else if (attackerType === 2) {
+				applied_conditions.push(getStatConditions(enemy_stat_cards[index].eCon01) );
+				applied_conditions.push(getStatConditions(enemy_stat_cards[index].eCon02) );	
+			}
 		}
 
 		//If Player Attacking Enemy
@@ -381,7 +395,7 @@ document.addEventListener('click', function(event) {
 			for (i=0; i<applied_conditions.length; i++) {
 				//Pierce from Stat Card
 				if (applied_conditions[i] && applied_conditions[i].includes("Pierce") ) {
-					var piere = Number(applied_conditions[i].at(-1));
+					var pierce = Number(applied_conditions[i].at(-1));
 					for (i=1; i<=pierce; i++) {
 						newHealth--;
 						attackValue--;
