@@ -67,8 +67,6 @@ function applyCardAttackAction() {
 	action_conditions = [];
 	var action = action_array[0];
 	
-console.log(action);
-
 	if (action) {
 		//Reset Atack Values
 		var person = enemy_stat_cards.find(user => user.name === score_array[0][0].split("_")[0]);
@@ -423,9 +421,7 @@ document.addEventListener('click', function(event) {
 				if (all_people[index].posCons.find(con => con.name === "Ward") ) {
 					attackValue = Math.floor(attackValue / 2);
 					//Remove Ward
-					var ward = document.getElementById("Ward");
-					var targetBox = document.getElementById(all_people[index].name + "_Conditions");
-					removeCondition(all_people[index].posCons, ward, targetBox);
+					removeCondition(all_people[index].posCons, "Ward", (all_people[index].name) );
 				}
 			
 				//Attack

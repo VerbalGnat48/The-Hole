@@ -184,7 +184,7 @@ function makeSelectedCharacters() {
 				<div class="box-tall" style="row-gap:15px;">
 					<div class="box-long">
 						<img src="./Images/Icons/Attack.png" id="${charName + '_Attack_Btn'}" onclick="Attack(this.id)" class="action-Btn">
-						<p id="${charName + '_Attack'}" class="attribute-input">0</p>
+						<p id="${charName + '_Attack'}" class="attribute-input">2</p>
 						<div class="box-tall">
 							<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${charName + '_Attack'})" style="width:10px;height:10px; cursor:pointer;">
 							<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${charName + '_Attack'})" style="width:10px;height:10px; rotate:180deg; cursor:pointer;">
@@ -215,6 +215,7 @@ function makeSelectedCharacters() {
 
 	makeEnemyList();
 	makeEnemyScoreCards();
+	gameSetup();
 }
 
 
@@ -386,7 +387,7 @@ function addEnemy(array_type) {
 							<p id="${eActionName + '_nAttack'}" class="attribute-input" style="font-size:20px;">${enemy.nAttack}</p>
 							<div class="box-tall">
 								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_nAttack'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_nAttack'})" style="width:10px;height:10px; cursor:pointer; rotate:180deg;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${eActionName + '_nAttack'})" style="width:10px;height:10px; cursor:pointer; rotate:180deg;">
 							</div>
 						</div>
 						<div class="box-long">
@@ -394,7 +395,7 @@ function addEnemy(array_type) {
 							<p id="${eActionName + '_eAttack'}" class="attribute-input" style="font-size:20px; color:gold;border-color:gold">${enemy.eAttack}</p>
 							<div class="box-tall">
 								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_eAttack'})" style="width:10px;height:10px; cursor:pointer;">
-								<img src="./Images/Icons/Arrow.png" onclick="addAttribute(${eActionName + '_eAttack'})" style="width:10px;height:10px; cursor:pointer; rotate:180deg;">
+								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${eActionName + '_eAttack'})" style="width:10px;height:10px; cursor:pointer; rotate:180deg;">
 							</div>
 						</div>
 						<img src="./Images/Icons/Shuffle.png" onclick="shuffleScores(${eCardName})" class="action-Btn" style="height:25px;">

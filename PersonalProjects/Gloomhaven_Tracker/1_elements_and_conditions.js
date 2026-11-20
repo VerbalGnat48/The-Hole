@@ -54,6 +54,8 @@ const conditions = [
 	["Negative", ["Wound", "Poison", "Immobilize", "Disarm", "Stun", "Muddle", "Plague", "Doom"] ],
 ];
 
+const permanant_conditions = ["Wound", "Poison", "Doom", "Plague", "Safeguard", "Ward"];
+
 function makeStatCardsConditions(enemy, enemyType, conNum) {
 	//Get Enemy Stat Column to Apply Condition to
 	var enemyStatColumn = document.getElementById(enemy.name + "_Stat_" + enemyType);
@@ -157,26 +159,31 @@ function addCondition(conBox, condition, target, plagueTime) {
 	var negNotHas = person.negCons.find(con => con.name === condition.id);
 
 	if (person.posCons.find(con => con.name === "Safeguard") && conditions[1][1].includes(condition.id) ) {
-		var safeguard = document.getElementById("Safeguard");
-		removeCondition(person.posCons, safeguard, target)
+		removeCondition(person.posCons, "Safeguard", name)
 	}
 	else if (posNotHas === undefined && (negNotHas === undefined || plagueTime ) ) {
 		//Add to Box Visual
 		var clonedCondition = condition.cloneNode(true);
-		clonedCondition.id = target.id.split("_")[0] + "_" + condition.id;
+		clonedCondition.id = name + "_" + condition.id;
 
 		//Check if Player or Enemy
-		var splitCount = target.id.split("_").length - 1;
+		var splitCount = name.split("_").length - 1;
 		if (splitCount > 0) {
-			clonedCondition.id = target.id.split("_")[0] + "_" + target.id.split("_")[1] + "_" + condition.id;
+			clonedCondition.id = name.split("_")[0] + "_" + name.split("_")[1] + "_" + condition.id;
 		}
 		clonedCondition.style.height = "35px";
 		target.appendChild(clonedCondition);
 
 		//Timer
 		var timer = 1;
+
+		//If turing turn set timer so that condition lasts until end of next turn
 		if (highlightedTarget && name === highlightedTarget.id) {
-			var timer = 2;
+			timer = 2;
+		}
+		//Make condition functionally permanent
+		if (permanant_conditions.includes(condition.id) ) {
+			timer = 99;
 		}
 		
 		//Add to Box 2
@@ -198,18 +205,18 @@ function addCondition(conBox, condition, target, plagueTime) {
 
 function removeCondition(conBox, condition, target) {
 	//Remove Visual Condition
-	document.getElementById(target.id.substring(0, target.id.lastIndexOf("_") ) + "_Conditions" ).querySelector(`[id*="${condition.id}"]`).remove();
+	document.getElementById(target + "_" + condition).remove();
 
 	//Remove Data Condition
 	for (i=0; i<conBox.length; i++) {
-		if (conBox[i].name === condition.id) {
+		if (conBox[i].name === condition) {
 			conBox.splice(i, 1);
 			//Doom
-			if (condition.id.includes("Doom") ) {
+			if (condition.includes("Doom") ) {
 				doomCounter--;
 			}
 			//Plague
-			if (condition.id.includes("Plague") ) {
+			if (condition.includes("Plague") ) {
 				plagueCounter--;
 			}
 		}
@@ -249,15 +256,14 @@ document.addEventListener('click', function(event) {
 			//Get Name
 			var name02 = name.substring(0, name.lastIndexOf("_") );
 			var person = all_people.find(user => user.name === name02.replace("_Conditions", "") );
-			var condition = document.getElementById(con);
 
 			//If Pos
 			if (conditions[0][1].includes(con) ) {
-				removeCondition(person.posCons, condition, clickedElement)
+				removeCondition(person.posCons, con, person.name)
 			}
 			//If Neg
 			else if (conditions[1][1].includes(con) ) {
-				removeCondition(person.negCons, condition, clickedElement)
+				removeCondition(person.negCons, con, person.name)
 			}
 		}
 	}

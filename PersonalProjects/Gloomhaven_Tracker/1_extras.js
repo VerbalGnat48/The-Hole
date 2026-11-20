@@ -49,6 +49,8 @@ document.addEventListener('input', (event) => {
 	}
 });
 
+
+//Setting Up the Battale Page
 addEventListener('change', (event) => {
 	if (event.target.id === "Imbuements") {
 		imbuementLevel = event.target.value;
@@ -56,10 +58,37 @@ addEventListener('change', (event) => {
 	}
 });
 
+
+//Game Setup
+function gameSetup() {
+	//Hide Plague if Plagueherald was not selected
+	if (!selected_characters.find(person => person.name.includes("Plagueherald") ) ) {
+		document.getElementById("Plague").style.display = "none";
+	}
+
+	//Hide Doom if no Doomstalker was not selected
+	if (!selected_characters.some(person => person.name.includes("Doomstalker") ) ) {
+		document.getElementById("Doom").style.display = "none";
+	}
+
+	//Set default Enemy Level
+	var ESLE = document.getElementById("Enemy_Selector_Levels");
+	var totalPlayers = selected_characters.length;
+	var total = 0;
+	for (i=0; i<selected_characters.length; i++) {
+		total = total + Number(selected_characters[i].level);
+	}
+	ESLE.value = Math.ceil( Math.ceil(total / totalPlayers) / 2);
+}
+
+
 function startRound() {
 	//Un-Highlight "Start Round" Button
 	var press = document.getElementById("Next_Round_Btn");
 	press.style.color = "white";
+
+	//Un-Highlight Selected Modifier
+	if (selectedModifier) { selectedModifier.style.border = "none"; }
 
 	//Make all Summon Enemies Normal
 	for (i=0; i<enemy_standees.length; i++) {
@@ -70,13 +99,13 @@ function startRound() {
 	var tracker = document.getElementById("Round_Tracker");
 	tracker.textContent = Number(tracker.textContent) + 1;
 
-	//
+	//Move Elements Down
+	moveElementsFrom("Waning", "Inert");
+	moveElementsFrom("Strong", "Waning");
+
+	//Flip and Score
 	flipAllScoreCards();
 	startingScores();
-
-	//
-	endOfRound = false;
-	inRound = true;
 
 	//Do Wound
 	var person = all_people.find(user => user.name === score_array[0][0]);
@@ -88,6 +117,10 @@ function startRound() {
 		}
 		target.textContent = health;
 	}
+
+	//
+	endOfRound = false;
+	inRound = true;
 }
 
 
@@ -132,7 +165,27 @@ function startingScores() {
 function nextAction() {
 	if (score_array.length > 0) {
 		//No New Action, hightlight next guy
-		if (action_array.length == 0) {
+		if (action_array.length === 0) {
+
+			//Subtract 1 from the current highlighted targets conditions and remove if timer = 0
+			if (highlightedTarget !== null) {
+				var person = all_people.find(user => user.name === score_array[0][0]);
+				//Pos
+				for (let i = person.posCons.length - 1; i >= 0; i--) {
+					person.posCons[i].timer--;
+					if (person.posCons[i].timer === 0) {
+						removeCondition(person.posCons, person.posCons[i].name, person.name);
+					}
+				}
+				//Neg
+				for (let i = person.negCons.length - 1; i >= 0; i--) {
+					person.negCons[i].timer--;
+					if (person.negCons[i].timer === 0) {
+						removeCondition(person.negCons, person.negCons[i].name, person.name);
+					}
+				}
+			}
+
 			//Unhighlight Current Card
 			unHighlight(score_array[0][0]);
 			var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
@@ -191,6 +244,9 @@ function nextAction() {
 			applyCardAttackAction()
 			var card = document.getElementById(score_array[0][0].split("_")[0] + "_Action_Next");
 			card.textContent = Number(card.textContent) + 1;
+
+			//Un-Highlight Selected Modifier
+			if (selectedModifier) { selectedModifier.style.border = "none"; }
 		}
 	}
 	else {
@@ -233,8 +289,13 @@ document.addEventListener('keydown', (event) => {
 	//Activate Once
 	if (event.repeat) return;
 
+	//Start Game on Enter
+	if (event.key === 'Enter') {
+		startRound();
+	}
+
 	//Clear Pointer on Esc
-	if (event.key === 'Escape') {
+	else if (event.key === 'Escape') {
 		document.documentElement.style.cursor = "default";
 		conditionMod = null;
 		follower.style.display = "none";
@@ -243,8 +304,13 @@ document.addEventListener('keydown', (event) => {
 		conditionsMode = false;
 	}
 
+	//Next Turn/Action on Q
+	else if (event.key === 'q' || event.key === 'Q') {
+		nextAction();
+	}
+
 	//Enter Attack mode
-	if (event.key === 'a' || event.key === 'A') {
+	else if (event.key === 'a' || event.key === 'A') {
 		//Set Array
 		var Id = highlightedTarget.id;
 		var name = Id.split("_")[0];

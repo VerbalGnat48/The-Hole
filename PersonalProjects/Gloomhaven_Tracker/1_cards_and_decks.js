@@ -205,24 +205,28 @@ function modifyModifierDeck(action) {
 }
 
 function addAttackModifier(mod_card, Id) {
-	//Reset Attack Values
+	//Grab Cards
 	crit = false;
 	for (i=0; i<enemy_score_cards.length; i++) {
 		var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
 		var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
-		nAction.textContent = enemy_stat_cards[i].nAttack;
-		eAction.textContent = enemy_stat_cards[i].eAttack;
+//		nAction.textContent = enemy_stat_cards[i].nAttack;
+//		eAction.textContent = enemy_stat_cards[i].eAttack;
 
 		//Add Modifier Value
 		//If Normal
 		if (mod_card.effect != "Null" && mod_card.effect != "Curse" && mod_card.effect != "Crit" && mod_card.effect != "Bless" ) {
 			nAction.textContent = Number(nAction.textContent) + Number(mod_card.value);
 			eAction.textContent = Number(eAction.textContent) + Number(mod_card.value);
+			if (Number(nAction.textContent) < 0) { nAction.textContent = 0; }
+			if (Number(eAction.textContent) < 0) { eAction.textContent = 0; }
 		}
 		//If Crit/Bless
 		else if (mod_card.effect === "Crit" || mod_card.effect === "Bless" ) {
 			nAction.textContent = Number(nAction.textContent) + Number(nAction.textContent);
 			eAction.textContent = Number(eAction.textContent) + Number(eAction.textContent);
+			if (Number(nAction.textContent) < 0) { nAction.textContent = 0; }
+			if (Number(eAction.textContent) < 0) { eAction.textContent = 0; }
 			crit = true;
 		}
 	}
