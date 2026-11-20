@@ -294,6 +294,25 @@ console.log(action);
 				}
 			}
 		}
+
+		//Infuse
+		else if (action.includes("Infuse") ) {
+			//Randomly Choose an Active Element to Infuse
+			if (action.split(":")[1].includes("Any") ) {
+				var random = getRandomIntInclusive(0, 5);
+				moveElementTo(elements[random], "Strong");
+			}
+			//Infuse All
+			if (action.split(":")[1].includes("All") ) {
+				moveElementsFrom("Inert", "Waning");
+				moveElementsFrom("Waning", "Strong");
+			}
+			//Normal Infuse
+			else {
+				var element = document.getElementById(action.split(":")[1]);
+				moveElementTo(element.id, "Strong");
+			}
+		}
 	}
 }
 
@@ -355,7 +374,7 @@ document.addEventListener('click', function(event) {
 			}
 
 			//Apply Posion Damage
-			if (all_people[index].negCons.includes("Poison") ) {
+			if (all_people[index].negCons.find(con => con.name === "Poison") ) {
 				attackValue++;
 				if (crit) { attackValue++; }
 			}
@@ -401,9 +420,12 @@ document.addEventListener('click', function(event) {
 				}
 
 				//Calculate Ward (half incoming damage and round up is removed)
-				if (all_people[index].negCons.includes("Ward") ) {
+				if (all_people[index].posCons.find(con => con.name === "Ward") ) {
 					attackValue = Math.floor(attackValue / 2);
-					//remove ward
+					//Remove Ward
+					var ward = document.getElementById("Ward");
+					var targetBox = document.getElementById(all_people[index].name + "_Conditions");
+					removeCondition(all_people[index].posCons, ward, targetBox);
 				}
 			
 				//Attack
@@ -423,7 +445,7 @@ document.addEventListener('click', function(event) {
 			//Negative Conditions from Applied Conditions
 			for (i=0; i<applied_conditions.length; i++) {
 				//If target does not have the confition apply it
-				if (applied_conditions[i] && !all_people[index].negCons.includes(applied_conditions[i]) ) {
+				if (applied_conditions[i] && !all_people[index].negCons.find(con => con.name === applied_conditions[i]) ) {
 					var condition = document.getElementById(applied_conditions[i]);
 					var targetBox = document.getElementById(all_people[index].name + "_Conditions");
 					addCondition(all_people[index].negCons, condition, targetBox);
@@ -433,7 +455,7 @@ document.addEventListener('click', function(event) {
 			//Negative Conditions from Action Conditions
 			for (i=0; i<action_conditions.length; i++) {
 				//If target does not have the confition apply it
-				if (action_conditions[i] && !all_people[index].negCons.includes(action_conditions[i]) ) {
+				if (action_conditions[i] && !all_people[index].negCons.find(con => con.name === action_conditions[i]) ) {
 					var condition = document.getElementById(action_conditions[i]);
 					var targetBox = document.getElementById(all_people[index].name + "_Conditions");
 					addCondition(all_people[index].negCons, condition, targetBox);
@@ -447,19 +469,21 @@ document.addEventListener('click', function(event) {
 				if (selectedModifier && selectedModifier.id.includes("Old") ) { jndex = 3; }
 				else { jndex = 2; }
 
-				if (modifier_deck && modifier_deck[jndex].name.includes("Heal") ) {
-					var standee = all_people.find(user => user.name === attacker);
-					var sH = Number(highlightedTarget.textContent);
-					if (sH < standee.maxHealth) {
-						highlightedTarget.textContent = sH++;
+				if (modifier_deck[jndex]) {
+					if (modifier_deck[jndex].name.includes("Heal") ) {
+						var standee = all_people.find(user => user.name === attacker);
+						var sH = Number(highlightedTarget.textContent);
+						if (sH < standee.maxHealth) {
+							highlightedTarget.textContent = sH++;
+						}
 					}
-				}
-				else {
-					//If target does not have the confition apply it
-					if (!all_people[index].negCons.includes(modifier_deck[jndex].effect) ) {
-						var condition = document.getElementById(modifier_deck[jndex].effect);
-						var targetBox = document.getElementById(all_people[index].name + "_Conditions");
-						addCondition(all_people[index].negCons, condition, targetBox);
+					else {
+						//If target does not have the confition apply it
+						if (!all_people[index].negCons.find(con => con.name === modifier_deck[jndex].effect) ) {
+							var condition = document.getElementById(modifier_deck[jndex].effect);
+							var targetBox = document.getElementById(all_people[index].name + "_Conditions");
+							addCondition(all_people[index].negCons, condition, targetBox);
+						}
 					}
 				}
 			}

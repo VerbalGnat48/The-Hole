@@ -54,8 +54,6 @@ const conditions = [
 	["Negative", ["Wound", "Poison", "Immobilize", "Disarm", "Stun", "Muddle", "Plague", "Doom"] ],
 ];
 
-const nextTurnConditions = ["Strengthen", "Invisible", "Muddle", "Immobilize", "Disarm", "Stun"];
-
 function makeStatCardsConditions(enemy, enemyType, conNum) {
 	//Get Enemy Stat Column to Apply Condition to
 	var enemyStatColumn = document.getElementById(enemy.name + "_Stat_" + enemyType);
@@ -104,7 +102,12 @@ function dropConditionHandler(ev) {
 	//Get Target in Score Array
 	var name = ev.target.id.replace("_Conditions", "");
 	var person = all_people.find(user => user.name === name);
+	
+	//Condition Time
+	preAddConditions(person, condition, ev.target);
+}
 
+function preAddConditions(person, condition, target) {
 	//Too Many Doom
 	if (condition.id === "Doom" && doomCounter > 0) {
 		console.log("Doom to many");
@@ -113,11 +116,11 @@ function dropConditionHandler(ev) {
 	//Add Doom
 	else if (condition.id === "Doom" && doomCounter < 1) {
 		doomCounter++;
-		addCondition(person.negCons, condition, ev.target);
+		addCondition(person.negCons, condition, target, false);
 	}
 
 	//Too Many Plauge
-	else if (condition.id === "Plague" && plagueCounter >= 13) {
+	else if (condition.id === "Plague" && plagueCounter >= 12) {
 		console.log("Plague to many");
 	}
 
@@ -125,9 +128,8 @@ function dropConditionHandler(ev) {
 	else {
 		//Plauge Check
 		if (condition.id === "Plague" && plagueCounter < 12) {
-			plagueCounter++;
-			if (person.negCons.filter(item => item === "Plague").length < 3 ) {
-				addCondition(person.negCons, condition, ev.target);
+			if (person.negCons.filter(item => item.name === "Plague").length < 3 ) {
+				addCondition(person.negCons, condition, target, true);
 			}
 		}
 
@@ -136,31 +138,30 @@ function dropConditionHandler(ev) {
 			//Check if Positive or Negative Condition
 			if (conditions[0][1].includes(condition.id) && !person.posCons.includes(condition.id) ) {
 				//Apply Pos
-				addCondition(person.posCons, condition, ev.target);
-				console.log(person.posCons);
+				addCondition(person.posCons, condition, target, false);
 			}
 			else if (conditions[1][1].includes(condition.id) && !person.negCons.includes(condition.id) ) {
 				//Apply Neg
-				addCondition(person.negCons, condition, ev.target);
-				console.log(person.negCons);
+				addCondition(person.negCons, condition, target, false);
 			}
 		}
 	}
 }
 
-function addCondition(conBox, condition, target) {
+
+function addCondition(conBox, condition, target, plagueTime) {
 	//Check for Safeguard
 	var name = target.id.replace("_Conditions", "");
 	var person = all_people.find(user => user.name === name);
-	if (person.posCons.includes("Safeguard") ) {
+	var posNotHas = person.posCons.find(con => con.name === condition.id);
+	var negNotHas = person.negCons.find(con => con.name === condition.id);
+
+	if (person.posCons.find(con => con.name === "Safeguard") && conditions[1][1].includes(condition.id) ) {
 		var safeguard = document.getElementById("Safeguard");
 		removeCondition(person.posCons, safeguard, target)
 	}
-	else {
-		//Add to Array
-		conBox.push(condition.id);
-
-		//Add to Box Viual
+	else if (posNotHas === undefined && (negNotHas === undefined || plagueTime ) ) {
+		//Add to Box Visual
 		var clonedCondition = condition.cloneNode(true);
 		clonedCondition.id = target.id.split("_")[0] + "_" + condition.id;
 
@@ -171,38 +172,53 @@ function addCondition(conBox, condition, target) {
 		}
 		clonedCondition.style.height = "35px";
 		target.appendChild(clonedCondition);
+
+		//Timer
+		var timer = 1;
+		if (highlightedTarget && name === highlightedTarget.id) {
+			var timer = 2;
+		}
 		
 		//Add to Box 2
-		if (conditions[0].includes(condition.id) ) {
-			person.posCons.append(condition.id);
+		if (conditions[0][1].includes(condition.id) ) {
+			person.posCons.push(new Condition(condition.id, timer) );
 		}
-		else if (conditions[1].includes(condition.id) ) {
-			person.negCons.append(condition.id);
+		else if (conditions[1][1].includes(condition.id) ) {
+			//Make new Condition
+			person.negCons.push(new Condition(condition.id, timer) );
+
+			//Plague Check
+			if (negNotHas === undefined || plagueTime) {
+				plagueCounter++;
+			}
 		}
 		
 	}
 }
 
 function removeCondition(conBox, condition, target) {
-	//Doom
-	if (condition.id.includes("Doom") ) {
-		doomCounter--;
-	}
-	//Plague
-	if (condition.id.includes("Plague") ) {
-		plagueCounter--;
-	}
-	document.getElementById(target.id.substring(0, target.id.lastIndexOf("_") ) + "_" + condition.id).remove();
+	//Remove Visual Condition
+	document.getElementById(target.id.substring(0, target.id.lastIndexOf("_") ) + "_Conditions" ).querySelector(`[id*="${condition.id}"]`).remove();
+
+	//Remove Data Condition
 	for (i=0; i<conBox.length; i++) {
-		if (conBox[i] === condition.id) {
+		if (conBox[i].name === condition.id) {
 			conBox.splice(i, 1);
+			//Doom
+			if (condition.id.includes("Doom") ) {
+				doomCounter--;
+			}
+			//Plague
+			if (condition.id.includes("Plague") ) {
+				plagueCounter--;
+			}
 		}
 	}
 }
 
 
 document.addEventListener('click', function(event) {
-	//Get Element under mouse that i sbeing targetted
+	//Get Element under mouse that is being targetted
 	const clickedElement = event.target;
 	const isCtrlOrCmd = event.ctrlKey || event.metaKey;
 	var name = clickedElement.id;
@@ -215,19 +231,13 @@ document.addEventListener('click', function(event) {
 		var person = all_people.find(user => user.name === target.id.replace("_Conditions", "") );
 		var condition = document.getElementById(conditionMod);
 
-		//If Pos
-		if (conditions[0][1].includes(conditionMod) ) {
-			addCondition(person.posCons, condition, target)
-		}
-		//If Neg
-		else if (conditions[1][1].includes(conditionMod) ) {
-			addCondition(person.negCons, condition, target)
-		}
+		//Condition Time
+		preAddConditions(person, condition, target);
 	}
 
 	else if (conditions[0][1].includes(con) || conditions[1][1].includes(con) ) {
 		//If grabbing a condition from the left side set conditionMode
-		if (clickedElement.parentElement.id == "Conditions") {
+		if (clickedElement.parentElement.id === "Conditions") {
 			//Set Cursor to Condition
 			document.documentElement.style.cursor = `url("${ './Images/Icons/Cursors/' + name + '_Cursor.png' }"), auto`;
 			conditionMod = name;

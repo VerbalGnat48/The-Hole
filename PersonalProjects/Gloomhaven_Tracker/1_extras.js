@@ -80,7 +80,7 @@ function startRound() {
 
 	//Do Wound
 	var person = all_people.find(user => user.name === score_array[0][0]);
-	if (person.negCons.includes("Wound") ) {
+	if (person.negCons.find(con => con.name === "Wound") ) {
 		var target = document.getElementById(person.name + "_Health");
 		var health = Number(target.textContent);
 		if (health > 0) {
@@ -171,7 +171,7 @@ function nextAction() {
 				
 				//Do Wound
 				var person = all_people.find(user => user.name === score_array[0][0]);
-				if (person.negCons.includes("Wound") ) {
+				if (person.negCons.find(con => con.name === "Wound") ) {
 					var target = document.getElementById(person.name + "_Health");
 					var health = Number(target.textContent);
 					if (health > 0) {
