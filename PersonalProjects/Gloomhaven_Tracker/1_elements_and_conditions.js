@@ -65,7 +65,13 @@ function makeStatCardsConditions(enemy, enemyType, conNum) {
 
 	//Check if Not Pierce
 	if (conNum < 70) {
-		condition = conditions[1][1][conNum - 1];
+		//Curse
+		if (conNum === 9) {
+			condition = "Curse";
+		}
+		else {
+			condition = conditions[1][1][conNum - 1];
+		}
 	}
 	//Check if Pierce
 	else if (conNum > 70 && conNum< 80) {

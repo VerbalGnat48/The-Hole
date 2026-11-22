@@ -24,15 +24,59 @@ function removeElement(ID) {
 	const element = document.getElementById(ID.id);
 }
 
-function removeEnemy(element) {
-	if (element.id.includes("Stat") ) {
-		var index = enemy_stat_cards.indexOf(element.id.split("_")[0]);
-		if (index > -1) { enemy_stat_cards.splice(index,1); }
-		element.parentElement.remove();
+
+function removeStandee(element) {
+	//Get Id
+	var Id = element.id;
+
+	//Remove from score_array
+	if (score_array.length !== 0) {
+		//If deletion target is current highlight do nextAction
+		if (highlightedTarget && highlightedTarget.id == Id) {
+			action_array.length = 0;
+			nextAction();
+		}
+		//Else just remove deletion target
+		else {
+			score_array = score_array.filter(user => user[0] !== Id);
+		}
 	}
-	else {
-		 element.parentElement.remove();
+
+	//Remove from all_people
+	if (all_people.length !== 0) {
+		all_people = all_people.filter(user => user.name !== Id);
 	}
+
+	//Remove from enemy_standees
+	enemy_standees = enemy_standees.filter(user => user.name !== Id);
+
+	//Remove
+	element.parentElement.remove();
+}
+
+
+function removeCard(element) {
+	//Get Id
+	var Id = element.id;
+
+	//Remove any corresponding Standees
+	var peeps = all_people;
+	var name = Id.replace("_Stat","");
+	for (let i = peeps.length - 1; i >= 0; i--) {
+		if (Id.includes(peeps[i].name.split("_")[0] ) ) {
+			var target = document.getElementById(peeps[i].name);
+			removeStandee(target);
+		}
+	}
+
+	//Remove Card from arrays
+	enemy_score_cards = enemy_score_cards.filter(user => user[0] !== name);
+	enemy_stat_cards = enemy_stat_cards.filter(user => user.name !== name);
+
+	//Remove
+	var index = enemy_stat_cards.indexOf(element.id.split("_")[0]);
+	if (index > -1) { enemy_stat_cards.splice(index,1); }
+	element.parentElement.remove();
 }
 
 
@@ -119,7 +163,6 @@ function startRound() {
 	}
 
 	//
-	endOfRound = false;
 	inRound = true;
 }
 
@@ -262,12 +305,27 @@ function nextAction() {
 			//Un-Highlight Selected Modifier
 			if (selectedModifier) { selectedModifier.style.border = "none"; }
 		}
-	}
-	else {
-		//endRound();
-		var found = normal_enemies.flat(Infinity).find(val => val === score_array[0][0].split("_")[0]);
-		if (found) { unHighlight(score_array[0][0].split("_")[0] + "_Card"); }
-		unHighlight(score_array[0][0]);
+
+		//End of Round
+		if (highlightedTarget === null) {
+			//Remove Standees with 0 Health
+			for (let i = all_people.length - 1; i >= 0; i--) {
+				var target = document.getElementById(all_people[i].name + "_Health");
+				var health = Number(target.textContent);
+				if (health === 0) {
+					var standee = document.getElementById(all_people[i].name);
+					removeStandee(standee);
+				}
+			}
+
+			//Remove any Cards with 0 corrsponding standees
+			for (let i = enemy_score_cards.length - 1; i >= 0; i--) {
+				if (!all_people.find(user => user.name.includes(enemy_score_cards[i][0]) ) ) {
+					var card = document.getElementById(enemy_score_cards[i][0] + "_Stat");
+					removeCard(card);
+				}
+			}
+		}
 	}
 }
 

@@ -316,7 +316,7 @@ function addEnemy(array_type) {
 	<div class="box-long" style="column-gap:5px;">
 		<div class="box-tall" id="${enemy.name}" style="position:relative">
 			<img src="${enemySrc}" id="${enemy.name + '_Image'}" class="enemy-image">
-			<img class="enemy-delete" onclick="removeEnemy(${enemy.name})">
+			<img class="enemy-delete" onclick="removeStandee(${enemy.name})">
 			<input type="number" class="enemy-ID" id="${enemy.name + '_Standee'}">
 			<div class="box-long" style="column-gap:5px;">
 				<div class="box-long">
@@ -369,7 +369,7 @@ function addEnemy(array_type) {
 			<div class="box-long" style="position:relative; column-gap:10px;">
 				<div class="box-tall" id="${eStatName}" style="position:relative">
 					<img src="${enemyStatCardSrc}" class="enemy-stat-image" style="position:relative">
-					<img class="enemy-delete" onclick="removeEnemy(${eStatName})">
+					<img class="enemy-delete" onclick="removeCard(${eStatName})">
 					<div class="box-long">
 						<div class="box-tall" id="${eStatName + '_Normal'}">
 							<p style="margin:5px; color:white; font-size:20px;">M:${enemy.nMove}</p>
