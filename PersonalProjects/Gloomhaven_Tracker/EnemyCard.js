@@ -24,7 +24,6 @@ class EnemyCard {
 			this.eAttack += totalPlayers;
 		}
 
-		this.flipped = false;
-		this.fresh = false;
+		this.flipTimer = 0;
 	}
 }

@@ -405,7 +405,7 @@ function addEnemy(array_type) {
 								<img src="./Images/Icons/Arrow.png" onclick="subAttribute(${eActionName + '_eAttack'})" style="width:10px;height:10px; cursor:pointer; rotate:180deg;">
 							</div>
 						</div>
-						<img src="./Images/Icons/Shuffle.png" onclick="shuffleScores(${eCardName})" class="action-Btn" style="height:25px;">
+						<img src="./Images/Icons/Shuffle.png" onclick="shuffleScoreCard(${eCardName})" class="action-Btn" style="height:25px;">
 						<img src="./Images/Icons/Flip.png" onclick="flipScoreCard(${eCardName})" id="${eCardName} + _Flip" class="action-Btn" style="height:25px;">
 					</div>
 					<div class="box-tall" style="position:relative">

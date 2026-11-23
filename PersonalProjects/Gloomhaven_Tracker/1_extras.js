@@ -325,6 +325,9 @@ function nextAction() {
 					removeCard(card);
 				}
 			}
+
+			//
+			document.getElementById("Attack_Info").textContent = "Attack Actions";
 		}
 	}
 }
@@ -371,9 +374,12 @@ document.addEventListener('keydown', (event) => {
 		document.documentElement.style.cursor = "default";
 		conditionMod = null;
 		follower.style.display = "none";
-		attackMode = false;
 		healMode = false;
 		conditionsMode = false;
+
+		attackMode = false;
+		follower.style.color = "white";
+		canCrit = true;
 	}
 
 	//Next Turn/Action on Q
@@ -381,8 +387,23 @@ document.addEventListener('keydown', (event) => {
 		nextAction();
 	}
 
+	//Flip Modifier Deck on E
+	else if (event.key === 'e' || event.key === 'E') {
+		flipModifierDeck();
+	}
+
+
+	///////////////////////////
+	// Modes
+	//
+
 	//Enter Attack mode
 	else if (event.key === 'a' || event.key === 'A') {
+		//Resets
+		modeReset();
+		healMode = false;
+		conditionMode = false;
+
 		//Set Array
 		var Id = highlightedTarget.id;
 		var name = Id.split("_")[0];
@@ -390,7 +411,7 @@ document.addEventListener('keydown', (event) => {
 		var splitCount = Id.split("_").length - 1;
 		var action;
 
-		//If =1 then Enemy
+		//If = 1 then Enemy
 		if (splitCount == 1) {
 			var type = "n";
 			if (person.type === 2) {
@@ -401,7 +422,7 @@ document.addEventListener('keydown', (event) => {
 			attacker = name;
 		}
 
-		//If =0 then Player
+		//If = 0 then Player
 		else {
 			var attackValue = document.getElementById(name + "_Attack");
 			enemyAttack = false;
@@ -415,7 +436,72 @@ document.addEventListener('keydown', (event) => {
 
 		attackMode = true;
 	}
+
+
+	//Enter Heal mode
+	else if (event.key === 's' || event.key === 'S') {
+		//Reset
+		modeReset();
+		attackMode = false;
+		conditionMode = false;
+
+		healMode = true;
+		follower.style.display = "";
+		follower.innerText = 1;
+		document.documentElement.style.cursor = `url("${ './Images/Icons/Cursors/Heal_Cursor.png' }"), auto`;
+	}
+
+	///////////////////////////
+	// Attack/Heal Mode Extra Key Presses
+	//
+
+	//Add 1 to Attack/Heal Value
+	else if (event.key === "ArrowUp" && (attackMode || healMode) ) {
+		event.preventDefault();
+		follower.innerText = Number(follower.innerText) + 1;
+		//Crit +1
+		if (canCrit === false) {
+			follower.innerText = Number(follower.innerText) + 1;
+		}
+	}
+
+	//Sub 1 to Attack/Heal Value
+	else if (event.key === "ArrowDown" && (attackMode || healMode) && Number(follower.innerText) - 1 > 0) {
+		event.preventDefault();
+		follower.innerText = Number(follower.innerText) - 1;
+		//Crit +1
+		if (canCrit === false && Number(follower.innerText) - 1 >= 0) {
+			follower.innerText = Number(follower.innerText) - 1;
+		}
+	}
+
+	//Crit Toggle On
+	else if (event.key === "ArrowRight" && attackMode && canCrit) {
+		event.preventDefault();
+		follower.innerText = Number(follower.innerText) * 2;
+		follower.style.color = "darkorchid";
+		canCrit = false;
+	}
+
+	//Crit Toggle Off
+	else if (event.key === "ArrowLeft" && attackMode && !canCrit) {
+		event.preventDefault();
+		follower.innerText = Number(follower.innerText) / 2;
+		follower.style.color = "white";
+		canCrit = true;
+	}
 });
+
+
+function modeReset() {
+	//Reset
+	document.documentElement.style.cursor = "default";
+	conditionMod = null;
+	follower.style.display = "none";
+	follower.style.color = "white";
+	canCrit = true;
+}
+
 
 //Follow cursor with attack value
 document.addEventListener('mousemove', (event) => {

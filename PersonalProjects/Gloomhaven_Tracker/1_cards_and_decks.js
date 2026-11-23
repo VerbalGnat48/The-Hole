@@ -12,12 +12,88 @@ function flipScoreCard(element) {
 
 	//Get index of where name is at
 	var index = enemy_score_cards.findIndex(row => row.includes(Id.split("_")[0]));
+console.log(enemy_stat_cards[index].flipTimer);
 
-	//Check if card can be flipped
-	if (enemy_stat_cards[index].flipped && !enemy_stat_cards[index].fresh) {
-		enemy_stat_cards[index].flipped = false;
-		return;
+	if (enemy_stat_cards[index].flipTimer === 0) {
+		//Check if card can be flipped
+		if (enemy_stat_cards[index].flipped && !enemy_stat_cards[index].fresh) {
+			enemy_stat_cards[index].flipped = false;
+			return;
+		}
+
+		//Check if current card says to shuffle
+		if (enemy_score_cards[index][3]) {
+			if (enemy_score_cards[index][3][7] === true) {
+				enemy_score_cards[index][1].push(...enemy_score_cards[index][2]);
+				enemy_score_cards[index][1].push(enemy_score_cards[index][3]);
+				enemy_score_cards[index][2] = [];
+				enemy_score_cards[index][3] = null;
+			}
+		}
+		
+		//Ranomly Choose a Useable score card to use
+		var total = enemy_score_cards[index][1].length - 1;
+
+		//Select random usable card
+		var kndex = getRandomIntInclusive(0, total)
+
+		//Move active card to used
+		if (enemy_score_cards[index][3]) {
+			enemy_score_cards[index][2].push(enemy_score_cards[index][3]);
+			enemy_score_cards[index][3] = null;
+		}
+		//Move useable card to active
+		enemy_score_cards[index][3] = enemy_score_cards[index][1][kndex];
+		enemy_score_cards[index][1].splice(kndex, 1);
+
+		//Reset Score Card Attack Values
+		var nAction = document.getElementById(enemy_stat_cards[index].name + "_Action_nAttack");
+		var eAction = document.getElementById(enemy_stat_cards[index].name + "_Action_eAttack");
+		nAction.textContent = enemy_stat_cards[index].nAttack;
+		eAction.textContent = enemy_stat_cards[index].eAttack;
+
+		//Update Dsiplayed Card
+		var scoreImg = document.getElementById(enemy_score_cards[index][0] + "_Card_Img");
+		scoreImg.src = enemy_score_cards[index][3][4];
+
+		//Reset Enemy Standee Shields to Zero
+		for (j=0; j<enemy_standees.length; j++) {
+			if (enemy_standees[j].name.includes(enemy_stat_cards[index].name)) {
+				var standee = document.getElementById(enemy_standees[j].name + "_Shield");
+				standee.textContent = enemy_standees[j].shield;
+			}
+		}
+
+		//Flip card and make it unflipable for a round
+		document.addEventListener('click', function(event) {
+			//Get Element under mouse that i sbeing targetted
+			const clickedElement = event.target;
+
+			if (event.ctrlKey && clickedElement.id.includes("Flip")) {
+				enemy_stat_cards[index].flipTimer = 1;
+				console.log(enemy_stat_cards[index].flipTimer);
+			}
+		});
 	}
+	
+	else if (enemy_stat_cards[index].flipTimer - 1 >= 0) {
+		enemy_stat_cards[index].flipTimer--;
+		console.log(enemy_stat_cards[index].flipTimer);
+	}
+}
+
+function flipAllScoreCards() {
+	for (i=0; i<enemy_stat_cards.length; i++) {
+		flipScoreCard(document.getElementById(enemy_stat_cards[i].name + "_Card"));
+	}
+}
+
+function shuffleScoreCard(element) {
+	//Get Id
+	var Id = element.id;
+	
+	//Get index of where name is at
+	var index = enemy_score_cards.findIndex(row => row.includes(Id.split("_")[0]));
 
 	//Check if current card says to shuffle
 	if (enemy_score_cards[index][3]) {
@@ -28,51 +104,14 @@ function flipScoreCard(element) {
 			enemy_score_cards[index][3] = null;
 		}
 	}
-	
-	//Ranomly Choose a Useable score card to use
-	var total = enemy_score_cards[index][1].length - 1;
 
-	//Select random usable card
-	var kndex = getRandomIntInclusive(0, total)
-
-	//Move active card to used
-	if (enemy_score_cards[index][3]) {
-		enemy_score_cards[index][2].push(enemy_score_cards[index][3]);
-		enemy_score_cards[index][3] = null;
-	}
-	//Move useable card to active
-	enemy_score_cards[index][3] = enemy_score_cards[index][1][kndex];
-	enemy_score_cards[index][1].splice(kndex, 1);
-
-	//Reset Score Card Attack Values
-	var nAction = document.getElementById(enemy_stat_cards[index].name + "_Action_nAttack");
-	var eAction = document.getElementById(enemy_stat_cards[index].name + "_Action_eAttack");
-	nAction.textContent = enemy_stat_cards[index].nAttack;
-	eAction.textContent = enemy_stat_cards[index].eAttack;
-
-	//Update Dsiplayed Card
-	var scoreImg = document.getElementById(enemy_score_cards[index][0] + "_Card_Img");
-	scoreImg.src = enemy_score_cards[index][3][4];
-
-	//Reset Enemy Standee Shields to Zero
-	for (j=0; j<enemy_standees.length; j++) {
-		if (enemy_standees[j].name.includes(enemy_stat_cards[index].name)) {
-			var standee = document.getElementById(enemy_standees[j].name + "_Shield");
-			standee.textContent = enemy_standees[j].shield;
-		}
-	}
-
-	//
-//	if (inRound) {
-//		enemy_stat_cards[index].flipped = true;
-//	}
-	
-//	enemy_stat_cards[index].fresh = false;
+	//Flip Card
+	flipScoreCard(element)
 }
 
-function flipAllScoreCards() {
+function shuffleAllScoreCards() {
 	for (i=0; i<enemy_stat_cards.length; i++) {
-		flipScoreCard(document.getElementById(enemy_stat_cards[i].name + "_Card"));
+		shuffleScoreCard(document.getElementById(enemy_stat_cards[i].name + "_Card"));
 	}
 }
 

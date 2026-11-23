@@ -74,6 +74,9 @@ function applyCardAttackAction() {
 	var action = action_array[0];
 	
 	if (action) {
+		//
+		document.getElementById("Attack_Info").textContent = action.replace("Fill ", "");
+
 		//Reset Atack Values
 		var person = enemy_stat_cards.find(user => user.name === score_array[0][0].split("_")[0]);
 		var nAction = document.getElementById(score_array[0][0].split("_")[0] + "_Action_nAttack");
@@ -81,12 +84,16 @@ function applyCardAttackAction() {
 		nAction.textContent = Number(person.nAttack);
 		eAction.textContent = Number(person.eAttack);
 
+		if (action.includes("Fill") ) {
+			return;
+		}
+
 		//If Attack and No Consume
 		if (action.includes("Attack") && !action.includes("Consume") ) {
 			//If Attack has Pierce
 			cardPierce = 0;
 			if (action.includes("Pierce") ) {
-				cardPierce = action.splice(0, -1);
+				cardPierce = action.at(-1);
 			}
 			
 			//If No Pierce set Negative Condition if Applicable
@@ -328,7 +335,7 @@ document.addEventListener('click', function(event) {
 	const isCtrlOrCmd = event.ctrlKey || event.metaKey;
 
 	//If Attack Mode
-	if (attackMode && !clickedElement.id.includes("Btn") ) {
+	if (attackMode && !clickedElement.id.includes("Btn") && clickedElement.id.includes("Image") ) {
 		//Overalls
 		var target; var health; var healthValue; var applied_conditions = [];
 
@@ -497,9 +504,39 @@ document.addEventListener('click', function(event) {
 					}
 				}
 			}
+		}	
+	}
+
+	//If Heal Mode
+	else if (healMode && !clickedElement.id.includes("Btn") && clickedElement.id.includes("Image") ) {
+		//Overalls
+		var name = clickedElement.id.replace("_Image", "");
+		var person = all_people.find(user => user.name === name);
+		var target = document.getElementById(name);
+		var health = document.getElementById(target.id + "_Health");
+		var healthValue = health.textContent;
+
+		//If Poison then only heal that
+		if (person.negCons.find(con => con.name === "Poison") ) {
+			removeCondition(person.negCons, "Poison", person.name );
 		}
 		
+		//If Wound then heal it
+		if (person.negCons.find(con => con.name === "Wound") ) {
+			removeCondition(person.negCons, "Wound", person.name );
+		}
+
+		//Else heal the amount up to max health
+		var newHealth = Number(health.textContent);
+		for (i=0; i<Number(follower.textContent); i++) {
+			newHealth++;
+			if (person.maxHealth === newHealth) {
+				health.textContent = newHealth;
+				break;
+			}
+		}
 	}
+
 });
 
 
