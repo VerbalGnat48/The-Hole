@@ -21,121 +21,6 @@ function dropHandler(ev) {
 	}
 }
 
-function dropConditionHandler(ev) {
-	//"Copy and Paste" Condition to Player Condition Boxes
-	ev.preventDefault();
-	const data = ev.dataTransfer.getData("text");
-	const condition = document.getElementById(data);
-
-	//Too Mnay Doom
-	if (condition.id === "Doom" && doomCounter > 0) {
-		console.log("Doom to many");
-	}
-
-	//Too Many Plague
-	else if (condition.id === "Plague" && plagueCounter >= 12) {
-		console.log("Plague to many");
-	}
-
-	//Not Enough Doom/Other Conditions
-	else {
-		//Doom
-		if (condition.id === "Doom" && doomCounter < 1) {
-			doomCounter++;
-		}
-		
-		//Plague
-		if (condition.id === "Plague" && plagueCounter <= 12) {
-			plagueCounter++;
-			//Only Put - Conditions in - Box
-			if (ev.target.id.split("_")[1] === "Negatives" && conditions[1][1].includes(condition.id) && ev.target.querySelectorAll(`[id*="Plague"`).length < 3) {
-				const clonedCondition = condition.cloneNode(true);
-				clonedCondition.id = ev.target.id.split("_")[0] + "_" + condition.id;
-				clonedCondition.style.height = "40px";
-				ev.target.appendChild(clonedCondition);
-
-				//Apply Round Timer
-				if (nextTurnConditions.includes(condition.id) ) {
-					if (highlightedTarget && highlightedTarget.id === ev.target.id.split("_")[0]) {
-						clonedCondition.dataset.timer = 2;
-					} else {
-						clonedCondition.dataset.timer = 1;
-					}
-				}
-			}
-
-			//Put Conditions in Specific Enemy Condition Boxes
-			else if ( ev.target.id.split("_")[2] === "All" && (conditions[0][1].includes(condition.id) || conditions[1][1].includes(condition.id) ) && ev.target.querySelectorAll(`[id*="Plague"`).length < 3 ) {
-				const clonedCondition = condition.cloneNode(true);
-				clonedCondition.id = ev.target.id.split("_")[0] + "_" + condition.id;
-				clonedCondition.style.height = "30px";
-				ev.target.appendChild(clonedCondition);
-
-				//Apply Round Timer
-				if (nextTurnConditions.includes(condition.id) ) {
-					if (highlightedTarget && highlightedTarget.id === ev.target.id.split("_")[0]) {
-						clonedCondition.dataset.timer = 2;
-					} else {
-						clonedCondition.dataset.timer = 1;
-					}
-				}
-			}
-		}
-
-		//Only Put + Conditions in + Box
-		if (ev.target.id.split("_")[1] === "Positives" && conditions[0][1].includes(condition.id) && !ev.target.querySelector(`[id*="${condition.id}"]`) ) {
-			const clonedCondition = condition.cloneNode(true);
-			clonedCondition.id = ev.target.id.split("_")[0] + "_" + condition.id;
-			clonedCondition.style.height = "40px";
-			clonedCondition.onclick = removeElement(clonedCondition);
-			ev.target.appendChild(clonedCondition);
-
-			//Apply Round Timer
-			if (nextTurnConditions.includes(condition.id) ) {
-				if (highlightedTarget && highlightedTarget.id === ev.target.id.split("_")[0]) {
-					clonedCondition.dataset.timer = 2;
-				} else {
-					clonedCondition.dataset.timer = 1;
-				}
-			}
-		}
-
-		//Only Put - Conditions in - Box
-		else if (ev.target.id.split("_")[1] === "Negatives" && conditions[1][1].includes(condition.id) && !ev.target.querySelector(`[id*="${condition.id}"]`) ) {
-			const clonedCondition = condition.cloneNode(true);
-			clonedCondition.id = ev.target.id.split("_")[0] + "_" + condition.id;
-			clonedCondition.style.height = "40px";
-			ev.target.appendChild(clonedCondition);
-
-			//Apply Round Timer
-			if (nextTurnConditions.includes(condition.id) ) {
-				if (highlightedTarget && highlightedTarget.id === ev.target.id.split("_")[0]) {
-					clonedCondition.dataset.timer = 2;
-				} else {
-					clonedCondition.dataset.timer = 1;
-				}
-			}
-		}
-
-		//Put Conditions in Specific Enemy Condition Boxes
-		else if ( ev.target.id.split("_")[2] === "All" && (conditions[0][1].includes(condition.id) || conditions[1][1].includes(condition.id) ) && !ev.target.querySelector(`[id*="${condition.id}"]`) ) {
-			const clonedCondition = condition.cloneNode(true);
-			clonedCondition.id = ev.target.id.split("_")[0] + "_" + condition.id;
-			clonedCondition.style.height = "30px";
-			ev.target.appendChild(clonedCondition);
-
-			//Apply Round Timer
-			if (nextTurnConditions.includes(condition.id) ) {
-				if (highlightedTarget && highlightedTarget.id === ev.target.id.split("_")[0] + "_" + ev.target.id.split("_")[1]) {
-					clonedCondition.dataset.timer = 2;
-				} else {
-					clonedCondition.dataset.timer = 1;
-				}
-			}
-		}
-	}
-}
-
 function moveElementTo(target, to) {
 	const toBox = document.getElementById(to);
 	const targetElement = document.getElementById(target);
@@ -169,35 +54,39 @@ const conditions = [
 	["Negative", ["Wound", "Poison", "Immobilize", "Disarm", "Stun", "Muddle", "Plague", "Doom"] ],
 ];
 
-const nextTurnConditions = ["Strengthen", "Invisible", "Muddle", "Immobilize", "Disarm", "Stun"];
+const permanant_conditions = ["Wound", "Poison", "Doom", "Plague", "Safeguard", "Ward"];
 
-function applyConditionfromStats(enemyStatName, enemyType, conditionNumber) {
+function makeStatCardsConditions(enemy, enemyType, conNum) {
 	//Get Enemy Stat Column to Apply Condition to
-	var enemyStatColumn = document.getElementById(enemyStatName + enemyType);
+	var enemyStatColumn = document.getElementById(enemy.name + "_Stat_" + enemyType);
 
-	//Get Condition Name/Amount from Number
 	var condition;
 	var amount;
 
 	//Check if Not Pierce
-	if (conditionNumber < 70) {
-		var realCN = conditionNumber - 1;
-		condition = conditions[1][1][realCN];
+	if (conNum < 70) {
+		//Curse
+		if (conNum === 9) {
+			condition = "Curse";
+		}
+		else {
+			condition = conditions[1][1][conNum - 1];
+		}
 	}
-	//If Pierce
-	else if (conditionNumber > 70 && conditionNumber < 80) {
+	//Check if Pierce
+	else if (conNum > 70 && conNum< 80) {
 		condition = "Pierce";
-		amount = Number(String(conditionNumber).split("")[1] );
+		amount = Number(String(conNum).split("")[1] );
 	}
-	//If Retalaite
-	else if (conditionNumber > 80 && conditionNumber < 90) {
+	//Check if Retaliate
+	else if (conNum > 80 && conNum < 90) {
 		condition = "Retaliate";
-		amount = Number(String(conditionNumber).split("")[1] );
+		amount = Number(String(conNum).split("")[1] );
 	}
 
 	//Create Condition Image
 	var image = document.createElement("img");
-	image.id = enemyType + "_" + enemyStatName + "_" + condition;
+	image.id = enemyType + "_" + enemy.name + "_" + condition;
 	image.src = "./Images/Conditions/" + condition + ".png";
 	image.dataset.amount = amount;
 	image.style.height = "25px";
@@ -212,44 +101,194 @@ function applyConditionfromStats(enemyStatName, enemyType, conditionNumber) {
 	}
 }
 
-function applyConditionTo(targetElement, conditionElement, idOne, idTwo, size) {
-	//Too Mnay Doom
-	if (conditionElement.id === "Doom" && doomCounter > 0) {
+function dropConditionHandler(ev) {
+	//Get Condition
+	ev.preventDefault();
+	const data = ev.dataTransfer.getData("text");
+	const condition = document.getElementById(data);
+
+	//Get Target in Score Array
+	var name = ev.target.id.replace("_Conditions", "");
+	var person = all_people.find(user => user.name === name);
+	
+	//Condition Time
+	preAddConditions(person, condition, ev.target);
+}
+
+function preAddConditions(person, condition, target) {
+	//Too Many Doom
+	if (condition.id === "Doom" && doomCounter > 0) {
 		console.log("Doom to many");
 	}
 
-	//Too Many Plague
-	else if (conditionElement.id === "Plague" && (plagueCounter >= 12 || targetElement.querySelectorAll(`[id*="Plague"]`).length >= 3) ) {
+	//Add Doom
+	else if (condition.id === "Doom" && doomCounter < 1) {
+		doomCounter++;
+		addCondition(person.negCons, condition, target, false);
+	}
+
+	//Too Many Plauge
+	else if (condition.id === "Plague" && plagueCounter >= 12) {
 		console.log("Plague to many");
 	}
 
-	//Not Enough Doom/Other Conditions
+	//Other Conditions
 	else {
-		//Doom
-		if (conditionElement.id === "Doom" && doomCounter < 1) {
-			doomCounter++;
-		}
-		
-		//Plague
-		if (conditionElement.id === "Plague" && plagueCounter < 12) {
-			plagueCounter++;
+		//Plauge Check
+		if (condition.id === "Plague" && plagueCounter < 12) {
+			if (person.negCons.filter(item => item.name === "Plague").length < 3 ) {
+				addCondition(person.negCons, condition, target, true);
+			}
 		}
 
-		var clonedCondition = conditionElement.cloneNode(true);
-		clonedCondition.id = idOne + "_" + idTwo;
-		clonedCondition.style.height = size;
-		clonedCondition.style.cursor = "pointer";
-		targetElement.appendChild(clonedCondition);
-
-		//Apply Round Timer
-		if (nextTurnConditions.includes(conditionElement.id) ) {
-console.log("A");
-			if (highlightedTarget && highlightedTarget.id === conditionElement.id.split("_")[0]) {
-				clonedCondition.dataset.timer = 2;
-			} else {
-				clonedCondition.dataset.timer = 1;
+		//Others
+		else {
+			//Check if Positive or Negative Condition
+			if (conditions[0][1].includes(condition.id) && !person.posCons.includes(condition.id) ) {
+				//Apply Pos
+				addCondition(person.posCons, condition, target, false);
+			}
+			else if (conditions[1][1].includes(condition.id) && !person.negCons.includes(condition.id) ) {
+				//Apply Neg
+				addCondition(person.negCons, condition, target, false);
 			}
 		}
 	}
 }
+
+
+function addCondition(conBox, condition, target, plagueTime) {
+	//Check for Safeguard
+	var name = target.id.replace("_Conditions", "");
+	var person = all_people.find(user => user.name === name);
+	var posNotHas = person.posCons.find(con => con.name === condition.id);
+	var negNotHas = person.negCons.find(con => con.name === condition.id);
+
+	if (person.posCons.find(con => con.name === "Safeguard") && conditions[1][1].includes(condition.id) ) {
+		removeCondition(person.posCons, "Safeguard", name)
+	}
+	else if (posNotHas === undefined && (negNotHas === undefined || plagueTime ) && condition && !condition.id.includes("Pierce") ) {
+		//Add to Box Visual
+		var clonedCondition = condition.cloneNode(true);
+		clonedCondition.id = name + "_" + condition.id;
+
+		//Check if Player or Enemy
+		var splitCount = name.split("_").length - 1;
+		if (splitCount > 0) {
+			clonedCondition.id = name.split("_")[0] + "_" + name.split("_")[1] + "_" + condition.id;
+		}
+		clonedCondition.style.height = "35px";
+		target.appendChild(clonedCondition);
+
+		//Timer
+		var timer = 1;
+
+		//If turing turn set timer so that condition lasts until end of next turn
+		if (highlightedTarget && name === highlightedTarget.id) {
+			timer = 2;
+		}
+		//Make condition functionally permanent
+		if (permanant_conditions.includes(condition.id) ) {
+			timer = 99;
+		}
+		
+		//Add to Box 2
+		if (conditions[0][1].includes(condition.id) ) {
+			person.posCons.push(new Condition(condition.id, timer) );
+		}
+		else if (conditions[1][1].includes(condition.id) ) {
+			//Make new Condition
+			person.negCons.push(new Condition(condition.id, timer) );
+
+			//Plague Check
+			if (negNotHas === undefined || plagueTime) {
+				plagueCounter++;
+			}
+		}
+		
+	}
+}
+
+function removeCondition(conBox, condition, target) {
+	//Remove Visual Condition
+	document.getElementById(target + "_" + condition).remove();
+
+	//Remove Data Condition
+	for (i=0; i<conBox.length; i++) {
+		if (conBox[i].name === condition) {
+			conBox.splice(i, 1);
+			//Doom
+			if (condition.includes("Doom") ) {
+				doomCounter--;
+			}
+			//Plague
+			if (condition.includes("Plague") ) {
+				plagueCounter--;
+			}
+		}
+	}
+}
+
+
+document.addEventListener('click', function(event) {
+	//Get Element under mouse that is being targetted
+	const clickedElement = event.target;
+	const isCtrlOrCmd = event.ctrlKey || event.metaKey;
+	var name = clickedElement.id;
+	var con = name.slice(name.lastIndexOf("_") + 1);
+
+	//If conditionsMode then add condition to new clicked target
+	if (conditionsMode && (name.includes("_Conditions") || name.includes("_Image") ) ) {
+		//Get Name
+		var target = document.getElementById(name.substring(0, name.lastIndexOf("_") ) + "_Conditions" );
+		var person = all_people.find(user => user.name === target.id.replace("_Conditions", "") );
+		var condition = document.getElementById(conditionMod);
+
+		//Condition Time
+		preAddConditions(person, condition, target);
+	}
+
+	else if (conditions[0][1].includes(con) || conditions[1][1].includes(con) ) {
+		//If grabbing a condition from the left side set conditionMode
+		if (clickedElement.parentElement.id === "Conditions") {
+			//Set Cursor to Condition
+			document.documentElement.style.cursor = `url("${ './Images/Icons/Cursors/' + name + '_Cursor.png' }"), auto`;
+			conditionMod = name;
+			conditionsMode = true;
+		}
+
+		//Remove condition on click if in a "Conditions" box
+		else if (clickedElement.parentElement.id.includes("_Conditions") ) {
+			//Get Name
+			var name02 = name.substring(0, name.lastIndexOf("_") );
+			var person = all_people.find(user => user.name === name02.replace("_Conditions", "") );
+
+			//If Pos
+			if (conditions[0][1].includes(con) ) {
+				removeCondition(person.posCons, con, person.name)
+			}
+			//If Neg
+			else if (conditions[1][1].includes(con) ) {
+				removeCondition(person.negCons, con, person.name)
+			}
+		}
+	}
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

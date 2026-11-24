@@ -3,135 +3,115 @@
 //
 var prevScore;
 
-function flipEnemy(element) {
-	//Get ID
-	var ID = element.id;
+const modDeck = document.getElementById("EnemyModDeck");
+const modDeckOld = document.getElementById("EnemyModDeckOld");
 
-	//Flip Enemy Score Card
-	var scoreArray = [];
-	var i = enemy_cards.findIndex(row => row.includes(ID.split("_")[0]) );
+function flipScoreCard(element) {
+	//Get Id
+	var Id = element.id;
 
-	//Shuffle card Stack if score card has shuffle icon
-	if (enemy_cards[i][4] && enemy_cards[i][1][enemy_cards[i][4]][7]) {
-		enemy_cards[i][4] = null;
-		shuffleScores(element);
-	}
+	//Get index of where name is at
+	var index = enemy_score_cards.findIndex(row => row.includes(Id.split("_")[0]));
+console.log(enemy_stat_cards[index].flipTimer);
 
-
-	//Make Array of Enemy Scores
-	for (j=0; j<enemy_cards[i][1].length; j++) {
-		if (enemy_cards[i][1][j][6] === true) {
-			var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][5];
-			scoreArray.push(card);
+	if (enemy_stat_cards[index].flipTimer === 0) {
+		//Check if card can be flipped
+		if (enemy_stat_cards[index].flipped && !enemy_stat_cards[index].fresh) {
+			enemy_stat_cards[index].flipped = false;
+			return;
 		}
-	}
 
-	//Reset Attack Values
-	for (index=0; index<enemy_types.length; index++) {
-		var enemyAttack = document.getElementById(enemy_cards[i][0] + "_Action" + enemy_types[index] + "_Attack");
-		enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack);
-		enemyAttack.dataset.extraAttack = Number(enemyAttack.textContent);
-	}
-
-	//Make Next Action Button clickable again
-	document.getElementById(enemy_cards[i][0] + "_Action_Next").style.pointerEvents = "auto";
-
-	//Shuffle Cards if hand is empty
-	if (scoreArray.length === 0) {
-		shuffleScores(element);
-	}
-
-	//Randomly select a Number/Score
-	var number = getRandomIntExclusive(0,scoreArray.length);
-	var score = scoreArray[number];
-	enemy_cards[i][2] = score;
-
-	//Get/Combine Attack Value(s)
-	var jndex = 0;
-	for (j=0; j<enemy_cards[i][1].length; j++) {
-		var card = enemy_cards[i][1][j][1] + enemy_cards[i][1][j][5];
-		if (card === score) {
-			enemy_cards[i][1][j][6] = false;
-			enemy_cards[i][3].length = 0;
-			for ( k=0; k<enemy_cards[i][1][j][2].length; k++) {
-				//Get Array of Enemy Attack values
-				enemy_cards[i][3].push(enemy_cards[i][1][j][2][k]);
-				enemy_cards[i][4] = jndex;
+		//Check if current card says to shuffle
+		if (enemy_score_cards[index][3]) {
+			if (enemy_score_cards[index][3][7] === true) {
+				enemy_score_cards[index][1].push(...enemy_score_cards[index][2]);
+				enemy_score_cards[index][1].push(enemy_score_cards[index][3]);
+				enemy_score_cards[index][2] = [];
+				enemy_score_cards[index][3] = null;
 			}
-			break;
 		}
-		jndex++;
+		
+		//Ranomly Choose a Useable score card to use
+		var total = enemy_score_cards[index][1].length - 1;
+
+		//Select random usable card
+		var kndex = getRandomIntInclusive(0, total)
+
+		//Move active card to used
+		if (enemy_score_cards[index][3]) {
+			enemy_score_cards[index][2].push(enemy_score_cards[index][3]);
+			enemy_score_cards[index][3] = null;
+		}
+		//Move useable card to active
+		enemy_score_cards[index][3] = enemy_score_cards[index][1][kndex];
+		enemy_score_cards[index][1].splice(kndex, 1);
+
+		//Reset Score Card Attack Values
+		var nAction = document.getElementById(enemy_stat_cards[index].name + "_Action_nAttack");
+		var eAction = document.getElementById(enemy_stat_cards[index].name + "_Action_eAttack");
+		nAction.textContent = enemy_stat_cards[index].nAttack;
+		eAction.textContent = enemy_stat_cards[index].eAttack;
+
+		//Update Dsiplayed Card
+		var scoreImg = document.getElementById(enemy_score_cards[index][0] + "_Card_Img");
+		scoreImg.src = enemy_score_cards[index][3][4];
+
+		//Reset Enemy Standee Shields to Zero
+		for (j=0; j<enemy_standees.length; j++) {
+			if (enemy_standees[j].name.includes(enemy_stat_cards[index].name)) {
+				var standee = document.getElementById(enemy_standees[j].name + "_Shield");
+				standee.textContent = enemy_standees[j].shield;
+			}
+		}
+
+		//Flip card and make it unflipable for a round
+		document.addEventListener('click', function(event) {
+			//Get Element under mouse that i sbeing targetted
+			const clickedElement = event.target;
+
+			if (event.ctrlKey && clickedElement.id.includes("Flip")) {
+				enemy_stat_cards[index].flipTimer = 1;
+				console.log(enemy_stat_cards[index].flipTimer);
+			}
+		});
 	}
-
-	//Update Displayed Card/Values
-	var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Card_Img");
-	if (jndex != 8) { enemyScoreImage.src = enemy_cards[i][1][jndex][4]; }
-
-	//Reset Shield to base value
-	const enemyBox = document.getElementById("Enemy_Box");
-	var allEnemyShieldsArray = Array.from(enemyBox.querySelectorAll(`[id*="${element.id.split('_')[0]}"] [id*="Shield"]`) );
-	for (p=0; p<allEnemyShieldsArray.length; p++) {
-		var enemy = allEnemyShieldsArray[p];
-		enemy.textContent = enemy.dataset.shield;
-	}
-
-	//+1 Action Counter
-	const actionCount = document.getElementById(enemy_cards[i][0] + "_Action_Next" );
-	actionCount.textContent = 0;
-
-	nextAction(document.getElementById(enemy_cards[i][0] + "_Card") );
-
-	//
-	if (inRound) {
-		element.dataset.flipped = "true";
+	
+	else if (enemy_stat_cards[index].flipTimer - 1 >= 0) {
+		enemy_stat_cards[index].flipTimer--;
+		console.log(enemy_stat_cards[index].flipTimer);
 	}
 }
 
-function shuffleScores(element) {
-	//Reset Score Card to base info
-	for (i=0; i<enemy_cards.length; i++ ) {
-		if (enemy_cards[i][0] === element.id.split("_")[0]) {
-			for (j=0; j<enemy_cards[i][1].length; j++) {
-				enemy_cards[i][1][j][6] = true;
-			}
-
-			//Reset Attack Value
-			var enemyScoreImage = document.getElementById(enemy_cards[i][0] + "_Card_Img");
-			enemyScoreImage.src = "./Images/Monster_Back.jpg";
-			for (h=0; h<enemy_types.length; h++) {
-				var attack = document.getElementById(enemy_cards[i][0] + "_Action" + enemy_types[h] + "_Attack");
-				attack.textContent = document.getElementById(enemy_cards[i][0] + "_Stat" + enemy_types[h] + "_A").textContent.replace("A:","");
-			}
-
-			//+1 Action Counter
-			const actionCount = document.getElementById(enemy_cards[i][0] + "_Action_Next" );
-			actionCount.textContent = 0;
-
-			if (element.dataset.flipped === "false") {
-				flipEnemy(element);
-			}
-
-			break;
-		}
+function flipAllScoreCards() {
+	for (i=0; i<enemy_stat_cards.length; i++) {
+		flipScoreCard(document.getElementById(enemy_stat_cards[i].name + "_Card"));
 	}
 }
 
-function flipEnemyAll() {
-	for (jerry=0; jerry<enemy_stat_cards.length; jerry++) {
-		var enemyCard = document.getElementById(enemy_stat_cards[jerry] + "_Card");
-		if (enemyCard.dataset.flipped === "false") {
-			flipEnemy(enemyCard);
+function shuffleScoreCard(element) {
+	//Get Id
+	var Id = element.id;
+	
+	//Get index of where name is at
+	var index = enemy_score_cards.findIndex(row => row.includes(Id.split("_")[0]));
+
+	//Check if current card says to shuffle
+	if (enemy_score_cards[index][3]) {
+		if (enemy_score_cards[index][3][7] === true) {
+			enemy_score_cards[index][1].push(...enemy_score_cards[index][2]);
+			enemy_score_cards[index][1].push(enemy_score_cards[index][3]);
+			enemy_score_cards[index][2] = [];
+			enemy_score_cards[index][3] = null;
 		}
 	}
+
+	//Flip Card
+	flipScoreCard(element)
 }
 
-function shuffleEnemyAll() {
-	var index = 0;
-	while (index < enemy_cards.length ) {
-		if (document.getElementById(enemy_cards[index][0].replace(" ","") + "_Card") ) {
-			shuffleScores( document.getElementById(enemy_cards[index][0].replace(" ","") + "_Card") );
-		}
-		index++;
+function shuffleAllScoreCards() {
+	for (i=0; i<enemy_stat_cards.length; i++) {
+		shuffleScoreCard(document.getElementById(enemy_stat_cards[i].name + "_Card"));
 	}
 }
 
@@ -143,136 +123,159 @@ var number;
 var modType = "EnemyModDeck";
 var imbuementLevel;
 var enemyModifiers;
+var selectedModifier;
+const enemy_types = ["_Normal", "_Elite"];
+const simple_enemy_types = ["_n", "_e"];
 
 function setDifficulty() {
 	//Re-assign Imbuement Level
 	const tempString = sessionStorage.getItem('IL');
 	imbuementLevel = JSON.parse(tempString);
 
+	//Get Modifeir Values
 	switch (imbuementLevel) {
 		case 1:
-			enemyModifiers = [ [0,0,0,0,0,0,"0_Poison",+1,+1,+1,+1,+1,+1,+1,+1,-1,-1,-2,+2,"+2_Muddle","Null","Crit"],
-			[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true], ];
+			enemyModifiers = [0,0,0,0,0,0,"0_Poison",1,1,1,1,1,1,1,1,-1,-1,-2,2,"2_Muddle","Null","Crit"];
 			break;
 
 		case 2:
-			enemyModifiers = [ [0,0,0,0,"0_Poison","0_Wound",+1,+1,+1,+1,+1,+1,+1,+1,"+1_Curse","+1_Heal","+1_Heal",-1,-1,+2,"+2_Muddle",+3,"Null","Crit"],
-			[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true], ];
+			enemyModifiers = [0,0,0,0,"0_Poison","0_Wound",1,1,1,1,1,1,1,1,"1_Curse","1_Heal","1_Heal",-1,-1,2,"2_Muddle",3,"Null","Crit"];
 			break;
 
 		default:
-			enemyModifiers = [ [0,0,0,0,0,0,+1,+1,+1,+1,+1,-1,-1,-1,-1,-1,-2,+2,"Null","Crit"],
-			[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true], ];
+			enemyModifiers = [0,0,0,0,0,0,1,1,1,1,1,-1,-1,-1,-1,-1,-2,2,"Null","Crit"];
+	}
+
+	//Create Actual Deck
+	for (i=0; i<enemyModifiers.length; i++) {
+		modifier_deck[0].push(new ModifierCard(enemyModifiers[i]) );
 	}
 }
 
-function flipEnemyModifierDeck() {
-	//Random Number
-	do {
-		number = getRandomIntExclusive(0,enemyModifiers[0].length);
-	} while (!enemyModifiers[1][number] && enemyModifiers[1].includes(true) );
-
-	//Make Display match selected Number/Card
-	if (enemyModifiers[1][number]) {
-		const modDeck = document.getElementById("EnemyModDeck");
-		const modDeckOld = document.getElementById("EnemyModDeckOld");
-		modDeckOld.src = modDeck.src;
-		modDeckOld.dataset.add = modDeck.dataset.add;
-		modDeckOld.dataset.condition = modDeck.dataset.condition;
-		modDeck.src = "./Images/AttackModifiers/" + enemyModifiers[0][number] + ".png";
-		if (enemyModifiers[0][number].length > 4) {
-			modDeck.dataset.add = enemyModifiers[0][number].split("_")[0];
-			modDeck.dataset.condition = enemyModifiers[0][number].split("_")[1];
-		} else {
-			modDeck.dataset.add = enemyModifiers[0][number];
-			modDeck.dataset.condition = "none";
+function flipModifierDeck() {
+	//Check if Current Card 2 says to Shuffle
+	if (modifier_deck[3]) {
+		if (modifier_deck[3].shuffle) {
+			shuffleModifierDeck();
+			return;
 		}
 	}
-	enemyModifiers[1][number] = false;
-	var attack;
-	if (enemyModifiers[0][number].length > 4) {
-		attack = enemyModifiers[0][number].split("_")[0];
-	} else {
-		attack = enemyModifiers[0][number];
+
+	//Ranomly Choose a Useable card to use
+	var total = modifier_deck[0].length - 1;
+	//If not then shuffle
+	if (total === 0) {
+		shuffleModifierDeck();
+		return;
 	}
+	total = modifier_deck[0].length - 1;
 
-	//Shuffle at End of Cards
-	if (enemyModifiers[1].every(value => value === false) ) {
-		shuffleEnemyModifierDeck();
-	}
+	//Select Random Useable Card
+	var index = getRandomIntInclusive(0, total);
 
-	//Add New Attack Value to Displayed Enemy Attack Value(s)
-	addAttackModifier(modType);
+	//Move 2nd Card to Used
+	if (modifier_deck[3]) { modifier_deck[1].push(modifier_deck[3]); }
 
-	//Remove any Bless/Curse cards after being pulled
-	if (attack === "Bless" || attack === "Curse") {
-		if (number > -1) {
-			enemyModifiers[0].splice(number,1);
-			enemyModifiers[1].splice(number,1);
+	//Move 1st Card to 2nd
+	if (modifier_deck[2]) { modifier_deck[3] = modifier_deck[2]; }
+
+	//Move Useable Card to 1st
+	modifier_deck[2] = modifier_deck[0][index];
+	modifier_deck[0].splice(index, 1);
+
+	//Remove any Bless or Curse acrds
+	for (i=0; i<modifier_deck[1].length; i++) {
+		if ( modifier_deck[1][i].effect === "Bless" || modifier_deck[1][i].effect === "Curse"  ) {
+			modifier_deck[1].splice(i, 1)
 		}
-		if (attack === "Curse") { 
-			curses--;
-		}
 	}
+
+	//Update Display
+	if (modifier_deck[2]) {	modDeck.src = "./Images/AttackModifiers/" + modifier_deck[2].name + ".png"; }
+	if (modifier_deck[3]) { modDeckOld.src = "./Images/AttackModifiers/" + modifier_deck[3].name + ".png"; }
+	
+	//Add Attack Value to Score Cards
+	addAttackModifier(modifier_deck[2], "EnemyModDeck");
 
 	//Play Card Flip Sound
 	const audio = new Audio('./Audio/Flip.wav');
 	audio.play();
 }
 
-function shuffleEnemyModifierDeck() {
-	for (i=0; i<enemyModifiers[1].length; i++) {
-		enemyModifiers[1][i] = true;
-	}
-	var modDeck = document.getElementById("EnemyModDeck");
+function shuffleModifierDeck() {
+	//Reset Cards Visually
 	modDeck.src = "./Images/AttackModifiers/Back.png";
-	modDeck = document.getElementById("EnemyModDeckOld");
-	modDeck.src = "./Images/AttackModifiers/Back.png";
+	modDeckOld.src = "./Images/AttackModifiers/Back.png";
 
+	//Reset All Cards to Useable
+	if (modifier_deck[1]) {
+		modifier_deck[0].push(...modifier_deck[1])
+		modifier_deck[1] = [];
+	}
+	if (modifier_deck[2]) {
+		modifier_deck[0].push(modifier_deck[2]);
+		modifier_deck[2] = null;
+	}
+	if (modifier_deck[3]) {
+		modifier_deck[0].push(modifier_deck[3]);
+		modifier_deck[3] = null;
+	}
+
+	//Reset Attack Values
 	for (i=0; i<enemy_stat_cards.length; i++) {
-		var enemyName = enemy_stat_cards[i].replace(" ","");
-		var enemyAttack = document.getElementById(enemyName + "_Attack");
-		enemyAttack.textContent = Number(enemyAttack.dataset.baseAttack);
+		var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
+		var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
+		nAction.textContent = enemy_stat_cards[i].nAttack;
+		eAction.textContent = enemy_stat_cards[i].eAttack;
 	}
 
-	selectedModifier.style.border = "none";
+	if (selectedModifier) { selectedModifier.style.border = "none"; }
 }
 
-function modifyEnemyModifierDeck(action) {
+function modifyModifierDeck(action) {
 	if (curses < 10 && action === "Curse") {
-		enemyModifiers[0].push(action);
-		enemyModifiers[1].push(true);
+		modifier_deck[0].push(new ModifierCard("Curse") );
 		curses++;
 	}
-	else {
-		enemyModifiers[0].push(action);
-		enemyModifiers[1].push(true);
+	else if (action === "Bless") {
+		modifier_deck[0].push(new ModifierCard("Bless") );
 	}
+	shuffleModifierDeck();
 }
 
-function addAttackModifier(ID) {
-	//Add New Attack Value to Displayed Enemy Attack Value(s)
-	var attack = document.getElementById(ID).dataset.add;
-	atkModCon = document.getElementById(ID).dataset.condition
-	for (i=0; i<enemy_stat_cards.length; i++) {
-		var enemyName = enemy_stat_cards[i].replace(" ","");
-		for (index=0; index<enemy_types.length; index++) {
+function addAttackModifier(mod_card, Id) {
+	//Grab Cards
+	crit = false;
+	for (i=0; i<enemy_score_cards.length; i++) {
+		var nAction = document.getElementById(enemy_stat_cards[i].name + "_Action_nAttack");
+		var eAction = document.getElementById(enemy_stat_cards[i].name + "_Action_eAttack");
+//		nAction.textContent = enemy_stat_cards[i].nAttack;
+//		eAction.textContent = enemy_stat_cards[i].eAttack;
 
-			//Update Enemy Attack Number
-			var enemyAttack = document.getElementById(enemyName + "_Action" + enemy_types[index] + "_Attack");
-			if (attack != "Null" && attack != "Curse" && attack != "Crit" && attack != "Bless" && enemyAttack) {
-				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + Number(attack);
-			}
-			else if ( (attack === "Crit" || attack === "Bless" ) && enemyAttack) {
-				enemyAttack.textContent = Number(enemyAttack.dataset.extraAttack) + Number(enemyAttack.dataset.extraAttack);
-			}
+		//Add Modifier Value
+		//If Normal
+		if (mod_card.effect != "Null" && mod_card.effect != "Curse" && mod_card.effect != "Crit" && mod_card.effect != "Bless" ) {
+			nAction.textContent = Number(nAction.textContent) + Number(mod_card.value);
+			eAction.textContent = Number(eAction.textContent) + Number(mod_card.value);
+			if (Number(nAction.textContent) < 0) { nAction.textContent = 0; }
+			if (Number(eAction.textContent) < 0) { eAction.textContent = 0; }
+		}
+		//If Crit/Bless
+		else if (mod_card.effect === "Crit" || mod_card.effect === "Bless" ) {
+			nAction.textContent = Number(nAction.textContent) + Number(nAction.textContent);
+			eAction.textContent = Number(eAction.textContent) + Number(eAction.textContent);
+			if (Number(nAction.textContent) < 0) { nAction.textContent = 0; }
+			if (Number(eAction.textContent) < 0) { eAction.textContent = 0; }
+			crit = true;
 		}
 	}
-	selectedModifier = document.getElementById(ID);
+
+	//Select First Modifier
+	selectedModifier = document.getElementById(Id);
 	selectedModifier.style.border = "3px solid chartreuse";
 }
 
-const enemy_types = ["_Normal", "_Elite"];
+
 
 function makeEnemyScoreCard(enemyName, score, actions, enemyType, img, shuffle) {
 	//Seperate all actions
@@ -333,14 +336,14 @@ document.addEventListener('click', function(event) {
 	if (clickedElement.id === "EnemyModDeck") {
 		clickedElement.style.border = "3px solid chartreuse";
 		document.getElementById("EnemyModDeckOld").style.border = "none";
-		addAttackModifier("EnemyModDeck");
+		addAttackModifier(modifier_deck[2], "EnemyModDeck");
 		selectedModifier = clickedElement;
 		modType = "EnemyModDeck";
 	}
 	else if (clickedElement.id === "EnemyModDeckOld") {
 		clickedElement.style.border = "3px solid chartreuse";
 		document.getElementById("EnemyModDeck").style.border = "none";
-		addAttackModifier("EnemyModDeckOld");
+		addAttackModifier(modifier_deck[3], "EnemyModDeckOld");
 		selectedModifier = clickedElement;
 		modType = "EnemyModDeckOld";
 	}
